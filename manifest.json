@@ -1,0 +1,36 @@
+{
+  "name": "더오름패스 · 자격증 CBT",
+  "short_name": "더오름패스",
+  "description": "더오름패스 자격증 CBT 문제 풀이, OX 선지 퀴즈, 오답노트",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F2F4F6",
+  "theme_color": "#F2F4F6",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "./",
+  "orientation": "portrait-primary",
+  "categories": [
+    "education"
+  ]
+}
