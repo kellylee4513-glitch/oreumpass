@@ -754,3 +754,4 @@ mark{background:linear-gradient(transparent 62%,#FFEFB0 62%)!important}
 .pk1 .fl-h.sm{margin-top:28px}
 .pk1 .allpass{margin-top:28px}
 @media(min-width:900px){.pk-h{font-size:30px;margin:20px 2px 22px}}
+@media(max-width:380px){.pk-h{font-size:22px}}
