@@ -1,6 +1,6 @@
 /* [screens/picker.js] 첫 화면: 자격증 선택 */
 /* ===== 자격증 선택 (첫 화면) ===== */
-function certPicker(first) { if (!first) markNav();
+function certPicker(first) {
   stopTimer(); run = null; window.scrollTo(0, 0); $app.classList.add('wide');
   const totalQ = READY.reduce((n, c) => n + c.questions.length, 0);
   const big = c => { const d = G.data[c.id], pro = G.passAll || G.passCerts.includes(c.id), dd = d ? dday(d.exam) : null, seen = d ? d.seen.length : 0, pct = Math.round(seen / c.questions.length * 100);
@@ -15,16 +15,16 @@ function certPicker(first) { if (!first) markNav();
       <div class="rc-foot"><span class="rc-n">자체 제작 <b>${c.questions.length}</b>문항 · 해설 포함</span><span class="rc-cta">${seen ? `${seen}문제 풀었어요 · 이어서 →` : '무료로 시작하기 →'}</span></div>
     </button>`; };
   const tile = c => `<button class="sc" onclick="toast('${esc(c.name)} 문제를 열심히 만들고 있어요')">${badge(c, 48)}<div class="grow"><div class="sc-top"><span class="sc-name">${esc(c.name)}</span><span class="sc-tag">준비 중</span></div><div class="sc-d">${esc(c.org || c.cat)}${c.desc ? ' · ' + esc(c.desc) : ''}</div>${c.meta ? `<div class="sc-m">${c.meta.map(m => `<span>${esc(m)}</span>`).join('')}</div>` : ''}</div></button>`;
-  $app.innerHTML = `<div class="top ftop"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()">${WORDMARK}</div>${first ? '' : `<button class="back-x" onclick="go(tab)">닫기</button>`}</div>
+  $app.innerHTML = `<div class="top ftop"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()">${WORDMARK}</div></div>
   <div class="pad fwrap">
-    <section class="fhero">
-      <div class="fh-art"><img src="icon-512.png" alt="" onerror="this.remove()"></div>
-      <div class="fh-k">자격증 CBT · 더오를패스</div>
-      <h1>한 문제씩 <em>더 오를</em><br>자격증 합격까지</h1>
-      <p>실제 시험처럼 풀고, 틀린 문제만 골라 다시 올라가요.</p>
+    <section class="fhero lp">
+      <svg class="lp-line" viewBox="0 0 400 160" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D27A" stop-opacity=".22"/><stop offset="1" stop-color="#F3D27A" stop-opacity="0"/></linearGradient></defs><path d="M0 150 L60 128 L110 136 L170 96 L220 104 L280 58 L330 66 L400 16 V160 H0Z" fill="url(#lpg)"/><path d="M0 150 L60 128 L110 136 L170 96 L220 104 L280 58 L330 66 L400 16" fill="none" stroke="#F3D27A" stroke-opacity=".45" stroke-width="2"/></svg>
+      <div class="lp-top"><span class="lp-badge"><i></i>2026 개정 세법 반영</span></div>
+      <h1>합격까지<br>한 계단씩, <em>더 오를</em></h1>
+      <p>기출을 외우는 대신,<br>왜 틀렸는지 고쳐 주는 자격증 문제집</p>
       ${READY[0] ? `<button class="fh-cta" onclick="quickStart('${READY[0].id}')"><span class="grow"><b>${esc(READY[0].name)}</b><span>바로 문제 풀기</span></span><span class="go">→</span></button><div class="fh-sub">가입 없이 바로 · 10문제 5분 · 해설 무료</div>` : ''}
-      <div class="fh-stats"><div><b>${READY.length}</b><span>열린 자격증</span></div><div><b>${totalQ}</b><span>문항</span></div><div><b>100%</b><span>해설 포함</span></div></div>
-      <ul class="fh-pt"><li>${IC.exam()}<span>실전 시간 그대로 모의고사</span></li><li>${IC.target()}<span>합격선·과락선 기준 실력 진단</span></li><li>${IC.note()}<span>틀린 문제만 모으는 복습노트</span></li></ul>
+      <div class="lp-stats"><div><b>${totalQ}</b><span>자체 제작 문항</span></div><i></i><div><b>${READY.reduce((n, c) => n + c.questions.filter(q => q.m).length, 0)}</b><span>10초 암기 팁</span></div><i></i><div><b>0원</b><span>해설 이용료</span></div></div>
+      <ul class="lp-feat"><li><span>01</span>오늘 풀 분량을 앱이 정해 줘요</li><li><span>02</span>틀린 문제는 1·3·7일 뒤 다시 나와요</li><li><span>03</span>합격 확률을 숫자로 보여 줘요</li></ul>
     </section>
     <section class="flist">
       <div class="fl-h">${first ? '어떤 자격증을 준비하나요?' : '공부할 자격증을 골라 주세요'}</div>
@@ -35,8 +35,10 @@ function certPicker(first) { if (!first) markNav();
     </section>
   </div>`;
   bottom('');
+  if (first) document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); else tabbar();
 }
-function pickCert(id) { useCert(id); save(); tab = 'home'; $app.classList.remove('wide'); go('home'); toast(C.name + '(으)로 바꿨어요'); }
+
+function pickCert(id) { const same = G.cur === id; useCert(id); save(); tab = 'home'; $app.classList.remove('wide'); go('home'); toast(same ? C.name + ' 이어서 공부해요' : C.name + '(으)로 바꿨어요'); }
 
 
 function quickStart(id) { useCert(id); G.cur = id; save(); tab = 'home'; $app.classList.remove('wide'); const all = pool(0), un = shuffle(all.filter(q => !S.seen.includes(q.id))); startQuiz(un.concat(shuffle(all.filter(q => S.seen.includes(q.id)))).slice(0, 10), C.short + ' 바로 풀기', 'explain'); }

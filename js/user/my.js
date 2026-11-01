@@ -7,10 +7,10 @@ function myTab() {
     ${G.passAll ? '' : `<button class="upsell" onclick="paywall('all')"><div class="deco">${IC.trophy()}</div><div class="t">더오를패스 ALL</div><div class="d">지금 있는 자격증과 앞으로 추가될 자격증 PRO 전부</div><span class="go">${won(ALL_PRICE)}에 시작하기</span></button>`}
     <div class="sec" style="margin-top:6px">${esc(C.short)} 설정</div>
     <div class="card list" style="padding:4px 20px">
-      <button class="li" onclick="certPicker()"><span class="ico">${badge(C, 32)}</span>공부 중인 자격증<span class="r">${esc(C.name)} ›</span></button>
+      <button class="li" onclick="go('certs')"><span class="ico">${badge(C, 32)}</span>공부 중인 자격증<span class="r">${esc(C.name)} ›</span></button>
       <button class="li" onclick="examSheet()"><span class="ico">${IC.calendar()}</span>시험일<span class="r">${S.exam ? S.exam.replace(/-/g, '.') : '설정 안 함'} ›</span></button>
       <button class="li" onclick="goalSheet()"><span class="ico">${IC.goal()}</span>하루 목표<span class="r">${S.goal}문제 ›</span></button>
-      <a class="li" href="${PDF_LINK}" target="_blank" rel="noopener"><span class="ico">${IC.book()}</span>${esc(C.short)} 핵심 정리본 PDF<span class="r">›</span></a>
+${PDF_LINK && PDF_LINK !== '#' ? `<a class="li" href="${PDF_LINK}" target="_blank" rel="noopener"><span class="ico">${IC.book()}</span>${esc(C.short)} 핵심 정리본 PDF<span class="r">›</span></a>` : ''}
     </div>
     <div class="card list" style="padding:4px 20px">
       <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>

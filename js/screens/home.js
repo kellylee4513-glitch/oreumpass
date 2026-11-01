@@ -50,8 +50,8 @@ function home() {
       <div class="card list mlist">
         <button class="li" onclick="examInfoSheet()"><span class="ico">${badge(C, 30)}</span>${esc(C.short)} 시험 안내<span class="r">${C.info.count}문항 · ${C.info.minutes}분 ›</span></button>
         <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>
-        <button class="li" onclick="certPicker()"><span class="ico">${IC.cert()}</span>다른 자격증<span class="r">${SOON.map(c => c.short).join('·')} 준비 중 ›</span></button>
-        <a class="li" href="${PDF_LINK}" target="_blank" rel="noopener"><span class="ico">${IC.book()}</span>${esc(C.short)} 핵심 정리본 PDF<span class="r">›</span></a>
+        <button class="li" onclick="go('certs')"><span class="ico">${IC.cert()}</span>다른 자격증<span class="r">${SOON.map(c => c.short).join('·')} 준비 중 ›</span></button>
+${PDF_LINK && PDF_LINK !== '#' ? `<a class="li" href="${PDF_LINK}" target="_blank" rel="noopener"><span class="ico">${IC.book()}</span>${esc(C.short)} 핵심 정리본 PDF<span class="r">›</span></a>` : ''}
       </div>
     </div>
     <div class="foot b-foot">${policyLinks()}더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>

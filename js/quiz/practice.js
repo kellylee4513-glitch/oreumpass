@@ -16,15 +16,17 @@ function toggleStar(id) { const on = S.star.includes(id); S.star = on ? S.star.f
 const NUM = '①②③④';
 function explainHTML(q, pick) {
   const answered = pick !== null && pick !== undefined, ok = pick === q.a, qs = (S.qstat || {})[q.id];
-  let h = `<div class="rx-band ${!answered ? '' : ok ? 'ok' : 'no'}"><div class="rx-ic">${!answered ? IC.medal() : ok ? IC.trophy() : IC.climb()}</div><div><div class="rx-t">${!answered ? '정답' : ok ? '맞혔어요!' : '한 번 더 오르면 돼요'}</div><div class="rx-s">정답 ${NUM[q.a]} ${esc(q.o[q.a])}</div></div></div>`;
-  if (q.m) h += `<div class="rx-m first"><div class="lb">10초 암기 팁</div>${esc(q.m)}</div>`;
-  if (q.c) h += `<div class="rx-blk"><div class="rx-lbl"><i>01</i>한 줄 개념</div><p>${hl(q.c)}</p></div>`;
-  if (q.f) h += `<div class="rx-f"><div class="lb">핵심 공식</div>${hl(q.f)}</div>`;
-  h += `<div class="rx-blk"><div class="rx-lbl"><i>${q.c ? '02' : '01'}</i>왜 정답이 ${NUM[q.a]}일까</div><p>${hl(q.e)}</p></div>`;
-  if (q.w) h += `<div class="rx-blk"><div class="rx-lbl"><i>03</i>보기별 함정 체크</div><table class="rx-tb">${q.o.map((o, k) => `<tr class="${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><td class="k">${NUM[k]}</td><td class="j">${k === q.a ? '<b class="o">O</b>' : '<b class="x">X</b>'}</td><td>${k === q.a ? '정답 보기예요.' : hl(q.w[k] || '')}${k === pick && k !== q.a ? ' <span class="pk">내 선택</span>' : ''}</td></tr>`).join('')}</table></div>`;
-  if (q.c) h += `<button class="ref nt" onclick="notePage('${unitKey(q)}',${q.id})">${IC.note()}<span>요약 노트에서 ‘${esc(unitName(q))}’ 이어 보기 ›</span></button>`;
-  h += `<a class="ref" href="${PDF_LINK}" target="_blank" rel="noopener">${IC.book()}<span>${esc(C.short)} 정리본 ${SUBJ[q.s]} ‘${esc(SUBJ_SHORT[q.s])}’ 펼쳐 보기 ›</span></a>`;
-  if (qs && qs.t) h += `<div class="xp-me">나의 풀이 ${qs.t}회 · 오답 ${qs.w}회</div>`;
+  const st = !answered ? 'neutral' : ok ? 'ok' : 'no';
+  let h = `<div class="ex">
+    <div class="ex-head ${st}"><div class="ex-st"><i></i>${!answered ? '정답 확인' : ok ? '정답이에요' : '아쉽게 틀렸어요'}</div>
+      <div class="ex-ans"><span class="ex-n">${NUM[q.a]}</span><span>${esc(q.o[q.a])}</span></div>
+      ${answered && !ok ? `<div class="ex-my">내가 고른 답 <b>${NUM[pick]}</b> ${esc(q.o[pick])}</div>` : ''}</div>`;
+  if (q.k) h += `<div class="ex-easy"><div class="ex-lb">쉽게 말하면</div><p>${esc(q.k)}</p></div>`;
+  if (q.m) h += `<div class="ex-tip"><div class="ex-lb">10초 암기</div><p>${esc(q.m)}</p></div>`;
+  if (q.c) h += `<section class="ex-sec"><h4>핵심 개념${q.t ? `<span>${esc(q.t)}</span>` : ''}</h4><p>${hl(q.c)}</p>${q.f ? `<div class="ex-f"><span>공식</span><div class="fx">${hl(q.f)}</div></div>` : ''}</section>`;
+  h += `<section class="ex-sec"><h4>왜 정답이 ${NUM[q.a]}일까</h4><p>${hl(q.e)}</p></section>`;
+  if (q.w) h += `<section class="ex-sec"><h4>보기 분석</h4><div class="ex-ol">${q.o.map((o, k) => `<div class="ex-o ${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><span class="k">${NUM[k]}</span><div class="grow"><div class="ot">${esc(o)}${k === q.a ? '<em class="t ok">정답</em>' : ''}${k === pick && k !== q.a ? '<em class="t my">내 선택</em>' : ''}</div><div class="ow">${k === q.a ? '정답 보기 — 위 설명을 확인하세요' : hl(q.w[k] || '')}</div></div></div>`).join('')}</div></section>`;
+  h += `<div class="ex-foot">${q.c ? `<button class="ex-link" onclick="notePage('${unitKey(q)}',${q.id})">요약 노트 · ${esc(unitName(q))} <span>›</span></button>` : ''}${PDF_LINK && PDF_LINK !== '#' ? `<a class="ex-link" href="${PDF_LINK}" target="_blank" rel="noopener">${esc(C.short)} 정리본 PDF <span>›</span></a>` : ''}${qs && qs.t ? `<div class="ex-me">이 문제 ${qs.t}번 풀이 · 오답 ${qs.w}번</div>` : ''}</div></div>`;
   return h;
 }
 function drawQ() { markNav();
