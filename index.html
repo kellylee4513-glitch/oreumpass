@@ -387,6 +387,40 @@ button,a{touch-action:manipulation}
  .inkbar{gap:6px;padding:6px 8px 6px 12px}.inkbar span{display:none}
 }
 @media(max-width:360px){.rc-name{font-size:16px!important;white-space:nowrap}.rc-open{padding:3px 6px;font-size:11px}.h1{font-size:21px}.pad{padding-left:16px;padding-right:16px}.top{padding-left:16px;padding-right:16px}}
+.plan-c{background:radial-gradient(120% 120% at 0% 0%,#2A2D34 0%,#15171C 60%,#0B0C10 100%);color:#fff;border-radius:26px;padding:22px;margin-top:14px;position:relative;overflow:hidden}
+.plan-c:after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(243,210,122,.18),transparent 70%)}
+.pc-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pc-k{font-size:13px;font-weight:700;color:#C9A24A}.pc-t{font-size:19px;font-weight:800;margin-top:3px}
+.pc-r{position:relative;width:44px;height:44px;flex-shrink:0}.pc-r b{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;color:#F3D27A}
+.pc-list{margin:16px 0 14px;display:grid;gap:8px}
+.pc-i{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px 14px;font-size:15px;font-weight:700}
+.pc-i small{display:block;font-size:12px;color:#9AA3AE;font-weight:500;margin-top:2px}
+.pc-i b{font-size:20px;color:#F3D27A}
+.pc-i span.d1,.pc-i span.d2{font-size:10.5px;font-weight:800;letter-spacing:.06em;border-radius:7px;padding:4px 7px;flex-shrink:0}
+.pc-i .d1{background:#F3D27A;color:#15171C}.pc-i .d2{background:rgba(243,210,122,.16);color:#F3D27A}
+.pc-i.lk{opacity:.85}
+.pc-go{width:100%;height:52px;border-radius:15px;background:linear-gradient(180deg,#F6DC95,#D9A93E);color:#15171C;font-size:16px;font-weight:800}
+.why{background:#FFF7F0;border:1px solid #FFE0C7;border-radius:16px;padding:14px;margin-bottom:14px}
+.why .wl{font-size:14px;font-weight:800;color:#C2410C}.why .wl small{font-weight:500;color:#9A6B4F;margin-left:4px;font-size:12px}
+.why .wc{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.why .wc button{font-size:13px;font-weight:700;padding:8px 11px;border-radius:999px;background:#fff;border:1px solid #F5D0B5;color:#7C4A2D}
+.why .wc button.on{background:#EA580C;border-color:#EA580C;color:#fff}
+.whytip{margin-top:10px;background:#F2F4F6;border-radius:14px;padding:12px 14px;font-size:13.5px;line-height:1.6;color:var(--sub)}.whytip b{display:block;color:var(--text);margin-bottom:2px}
+.fc{perspective:1200px;margin-top:6px;cursor:pointer}
+.fc-in{position:relative;min-height:340px;transition:transform .5s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:26px;padding:26px 22px;display:flex;flex-direction:column}
+.fc-f{background:#fff;box-shadow:0 10px 30px rgba(20,40,80,.06)}
+.fc-b{background:radial-gradient(120% 120% at 0% 0%,#2A2D34,#0F1014);color:#fff;transform:rotateY(180deg)}
+.fc-tag{font-size:12px;font-weight:800;color:var(--blue);background:#E8F3FF;align-self:flex-start;border-radius:7px;padding:4px 8px}
+.fc-b .fc-tag{background:rgba(243,210,122,.16);color:#F3D27A}
+.fc-q{font-size:20px;font-weight:800;line-height:1.5;margin-top:16px;word-break:keep-all}
+.fc-hint{margin-top:auto;font-size:13px;color:var(--gray);text-align:center}
+.fc-a{font-size:18px;font-weight:800;margin-top:14px;line-height:1.5;color:#F6DC95}
+.fc-c{font-size:15.5px;line-height:1.75;margin-top:14px;color:#E5E8EB}
+.fc-meta{text-align:center;font-size:13px;color:var(--gray);margin-top:14px}
+@media(min-width:900px){.hgrid{grid-template-areas:"greet greet greet" "hero hero goal" "plan plan plan" "play play play" "rev rev rev" "ox ox pass" "info more more" "foot foot foot"}.b-plan{grid-area:plan}.g2b{grid-template-columns:repeat(3,1fr)!important}
+.plan-c{display:grid;grid-template-columns:1fr 1.4fr auto;align-items:center;gap:20px;padding:22px 26px}.pc-list{grid-template-columns:1fr 1fr;margin:0}.pc-go{width:auto;padding:0 26px}}
 .sgrid2{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:900px){.sgrid2{grid-template-columns:1fr 1fr}}
 .sc{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border-radius:22px;padding:18px;border:1.5px dashed #D9DEE4}
@@ -732,6 +766,7 @@ function record(s, ok, qid) {
   S.solved++; if (ok) S.correct++; S.subj[s].t++; if (ok) S.subj[s].c++;
   const k = dkey(); S.days[k] = (S.days[k] || 0) + 1;
   if (qid !== undefined && !S.seen.includes(qid)) S.seen.push(qid);
+  if (qid !== undefined) srsHit(qid, ok);
   if (S.days[k] >= S.goal && S.goalDone !== k) { S.goalDone = k; setTimeout(celebrate, 350); }
 }
 function celebrate() { const c = document.createElement('div'); c.className = 'confetti'; const col = ['#3182F6', '#FFB800', '#F04452', '#00C471', '#FF8A00']; for (let i = 0; i < 60; i++) { const e = document.createElement('i'); e.style.left = Math.random() * 100 + '%'; e.style.background = col[i % 5]; e.style.animationDelay = Math.random() * .5 + 's'; e.style.animationDuration = 1.2 + Math.random() + 's'; c.appendChild(e); } document.body.appendChild(c); setTimeout(() => c.remove(), 2800); toast('오늘 목표 ' + S.goal + '문제 달성! 🎉'); }
@@ -814,13 +849,14 @@ function home() {
       <div class="streak">${week.map(d => { const k = dkey(d), on = !!S.days[k], t = k === dkey(); return `<div><i class="${on ? 'on' : ''} ${t ? 'today' : ''}">${on ? IC.flame() : ''}</i>${'일월화수목금토'[d.getDay()]}</div>`; }).join('')}</div>
     </div></div>
 
+    <div class="b-plan">${planCard()}</div>
     <div class="b-play"><div class="sec">문제 풀기</div>
     <div class="grid2 g3">
       <button class="tile" onclick="startMock()"><span class="tag free">무료</span><div class="ico">${IC.exam()}</div><div class="t">실전 모의고사</div><div class="d">${Q.length}문항 · 실제 시험 시간 비율</div></button>
       <button class="tile" onclick="startQuick()"><span class="tag free">무료</span><div class="ico">${IC.quick()}</div><div class="t">빠른 10문제</div><div class="d">안 푼 문제부터 5분</div></button>
       ${subj}
     </div>
-    <div class="grid2 g2b"><button class="menu" onclick="setPage()"><div class="ico">${IC.sets()}</div><div class="grow"><div class="t">세트별 실전 문제</div><div class="d">${SET_N}문항씩 ${setsOf().length}세트 · 점수 기록</div></div><span class="chev">›</span></button><button class="menu" onclick="bankPage()"><div class="ico">${IC.bank()}</div><div class="grow"><div class="t">문제은행 검색</div><div class="d">전체 ${Q.length}문항 · 키워드·상태로 찾기</div></div><span class="chev">›</span></button></div></div>
+    <div class="grid2 g2b"><button class="menu" onclick="setPage()"><div class="ico">${IC.sets()}</div><div class="grow"><div class="t">세트별 실전 문제</div><div class="d">${SET_N}문항씩 ${setsOf().length}세트 · 점수 기록</div></div><span class="chev">›</span></button><button class="menu" onclick="bankPage()"><div class="ico">${IC.bank()}</div><div class="grow"><div class="t">문제은행 검색</div><div class="d">전체 ${Q.length}문항 · 키워드·상태로 찾기</div></div><span class="chev">›</span></button><button class="menu" onclick="cardPage()"><div class="ico">${IC.book()}</div><div class="grow"><div class="t">1분 개념 카드</div><div class="d">핵심 개념 ${Q.filter(q => q.c).length}장 · 뒤집어 외우기</div></div><span class="chev">›</span></button></div></div>
 
     <div class="b-rev"><div class="sec"><span>맞춤 복습<span class="pro">PRO</span></span></div>
     <div class="grid2 g3">
@@ -918,7 +954,7 @@ function drawQ() { markNav();
       ${M === 'exam' ? `<div class="qact"><button class="btn ghost" ${r.i === 0 ? 'disabled' : ''} onclick="goQ(${r.i - 1})">이전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음 문제' : '채점하기'}</button></div>` : M === 'open' ? `<div class="qact"><button class="btn ghost" ${r.i === 0 ? 'disabled' : ''} onclick="goQ(${r.i - 1})">이전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음 문제' : '끝내기'}</button></div>` : ''}
       ${M === 'explain' && st.done ? `<div class="qact"><button class="btn ghost" onclick="retryQ()">↺ 다시 도전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음으로' : '결과 보기'}</button></div>` : ''}
     </div>
-    <div class="xcard ${st.done || M === 'open' ? 'open' : ''}">${M === 'open' ? explainHTML(q, null) : M === 'exam' ? `<div class="xp-wait">${IC.exam()}<p>시험 모드예요<br>다 풀고 <b>채점하기</b>를 누르면<br>해설이 한꺼번에 열려요</p></div>` : st.done ? explainHTML(q, st.pick) : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
+    <div class="xcard ${st.done || M === 'open' ? 'open' : ''}">${M === 'open' ? explainHTML(q, null) : M === 'exam' ? `<div class="xp-wait">${IC.exam()}<p>시험 모드예요<br>다 풀고 <b>채점하기</b>를 누르면<br>해설이 한꺼번에 열려요</p></div>` : st.done ? (st.pick !== q.a ? whyHTML(q.id) : '') + explainHTML(q, st.pick) : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
   </div></div>`;
   document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove());
   if (r.pen) setTimeout(mountPen, 30);
@@ -1005,6 +1041,7 @@ function studyTab() { const rate = S.solved ? Math.round(S.correct / S.solved * 
     <div class="row"><div class="card"><div class="lbl">연속 학습</div><div class="val fl" style="justify-content:flex-start">${IC.flame()}${streak()}<small>일</small></div></div><div class="card"><div class="lbl">문제은행</div><div class="val">${S.seen.length}<small>/ ${Q.length}</small></div></div></div>
     <div class="sec">과목별 정답률</div>
     <div class="card">${SK.map(s => { const a = acc(s), o = S.subj[s]; return `<div class="bar"><span class="nm">${SUBJ[s]}${a !== null && a < T ? '<span class="weak">' + (a < M ? '과락' : T + ' 미만') + '</span>' : ''}</span><span class="tr"><i style="width:${a || 0}%;${a !== null && a < M ? 'background:var(--red)' : a !== null && a < T ? 'background:var(--orange)' : ''}"></i></span><span class="v">${a === null ? '-' : a + '%'}</span></div><div style="font-size:13px;color:var(--gray);margin:-6px 0 6px">${esc(SUBJ_FULL[s])} · ${o.c}/${o.t}</div>`; }).join('')}</div>
+    ${whyStatsHTML()}
     ${topWrongHTML()}
     <div class="sec">최근 풀이</div>
     <div class="card" style="padding:4px 20px">${S.hist.length ? S.hist.slice(0, 10).map(h => { const p = Math.round(h.s / h.t * 100); return `<div class="hist"><div class="grow"><div class="t">${esc(h.l)}</div><div class="d">${h.d.slice(5).replace('-', '.')} · ${h.t}문제${h.ms ? ' · ' + fmt(h.ms) : ''}</div></div><div class="s" style="color:${p >= T ? 'var(--blue)' : 'var(--red)'}">${p}점</div></div>`; }).join('') : `<div class="empty"><div class="e">${IC.climb()}</div>아직 기록이 없어요<br>문제를 풀면 여기에 쌓여요</div>`}</div>
@@ -1197,6 +1234,73 @@ window.addEventListener('popstate', () => {
   try { history.back(); } catch (e) {}
 });
 function onSub() { return !document.querySelector('.tabbar') || !!document.querySelector('.top .back'); }
+/* ===== 간격 반복(SRS) · 오늘의 학습 플랜 · 오답 원인 · 개념 카드 ===== */
+const SRS_INT = [1, 2, 4, 7, 15, 30];
+function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return dkey(d); }
+function srsHit(id, ok) { S.srs = S.srs || {}; const o = S.srs[id] || { b: 0, d: '' }; if (ok) { o.b = Math.min(o.b + (o.d ? 1 : 2), SRS_INT.length - 1); o.d = addDays(SRS_INT[o.b]); } else { o.b = 0; o.d = addDays(1); } S.srs[id] = o; }
+function dueIds() { const t = dkey(), m = S.srs || {}; return Object.keys(m).map(Number).filter(id => Q[id] && m[id].d && m[id].d <= t).sort((a, b) => m[a].b - m[b].b); }
+function planToday() {
+  const dd = dday(), remain = Q.length - S.seen.length;
+  const nNew = Math.min(remain, dd && dd > 0 ? Math.max(5, Math.ceil(remain / dd)) : S.goal);
+  const due = dueIds(); return { nNew, due, nDue: Math.min(due.length, 30), done: today() };
+}
+function planCard() {
+  const p = planToday(), pro = isPro(), target = p.nNew + (pro ? p.nDue : 0), pct = target ? Math.min(1, p.done / target) : 1;
+  return `<div class="plan-c">
+    <div class="pc-h"><div><div class="pc-k">오늘의 학습 플랜</div><div class="pc-t">${target ? `${target}문제면 오늘 할 일 끝` : '오늘 할 일을 다 했어요!'}</div></div><div class="pc-r"><svg viewBox="0 0 44 44" width="44" height="44"><circle cx="22" cy="22" r="18" stroke="rgba(255,255,255,.18)" stroke-width="5" fill="none"/><circle cx="22" cy="22" r="18" stroke="#F3D27A" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 18}" stroke-dashoffset="${2 * Math.PI * 18 * (1 - pct)}" transform="rotate(-90 22 22)"/></svg><b>${Math.round(pct * 100)}%</b></div></div>
+    <div class="pc-list">
+      <div class="pc-i"><span class="d1">NEW</span><div class="grow">새 문제<small>${S.exam ? '시험일까지 1회독 페이스' : '하루 목표 기준'}</small></div><b>${p.nNew}</b></div>
+      <div class="pc-i ${pro ? '' : 'lk'}"><span class="d2">복습</span><div class="grow">잊을 때쯤 다시 보기<small>틀린 문제는 1·2·4·7·15일 간격으로 돌아와요</small></div>${pro ? `<b>${p.nDue}</b>` : `<span class="tag pro">${IC.lock()} PRO</span>`}</div>
+    </div>
+    <button class="pc-go" onclick="startToday()">${p.done ? '이어서 학습하기' : '오늘 학습 시작'} →</button>
+  </div>`;
+}
+function startToday() {
+  const p = planToday(), pro = isPro();
+  const fresh = shuffle(pool(0).filter(q => !S.seen.includes(q.id))).slice(0, p.nNew);
+  const rev = pro ? p.due.slice(0, 30).map(id => Object.assign({ id }, Q[id])) : [];
+  let items = []; const a = rev.slice(), b = fresh.slice(); while (a.length || b.length) { if (a.length) items.push(a.shift()); if (b.length) items.push(b.shift()); if (b.length) items.push(b.shift()); }
+  if (!items.length) { items = shuffle(pool(0)).slice(0, 10); toast('오늘 할 일을 다 했어요. 보너스 10문제예요'); }
+  startQuiz(items, '오늘의 학습', 'explain');
+}
+
+/* 오답 원인 태그 */
+const WHY = [['concept', '개념을 몰랐어요'], ['confuse', '헷갈렸어요'], ['calc', '계산 실수'], ['read', '문제를 잘못 읽었어요']];
+function whyHTML(id) { const cur = (S.why || {})[id]; return `<div class="why"><div class="wl">왜 틀렸을까요? <small>골라 두면 약점 분석에 반영돼요</small></div><div class="wc">${WHY.map(([k, l]) => `<button class="${cur === k ? 'on' : ''}" onclick="setWhy(${id},'${k}')">${l}</button>`).join('')}</div></div>`; }
+function setWhy(id, k) { S.why = S.why || {}; S.why[id] = S.why[id] === k ? undefined : k; save(); const el = document.querySelector('.why'); if (el) el.outerHTML = whyHTML(id); }
+function whyStatsHTML() {
+  const w = S.why || {}, cnt = {}; Object.values(w).forEach(k => { if (k) cnt[k] = (cnt[k] || 0) + 1; }); const tot = Object.values(cnt).reduce((a, b) => a + b, 0);
+  const tip = { concept: '개념 카드로 기본기를 먼저 다져요. 오픈북 모드로 해설부터 읽는 것도 좋아요.', confuse: '비슷한 개념끼리 비교하는 연습이 필요해요. 오답노트의 보기별 함정 체크를 다시 보세요.', calc: '계산 문제는 공식만 외우면 끝나지 않아요. 세트별 문제로 손으로 직접 풀어 보세요.', read: '‘옳지 않은 것’, ‘모두 고르면’ 같은 조건에 펜 필기로 동그라미를 쳐 보세요.' };
+  if (!tot) return `<div class="sec">내가 틀리는 이유</div><div class="card"><div class="empty" style="padding:18px 0"><div class="e">${IC.target()}</div>문제를 틀렸을 때 이유를 골라 두면<br>나만의 약점 분석이 만들어져요</div></div>`;
+  const top = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0];
+  return `<div class="sec">내가 틀리는 이유</div><div class="card">${WHY.map(([k, l]) => { const p = Math.round((cnt[k] || 0) / tot * 100); return `<div class="bar"><span class="nm" style="width:120px">${l}</span><span class="tr"><i style="width:${p}%;${k === top ? '' : 'background:#B0B8C1'}"></i></span><span class="v">${cnt[k] || 0}</span></div>`; }).join('')}<div class="whytip"><b>더오를 처방</b>${tip[top]}</div></div>`;
+}
+
+/* 1분 개념 카드 */
+let CD = null;
+function cardPage() {
+  const deck = pool(0).filter(q => q.c); if (!deck.length) { toast('개념 카드가 아직 없어요'); return; }
+  const known = S.cardOk || [], order = deck.filter(q => !known.includes(q.id)).concat(deck.filter(q => known.includes(q.id)));
+  CD = { deck: order, i: 0, flip: false }; drawCard();
+}
+function drawCard() {
+  markNav(); window.scrollTo(0, 0); $app.classList.remove('wide');
+  const q = CD.deck[CD.i], n = CD.deck.length, known = (S.cardOk || []).length;
+  $app.innerHTML = topBar('1분 개념 카드', `<span class="tcount">${CD.i + 1} / ${n}</span>`) + `<div class="pad">
+    <div class="prog"><i style="width:${(CD.i + 1) / n * 100}%"></i></div>
+    <div class="fc ${CD.flip ? 'flip' : ''}" onclick="CD.flip=!CD.flip;drawCard()">
+      <div class="fc-in">
+        <div class="fc-f"><div class="fc-tag">${SUBJ[q.s]} · ${esc(q.sec || SUBJ_SHORT[q.s])}</div><div class="fc-q">${esc(q.q.split('\n')[0])}</div><div class="fc-hint">탭해서 핵심 개념 보기</div></div>
+        <div class="fc-b"><div class="fc-tag">정답 ${NUM[q.a]}</div><div class="fc-a">${esc(q.o[q.a])}</div><div class="fc-c">${esc(q.c)}</div></div>
+      </div>
+    </div>
+    <div class="fc-meta">외운 카드 ${known} / ${CD.deck.length}</div>
+  </div>`;
+  bottom(CD.flip ? `<button class="btn ghost" onclick="cardNext(false)">다시 볼래요</button><button class="btn" onclick="cardNext(true)">알았어요</button>` : `<button class="btn" onclick="CD.flip=true;drawCard()">개념 보기</button>`);
+}
+function cardNext(ok) { const id = CD.deck[CD.i].id; S.cardOk = S.cardOk || []; if (ok && !S.cardOk.includes(id)) S.cardOk.push(id); if (!ok) S.cardOk = S.cardOk.filter(x => x !== id); save();
+  if (CD.i + 1 < CD.deck.length) { CD.i++; CD.flip = false; drawCard(); } else { toast(`카드 ${CD.deck.length}장을 다 봤어요`); CD = null; go('home'); } }
+
 /* ===== 시트 ===== */
 function openSheet(html) { markNav(); const sh = document.getElementById('sheet'); sh.innerHTML = '<div class="grab"></div>' + html; document.getElementById('dim').classList.add('show'); sh.classList.add('show'); }
 function closeSheet() { document.getElementById('dim').classList.remove('show'); document.getElementById('sheet').classList.remove('show'); }
