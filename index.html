@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>더오름패스 · 자격증 CBT</title>
+<title>더오를패스 · 자격증 CBT</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -11,8 +11,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="더오름패스">
-<meta name="description" content="더오름패스 자격증 CBT: 투자자산운용사 등 자격증 문제 풀이, OX 선지 퀴즈, 오답노트">
+<meta name="apple-mobile-web-app-title" content="더오를패스">
+<meta name="description" content="더오를패스 자격증 CBT: 투자자산운용사 등 자격증 문제 풀이, OX 선지 퀴즈, 오답노트">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
@@ -441,7 +441,7 @@ function bookArt(){return `<svg viewBox="0 0 70 88" width="58" height="73"><defs
   <linearGradient id="bk2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0F3E91"/><stop offset="1" stop-color="#1B5FD6"/></linearGradient></defs>
   <rect x="10" y="6" width="58" height="80" rx="4" fill="#E8EBED"/><rect x="6" y="3" width="58" height="80" rx="4" fill="url(#bk1)"/><rect x="6" y="3" width="8" height="80" rx="3" fill="url(#bk2)"/>
   <path d="M22 62 L36 44 L42 51 L49 41 L60 62Z" fill="#fff" opacity=".9"/><rect x="40.5" y="30" width="1.6" height="12" fill="#fff"/><path d="M42 30.5l7 2.4-7 2.6z" fill="#FFB648"/>
-  <text x="37" y="18" text-anchor="middle" font-size="7.5" font-weight="800" fill="#fff" font-family="-apple-system,sans-serif">더오름</text>
+  <text x="37" y="18" text-anchor="middle" font-size="7.5" font-weight="800" fill="#fff" font-family="-apple-system,sans-serif">더오를</text>
   <text x="37" y="27" text-anchor="middle" font-size="6" font-weight="700" fill="#fff" opacity=".85" font-family="-apple-system,sans-serif">핵심 정리본</text>
   <rect x="20" y="70" width="34" height="7" rx="3.5" fill="#fff" opacity=".22"/><text x="37" y="75.4" text-anchor="middle" font-size="5" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">투자자산운용사</text></svg>`;}
 
@@ -516,7 +516,7 @@ function tabbar() { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.
 function topBar(title, right, backFn) { return `<div class="top"><button class="back" onclick="${backFn || 'go(tab)'}" aria-label="뒤로"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#191F28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="ttl">${title}</div><div class="right" id="tr">${right || ''}</div></div>`; }
 function go(t) { stopTimer(); run = null; $app.classList.remove('wide'); if (t === 'note' && !isPro()) { paywall('wrong'); return; } tab = t; window.scrollTo(0, 0); ({ home, study: studyTab, note: wrongNote, my: myTab })[t](); }
 const lockTag = () => `<span class="tag pro">${IC.lock()} PRO</span>`;
-function brandBar() { return `<div class="top"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()"><b>더오름<em>패스</em></b></div><button class="switch" onclick="certPicker()">${badge(C, 22)}<span>${esc(C.short)}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`; }
+function brandBar() { return `<div class="top"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()"><b>더오를<em>패스</em></b></div><button class="switch" onclick="certPicker()">${badge(C, 22)}<span>${esc(C.short)}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`; }
 
 /* ===== 자격증 선택 (첫 화면) ===== */
 function certPicker(first) {
@@ -529,12 +529,12 @@ function certPicker(first) {
       ${seen ? `<div class="rc-bar"><i style="width:${pct}%"></i></div><div class="rc-go">${seen}문제 풀었어요 · 이어서 풀기 →</div>` : `<div class="rc-go">무료로 시작하기 →</div>`}
     </button>`; };
   const tile = c => `<button class="st" onclick="toast('${esc(c.name)} 문제를 준비하고 있어요')">${badge(c, 40)}<span>${esc(c.short)}</span><em>${esc(c.cat)}</em></button>`;
-  $app.innerHTML = `<div class="top ftop"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()"><b>더오름<em>패스</em></b></div>${first ? '' : `<button class="back-x" onclick="go(tab)">닫기</button>`}</div>
+  $app.innerHTML = `<div class="top ftop"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()"><b>더오를<em>패스</em></b></div>${first ? '' : `<button class="back-x" onclick="go(tab)">닫기</button>`}</div>
   <div class="pad fwrap">
     <section class="fhero">
       <div class="fh-art"><img src="icon-512.png" alt="" onerror="this.remove()"></div>
-      <div class="fh-k">자격증 CBT · 더오름패스</div>
-      <h1>자격증 합격까지<br>한 문제씩 <em>더 오름</em></h1>
+      <div class="fh-k">자격증 CBT · 더오를패스</div>
+      <h1>한 문제씩 <em>더 오를</em><br>자격증 합격까지</h1>
       <p>실제 시험처럼 풀고, 틀린 문제만 골라 다시 올라가요.</p>
       <div class="fh-stats"><div><b>${READY.length}</b><span>열린 자격증</span></div><div><b>${totalQ}</b><span>문항</span></div><div><b>100%</b><span>해설 포함</span></div></div>
       <ul class="fh-pt"><li>${IC.exam()}<span>실전 시간 그대로 모의고사</span></li><li>${IC.target()}<span>합격선·과락선 기준 실력 진단</span></li><li>${IC.note()}<span>틀린 문제만 모으는 복습노트</span></li></ul>
@@ -543,8 +543,8 @@ function certPicker(first) {
       <div class="fl-h">${first ? '어떤 자격증을 준비하나요?' : '공부할 자격증을 골라 주세요'}</div>
       ${READY.map(big).join('')}
       ${SOON.length ? `<div class="fl-h sm">곧 열려요 <span>${SOON.length}개</span></div><div class="sgrid">${SOON.map(tile).join('')}</div>` : ''}
-      ${G.passAll ? '' : `<button class="allpass" onclick="paywall('all')"><div class="ap-ic">${IC.trophy()}</div><div class="grow"><div class="t">더오름패스 ALL</div><div class="d">모든 자격증 PRO · 새 자격증도 자동 포함</div></div><span class="go">${won(ALL_PRICE)}</span></button>`}
-      <div class="foot">문제는 출제 논점을 바탕으로 더오름이 직접 만든 문항이에요.</div>
+      ${G.passAll ? '' : `<button class="allpass" onclick="paywall('all')"><div class="ap-ic">${IC.trophy()}</div><div class="grow"><div class="t">더오를패스 ALL</div><div class="d">모든 자격증 PRO · 새 자격증도 자동 포함</div></div><span class="go">${won(ALL_PRICE)}</span></button>`}
+      <div class="foot">문제는 출제 논점을 바탕으로 더오를이 직접 만든 문항이에요.</div>
     </section>
   </div>`;
   bottom('');
@@ -558,7 +558,7 @@ function home() {
   const wk = weakest(), pro = isPro();
   $app.innerHTML = brandBar() + `
   <div class="pad">
-    <div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 자격증 합격까지<br>오늘도 한 문제 <em>더 오름!</em></div>
+    <div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 자격증 합격까지<br>오늘도 한 계단 <em>더 오를</em> 차례!</div>
     ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div><span class="x" onclick="event.stopPropagation();G.installHidden=true;save();home()">✕</span></button>` : ''}
     <div class="hero">
       ${heroArt(seen / Q.length)}
@@ -606,8 +606,8 @@ function home() {
 
     <button class="menu" onclick="certPicker()" style="margin-top:20px"><div class="ico">${IC.cert()}</div><div class="grow"><div class="t">다른 자격증도 준비 중이에요?</div><div class="d">${READY.length + SOON.length}개 자격증 · 기록은 자격증별로 따로 저장돼요</div></div><span class="chev">›</span></button>
 
-    <a class="promo" href="${PDF_LINK}" target="_blank" rel="noopener">${bookArt()}<div class="grow"><div class="t">헷갈리는 개념은 정리본으로</div><div class="d">시험에 나오는 수치·공식만 모은<br>더오름 ${esc(C.short)} 핵심 정리본 PDF</div></div><span class="chev" style="color:#6B7684">›</span></a>
-    <div class="foot">더오름패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>
+    <a class="promo" href="${PDF_LINK}" target="_blank" rel="noopener">${bookArt()}<div class="grow"><div class="t">헷갈리는 개념은 정리본으로</div><div class="d">시험에 나오는 수치·공식만 모은<br>더오를 ${esc(C.short)} 핵심 정리본 PDF</div></div><span class="chev" style="color:#6B7684">›</span></a>
+    <div class="foot">더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>
   </div>`;
   tabbar();
 }
@@ -677,7 +677,7 @@ function drawQ() {
       ${q.o.map((o, k) => `<button class="opt ${cls(k)}" ${st.done ? 'disabled' : ''} onclick="answer(${k})"><span class="num">${k + 1}</span><span>${esc(o)}</span></button>`).join('')}
       ${st.done ? `<div class="qact"><button class="btn ghost" onclick="retryQ()">↺ 다시 도전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음으로' : '결과 보기'}</button></div>` : ''}
     </div>
-    <div class="xcard ${st.done ? 'open' : ''}">${st.done ? explainHTML(q, st.pick) : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오름 해설이 펼쳐져요</p></div>`}</div>
+    <div class="xcard ${st.done ? 'open' : ''}">${st.done ? explainHTML(q, st.pick) : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
   </div></div>`;
   document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove());
   if (st.done && window.innerWidth < 900) { const x = document.querySelector('.xcard'); if (x) setTimeout(() => x.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120); }
@@ -692,8 +692,8 @@ function finishQuiz() { const r = run; if (!r.st.some(x => x.done)) { toast('먼
   r.items = done.map(x => x.q); r.score = done.filter(x => x.st.pick === x.q.a).length; r.wrongIds = done.filter(x => x.st.pick !== x.q.a).map(x => x.q.id); result(); }
 function jumpSheet() { const r = run; openSheet(`<h3>번호판</h3><div class="p">초록 맞힘 · 빨강 틀림 · 회색 아직</div><div class="jump">${r.items.map((q, i) => { const st = r.st[i]; return `<button class="${!st.done ? '' : st.pick === q.a ? 'ok' : 'no'} ${i === r.i ? 'cur' : ''}" onclick="closeSheet();goQ(${i})">${i + 1}</button>`; }).join('')}</div>`); }
 function reportSheet(id) { const q = Q[id]; openSheet(`<h3>문제 제보</h3><div class="p">틀린 내용이나 바뀐 법령을 알려 주세요</div><textarea class="field memo" id="rp" style="height:110px;padding:12px" placeholder="예) 2번 보기의 세율이 2026년 기준과 달라요"></textarea>
-  <button class="btn" style="width:100%" onclick="copyReport(${id})">제보 내용 복사하기</button><div class="note">복사한 내용을 더오름 카카오톡 채널이나 이메일로 보내 주세요 (연락처는 출시 때 연결돼요)</div>`); }
-function copyReport(id) { const t = `[더오름패스 문제 제보] ${C.name} / ${SUBJ[Q[id].s]} / ${Q[id].q.split('\n')[0].slice(0, 40)}…\n${document.getElementById('rp').value}`; try { navigator.clipboard.writeText(t).then(() => { toast('복사했어요'); closeSheet(); }, () => toast('복사가 안 돼요. 직접 적어 보내 주세요')); } catch (e) { toast('복사가 안 돼요. 직접 적어 보내 주세요'); } }
+  <button class="btn" style="width:100%" onclick="copyReport(${id})">제보 내용 복사하기</button><div class="note">복사한 내용을 더오를 카카오톡 채널이나 이메일로 보내 주세요 (연락처는 출시 때 연결돼요)</div>`); }
+function copyReport(id) { const t = `[더오를패스 문제 제보] ${C.name} / ${SUBJ[Q[id].s]} / ${Q[id].q.split('\n')[0].slice(0, 40)}…\n${document.getElementById('rp').value}`; try { navigator.clipboard.writeText(t).then(() => { toast('복사했어요'); closeSheet(); }, () => toast('복사가 안 돼요. 직접 적어 보내 주세요')); } catch (e) { toast('복사가 안 돼요. 직접 적어 보내 주세요'); } }
 let quitArm = false;
 function quitQuiz() { if (run && (run.st ? run.st.some(x => x.done) : true) && !quitArm) { quitArm = true; toast('한 번 더 누르면 나가요'); setTimeout(() => quitArm = false, 2000); return; } quitArm = false; $app.classList.remove('wide'); go(tab); }
 
@@ -783,8 +783,8 @@ function wrongNote() {
 function myTab() {
   const mine = READY.filter(c => G.passAll || G.passCerts.includes(c.id));
   $app.innerHTML = `<div class="top"><div class="ttl">내 정보</div></div><div class="pad">
-    <div class="card prof"><div class="av">${IC.user()}</div><div class="grow"><div style="font-size:18px;font-weight:800">${G.name ? esc(G.name) : '수험생'}님</div><div style="font-size:14px;color:var(--gray);margin-top:3px">${G.passAll ? '더오름패스 ALL 이용 중' : mine.length ? mine.map(c => c.short).join('·') + ' PRO 이용 중' : '무료 이용 중'}</div></div><button class="tag free" onclick="nameSheet()">이름 변경</button></div>
-    ${G.passAll ? '' : `<button class="upsell" onclick="paywall('all')"><div class="deco">${IC.trophy()}</div><div class="t">더오름패스 ALL</div><div class="d">지금 있는 자격증과 앞으로 추가될 자격증 PRO 전부</div><span class="go">${won(ALL_PRICE)}에 시작하기</span></button>`}
+    <div class="card prof"><div class="av">${IC.user()}</div><div class="grow"><div style="font-size:18px;font-weight:800">${G.name ? esc(G.name) : '수험생'}님</div><div style="font-size:14px;color:var(--gray);margin-top:3px">${G.passAll ? '더오를패스 ALL 이용 중' : mine.length ? mine.map(c => c.short).join('·') + ' PRO 이용 중' : '무료 이용 중'}</div></div><button class="tag free" onclick="nameSheet()">이름 변경</button></div>
+    ${G.passAll ? '' : `<button class="upsell" onclick="paywall('all')"><div class="deco">${IC.trophy()}</div><div class="t">더오를패스 ALL</div><div class="d">지금 있는 자격증과 앞으로 추가될 자격증 PRO 전부</div><span class="go">${won(ALL_PRICE)}에 시작하기</span></button>`}
     <div class="sec" style="margin-top:6px">${esc(C.short)} 설정</div>
     <div class="card list" style="padding:4px 20px">
       <button class="li" onclick="certPicker()"><span class="ico">${badge(C, 32)}</span>공부 중인 자격증<span class="r">${esc(C.name)} ›</span></button>
@@ -796,7 +796,7 @@ function myTab() {
       <button class="li" onclick="installGuide()"><span class="ico">${IC.phone()}</span>홈 화면에 추가<span class="r">›</span></button>
       <button class="li" onclick="resetAll()" style="color:var(--red)"><span class="ico"></span>${esc(C.short)} 학습 기록 초기화</button>
     </div>
-    <div class="foot">더오름패스 · 자격증 CBT (시제품)<br>문제는 기출 원문이 아니라 출제 포인트를 바탕으로 직접 만든 문항입니다.<br>학습 기록은 이 브라우저에 자격증별로 저장돼요.</div>
+    <div class="foot">더오를패스 · 자격증 CBT (시제품)<br>문제는 기출 원문이 아니라 출제 포인트를 바탕으로 직접 만든 문항입니다.<br>학습 기록은 이 브라우저에 자격증별로 저장돼요.</div>
   </div>`; tabbar(); }
 let resetArm = false;
 function resetAll() { if (!resetArm) { resetArm = true; toast('한 번 더 누르면 ' + C.short + ' 기록이 초기화돼요'); setTimeout(() => resetArm = false, 2500); return; } G.data[C.id] = blankCert(); useCert(C.id); save(); resetArm = false; toast('기록을 초기화했어요'); go('home'); }
@@ -830,16 +830,16 @@ function installGuide() { if (deferredPrompt) { deferredPrompt.prompt(); deferre
 let payPick = 'all';
 function paywall(kind) { afterPay = kind; payPick = kind === 'all' ? 'all' : (G.passCerts.includes(C.id) ? 'all' : 'one'); drawPay(); }
 function drawPay() { const one = kind => `<button class="plan ${payPick === kind ? 'on' : ''}" onclick="payPick='${kind}';drawPay()">`;
-  openSheet(`<h3>틀린 문제만 골라서<br>자격증 합격까지 빠르게</h3><div class="p">더오름패스 PRO로 합격선까지 약점을 집중 복습하세요</div>
+  openSheet(`<h3>틀린 문제만 골라서<br>자격증 합격까지 빠르게</h3><div class="p">더오를패스 PRO로 합격선까지 약점을 집중 복습하세요</div>
     <div class="feat"><span class="fi">${IC.note()}</span><span>오답노트 자동 정리<small>틀린 문제만 다시 풀고, 맞히면 빠져요</small></span></div>
     <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈<small>선지를 쪼개서 개념을 확실하게</small></span></div>
     <div class="feat"><span class="fi">${IC.target()}</span><span>약점 과목 집중 · 별표 문제<small>정답률 낮은 과목부터 자동으로</small></span></div>
     <div style="height:10px"></div>
     ${G.passCerts.includes(C.id) ? '' : `${one('one')}<span class="rd"></span><div class="grow"><div class="t">${esc(C.short)} PRO</div><div class="d">${esc(C.name)} 시험일까지</div></div><div class="pr">${won(C.price)}</div></button>`}
-    ${one('all')}<span class="rd"></span><div class="grow"><div class="t">더오름패스 ALL <span class="best">추천</span></div><div class="d">모든 자격증 PRO · 새 자격증도 자동 포함</div></div><div class="pr"><s>${won(ALL_LIST)}</s>${won(ALL_PRICE)}</div></button>
+    ${one('all')}<span class="rd"></span><div class="grow"><div class="t">더오를패스 ALL <span class="best">추천</span></div><div class="d">모든 자격증 PRO · 새 자격증도 자동 포함</div></div><div class="pr"><s>${won(ALL_LIST)}</s>${won(ALL_PRICE)}</div></button>
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payPick === 'all' ? won(ALL_PRICE) : won(C.price)} 결제하기</button>
     <div class="note">시제품이라 실제 결제는 되지 않고 바로 잠금이 풀려요</div>`); }
-function buy() { if (payPick === 'all') G.passAll = true; else if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id); save(); closeSheet(); toast((payPick === 'all' ? '더오름패스 ALL' : C.short + ' PRO') + '가 열렸어요 🎉');
+function buy() { if (payPick === 'all') G.passAll = true; else if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id); save(); closeSheet(); toast((payPick === 'all' ? '더오를패스 ALL' : C.short + ' PRO') + '가 열렸어요 🎉');
   setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'all') go(tab); else { tab = 'note'; go('note'); } }, 300); }
 
 /* ===== 시작 ===== */

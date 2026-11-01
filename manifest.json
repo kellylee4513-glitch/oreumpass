@@ -1,7 +1,7 @@
 {
-  "name": "더오름패스 · 자격증 CBT",
-  "short_name": "더오름패스",
-  "description": "더오름패스 자격증 CBT 문제 풀이, OX 선지 퀴즈, 오답노트",
+  "name": "더오를패스 · 자격증 CBT",
+  "short_name": "더오를패스",
+  "description": "더오를패스 자격증 CBT 문제 풀이, OX 선지 퀴즈, 오답노트",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
