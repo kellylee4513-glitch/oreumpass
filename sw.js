@@ -1,5 +1,5 @@
 /* 더오름패스 서비스 워커: 앱 화면과 문제 파일을 저장해 두고 빠르게(오프라인에서도) 열기 */
-const CACHE = 'oreumpass-v2';
+const CACHE = 'oreumpass-v3';
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './certs/catalog.js', './certs/tuunsa.js'];
 
 self.addEventListener('install', e => {

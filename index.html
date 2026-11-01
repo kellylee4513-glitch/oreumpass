@@ -208,7 +208,7 @@ textarea.memo{width:100%;min-height:70px;border:1px solid #F0D68A;background:#FF
 .sheet{visibility:hidden}.sheet.show{visibility:visible}
 .ftop .back-x{font-size:14px;font-weight:700;color:var(--sub);background:var(--card);padding:8px 12px;border-radius:999px}
 .fwrap{display:grid;gap:16px}
-@media(min-width:900px){.fwrap{grid-template-columns:420px 1fr;gap:28px;align-items:start}.fhero{position:sticky;top:72px}}
+@media(min-width:900px){.fwrap{grid-template-columns:420px 1fr;gap:28px;align-items:start;padding-top:8px}.fhero{position:sticky!important;top:64px}.flist .fl-h:first-child{margin-top:0}}
 .fhero{position:relative;overflow:hidden;border-radius:28px;padding:26px 24px 22px;color:#fff;background:radial-gradient(120% 90% at 20% 0%,#2A4A8A 0%,#13295A 55%,#0B1A3D 100%)}
 .fhero:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.35) 1px,transparent 1.5px);background-size:22px 22px;opacity:.25;pointer-events:none}
 .fh-art{position:absolute;right:-18px;top:-10px;width:150px;height:150px;transform:rotate(10deg);opacity:.95}
@@ -225,6 +225,8 @@ textarea.memo{width:100%;min-height:70px;border:1px solid #F0D68A;background:#FF
 .fh-pt li{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border-radius:12px;padding:8px 10px}
 .fh-pt li svg{width:26px;height:26px;flex-shrink:0}
 @media(max-width:899px){.fh-pt{display:none}.fh-art{width:108px;height:108px;right:-16px;top:-16px}.fhero h1{font-size:26px}.fhero p{max-width:230px}.fh-stats{margin-bottom:0}}
+@media(max-width:600px){.st:after{display:none}}
+.cicon{display:inline-block;flex-shrink:0;border-radius:28%;box-shadow:0 4px 12px rgba(0,0,0,.08)}.cicon svg{display:block}
 .fl-h{font-size:19px;font-weight:800;margin:4px 2px 12px}
 .fl-h.sm{font-size:16px;margin-top:24px;display:flex;align-items:center;gap:6px}.fl-h span{font-size:13px;color:var(--gray);font-weight:600}
 .rc{display:block;width:100%;text-align:left;background:var(--card);border-radius:24px;padding:20px;margin-bottom:12px;border:2px solid transparent;box-shadow:0 1px 0 rgba(0,0,0,.02);transition:transform .12s,border-color .12s}
@@ -240,8 +242,8 @@ textarea.memo{width:100%;min-height:70px;border:1px solid #F0D68A;background:#FF
 .rc-go{font-size:15px;font-weight:800;color:var(--blue)}
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 @media(min-width:900px){.sgrid{grid-template-columns:repeat(4,1fr)}}
-.st{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border-radius:18px;padding:14px 4px 12px;opacity:.75}
-.st .cb{filter:saturate(.75)}
+.st{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);border-radius:18px;padding:16px 4px 12px;position:relative}
+.st .cicon{filter:saturate(.85);opacity:.9}.st:after{content:"준비 중";position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;color:var(--gray);background:var(--bg);border-radius:6px;padding:1px 5px}
 .st span{font-size:13px;font-weight:700;color:var(--sub)}.st em{font-style:normal;font-size:11px;color:var(--gray)}
 .allpass{margin-top:16px}
 .ap-ic{width:40px;height:40px;flex-shrink:0}.ap-ic svg{width:100%;height:100%}
@@ -445,6 +447,25 @@ function bookArt(){return `<svg viewBox="0 0 70 88" width="58" height="73"><defs
   <text x="37" y="27" text-anchor="middle" font-size="6" font-weight="700" fill="#fff" opacity=".85" font-family="-apple-system,sans-serif">핵심 정리본</text>
   <rect x="20" y="70" width="34" height="7" rx="3.5" fill="#fff" opacity=".22"/><text x="37" y="75.4" text-anchor="middle" font-size="5" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">투자자산운용사</text></svg>`;}
 
+/* ===== 자격증별 일러스트 아이콘 ===== */
+const CERT_GLYPH = {
+  tuunsa: `<rect x="11" y="27" width="5.5" height="10" rx="1.6" fill="#fff" opacity=".7"/><rect x="19.5" y="21" width="5.5" height="16" rx="1.6" fill="#fff" opacity=".85"/><rect x="28" y="15" width="5.5" height="22" rx="1.6" fill="#fff"/><path d="M10 22l9-7 6 4 11-9" fill="none" stroke="#FFD54F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M31.5 9.5h5v5" fill="none" stroke="#FFD54F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`,
+  fund: `<path d="M23 11a13 13 0 1013 13H23z" fill="#fff" opacity=".9"/><path d="M26 8a13 13 0 0113 13H26z" fill="#FFD54F"/><circle cx="23" cy="24" r="4" fill="none" stroke="#fff" stroke-width="0" />`,
+  stock: `<line x1="15" y1="10" x2="15" y2="36" stroke="#fff" stroke-width="2" opacity=".7"/><rect x="11.5" y="15" width="7" height="13" rx="1.5" fill="#fff" opacity=".75"/><line x1="25" y1="9" x2="25" y2="33" stroke="#fff" stroke-width="2"/><rect x="21.5" y="13" width="7" height="14" rx="1.5" fill="#FFD54F"/><line x1="35" y1="14" x2="35" y2="38" stroke="#fff" stroke-width="2" opacity=".85"/><rect x="31.5" y="19" width="7" height="12" rx="1.5" fill="#fff"/>`,
+  deriv: `<path d="M9 31h14l14-16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 17l14 14" fill="none" stroke="#FFD54F" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1 5.5"/><circle cx="23" cy="31" r="3" fill="#FFD54F"/><path d="M31 13h7v7" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  analyst: `<rect x="10" y="25" width="5" height="10" rx="1.4" fill="#fff" opacity=".7"/><rect x="17.5" y="19" width="5" height="16" rx="1.4" fill="#fff" opacity=".85"/><circle cx="29" cy="20" r="8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="29" cy="20" r="4.5" fill="#FFD54F" opacity=".9"/><path d="M34.5 26l5 5" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>`,
+  history: `<path d="M7 21c6 0 10-6 17-6s11 6 17 6l-2 3c-5 0-9-3-15-3s-10 3-15 3z" fill="#fff"/><rect x="13" y="24" width="22" height="3" rx="1" fill="#FFD54F"/><rect x="15" y="27" width="3" height="10" rx="1" fill="#fff" opacity=".85"/><rect x="30" y="27" width="3" height="10" rx="1" fill="#fff" opacity=".85"/><rect x="21" y="29" width="6" height="8" rx="1" fill="#fff" opacity=".6"/>`,
+  comp: `<rect x="9" y="11" width="30" height="26" rx="4" fill="#fff"/><path d="M9 18h30M9 25h30M9 32h30M19 11v26M29 11v26" stroke="currentColor" stroke-width="1.6" opacity=".35"/><rect x="19" y="18" width="10" height="7" fill="#FFD54F"/><path d="M33 33l5 5" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+  adsp: `<path d="M14 32L22 16 34 22 30 34z" fill="none" stroke="#fff" stroke-width="2" opacity=".7"/><circle cx="14" cy="32" r="4" fill="#fff"/><circle cx="22" cy="16" r="4.5" fill="#FFD54F"/><circle cx="34" cy="22" r="4" fill="#fff"/><circle cx="30" cy="34" r="3.2" fill="#fff" opacity=".85"/>`,
+  sqld: `<ellipse cx="24" cy="14" rx="12" ry="4.5" fill="#fff"/><path d="M12 14v20c0 2.5 5.4 4.5 12 4.5S36 36.5 36 34V14" fill="#fff" opacity=".75"/><path d="M12 22c0 2.5 5.4 4.5 12 4.5S36 24.5 36 22M12 29c0 2.5 5.4 4.5 12 4.5S36 31.5 36 29" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".45"/><circle cx="31" cy="31" r="3" fill="#FFD54F"/>`
+};
+function shade(hex, t) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255; const f = v => Math.round(t > 0 ? v + (255 - v) * t : v * (1 + t)); return '#' + [f(r), f(g), f(b)].map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join(''); }
+function certIcon(c, size) {
+  size = size || 44; const id = 'ci' + (++_gid), glyph = CERT_GLYPH[c.ic || c.id];
+  if (!glyph) return `<span class="cb" style="width:${size}px;height:${size}px;background:${c.color};font-size:${size * .3}px">${c.short}</span>`;
+  return `<span class="cicon" style="width:${size}px;height:${size}px;color:${shade(c.color, -.35)}"><svg viewBox="0 0 48 48" width="${size}" height="${size}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(c.color, .25)}"/><stop offset="1" stop-color="${shade(c.color, -.22)}"/></linearGradient><radialGradient id="${id}h" cx=".25" cy=".15" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="48" height="48" rx="14" fill="url(#${id})"/><rect width="48" height="48" rx="14" fill="url(#${id}h)"/>${glyph}</svg></span>`;
+}
+
 </script>
 <script src="certs/catalog.js"></script>
 <script src="certs/tuunsa.js"></script>
@@ -505,7 +526,7 @@ function record(s, ok, qid) {
   if (S.days[k] >= S.goal && S.goalDone !== k) { S.goalDone = k; setTimeout(celebrate, 350); }
 }
 function celebrate() { const c = document.createElement('div'); c.className = 'confetti'; const col = ['#3182F6', '#FFB800', '#F04452', '#00C471', '#FF8A00']; for (let i = 0; i < 60; i++) { const e = document.createElement('i'); e.style.left = Math.random() * 100 + '%'; e.style.background = col[i % 5]; e.style.animationDelay = Math.random() * .5 + 's'; e.style.animationDuration = 1.2 + Math.random() + 's'; c.appendChild(e); } document.body.appendChild(c); setTimeout(() => c.remove(), 2800); toast('오늘 목표 ' + S.goal + '문제 달성! 🎉'); }
-function badge(c, size) { size = size || 44; const fs = c.short.length > 3 ? size * .26 : size * .32; return `<span class="cb" style="width:${size}px;height:${size}px;background:${c.color};font-size:${fs}px">${esc(c.short)}</span>`; }
+function badge(c, size) { return certIcon(c, size || 44); }
 
 function bottom(html) { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); if (!html) return; const b = document.createElement('div'); b.className = 'bottom'; b.innerHTML = '<div class="wrap">' + html + '</div>'; document.body.appendChild(b); }
 const TI = { home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.3 2.6a1 1 0 011.4 0l8.5 8a1 1 0 01-.7 1.7H19v8a1.7 1.7 0 01-1.7 1.7h-3.1v-5.5h-4.4V22H6.7A1.7 1.7 0 015 20.3v-8H3.5a1 1 0 01-.7-1.7z"/></svg>',
