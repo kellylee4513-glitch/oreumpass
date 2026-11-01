@@ -261,19 +261,45 @@ textarea.memo{width:100%;min-height:70px;border:1px solid #F0D68A;background:#FF
 .rc-n{font-size:13px;color:var(--gray)}.rc-n b{color:var(--text)}
 .rc-cta{font-size:14px;font-weight:800;color:#F6DC95;background:linear-gradient(180deg,#2A2D34,#0F1014);border-radius:12px;padding:10px 14px;flex-shrink:0}
 @media(max-width:600px){.rc-cat{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}.rc-foot{flex-direction:column;align-items:stretch}.rc-cta{text-align:center;padding:13px}}
-.donly{display:none}
+
+.side-logo,.dsec{display:none}
+.mt{margin-bottom:10px}
 @media(min-width:900px){
-.donly{display:block}
-.hwrap{display:grid;grid-template-columns:400px 1fr;gap:32px;align-items:start;padding-bottom:120px}
-.monly{display:none}
-.hl .h1{font-size:26px}
-.hr>.sec:first-child{margin-top:8px}
-.hr .grid2{grid-template-columns:repeat(2,1fr);gap:12px}
-.hr .tile{min-height:170px;padding:22px}
-.hr .tile .ico{width:60px;height:60px}
-.hr .menu .ico{width:44px;height:44px}
-.tabbar .wrap{max-width:420px}
-.tabbar{left:0;right:0;margin:0 auto;bottom:16px;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.08);width:420px}
+ body{background:var(--bg)}
+ nav.tabbar{top:0;bottom:0;left:0;right:auto;width:232px;border-top:none;border-right:1px solid var(--line);background:#fff;padding:0}
+ nav.tabbar .wrap{max-width:none;flex-direction:column;padding:22px 14px;gap:4px;height:100%}
+ nav.tabbar .side-logo{display:flex;align-items:center;gap:9px;padding:4px 10px 26px;font-size:19px;font-weight:800}
+ .side-logo img{width:32px;height:32px;border-radius:9px}.side-logo em{font-style:normal;color:var(--blue)}
+ nav.tabbar button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;padding:13px 14px;border-radius:14px;font-size:15px;font-weight:700;color:var(--sub)}
+ nav.tabbar button svg{width:22px;height:22px}
+ nav.tabbar button:hover{background:var(--bg)}
+ nav.tabbar button.on{background:#EEF4FF;color:var(--blue)}
+ body:has(.tabbar) .app{margin-left:232px;max-width:none;padding:0 0 60px}
+ body:has(.tabbar) .app>*{max-width:1160px;margin-left:auto;margin-right:auto}
+ body:has(.tabbar) .top .logo{visibility:hidden}
+ body:has(.tabbar) .top{padding:14px 40px;height:64px}
+ body:has(.tabbar) .pad{padding:0 40px}
+ .hgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 24px;grid-template-areas:"greet greet greet" "hero hero goal" "play play play" "rev rev rev" "ox ox pass" "info more more" "foot foot foot"}
+ .b-greet{grid-area:greet}.b-hero{grid-area:hero}.b-goal{grid-area:goal}.b-play{grid-area:play}.b-rev{grid-area:rev}.b-ox{grid-area:ox}.b-pass{grid-area:pass}.b-info{grid-area:info}.b-more{grid-area:more}.b-foot{grid-area:foot}
+ .b-greet{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:4px 0 18px}
+ .b-greet .h1{font-size:28px;margin:0}
+ .b-greet .install{width:auto;margin:0;max-width:380px}
+ .b-hero .hero,.b-goal .card{height:100%;margin-bottom:0}
+ .b-hero .hero{min-height:210px;padding:28px 30px}
+ .b-goal .card{display:flex;flex-direction:column;justify-content:space-between;padding:24px}
+ .g3{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
+ .g3 .tile,.g3 .menu.mt{min-height:190px;padding:24px;margin:0;border-radius:24px;transition:transform .15s,box-shadow .15s}
+ .g3 .tile:hover,.g3 .menu.mt:hover,.b-more .menu:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(20,40,80,.08)}
+ .g3 .tile .ico,.g3 .menu.mt .ico{width:64px;height:64px}
+ .g3 .tile .t,.g3 .menu.mt .t{font-size:18px}
+ .g3 .menu.mt{position:relative;flex-direction:column;align-items:flex-start;gap:0}
+ .g3 .menu.mt .grow{margin-top:auto;padding-top:14px;width:100%}
+ .g3 .menu.mt .tag,.g3 .menu.mt .chev{position:absolute;top:18px;right:16px}
+ .b-ox .card,.b-pass .card,.b-info .card{margin-bottom:0}
+ .b-ox>*:last-child,.b-pass>*:last-child{min-height:calc(100% - 64px)}
+ .dsec{display:flex}
+ .b-more .menu{margin-bottom:12px}
+ .b-foot{padding-top:30px}
 }
 .sgrid2{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:900px){.sgrid2{grid-template-columns:1fr 1fr}}
@@ -608,12 +634,12 @@ function record(s, ok, qid) {
 function celebrate() { const c = document.createElement('div'); c.className = 'confetti'; const col = ['#3182F6', '#FFB800', '#F04452', '#00C471', '#FF8A00']; for (let i = 0; i < 60; i++) { const e = document.createElement('i'); e.style.left = Math.random() * 100 + '%'; e.style.background = col[i % 5]; e.style.animationDelay = Math.random() * .5 + 's'; e.style.animationDuration = 1.2 + Math.random() + 's'; c.appendChild(e); } document.body.appendChild(c); setTimeout(() => c.remove(), 2800); toast('오늘 목표 ' + S.goal + '문제 달성! 🎉'); }
 function badge(c, size) { return certIcon(c, size || 44); }
 
-function bottom(html) { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); if (!html) return; const b = document.createElement('div'); b.className = 'bottom'; b.innerHTML = '<div class="wrap">' + html + '</div>'; document.body.appendChild(b); }
+function bottom(html) { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); if (!html) return; const b = document.createElement('div'); b.className = 'bottom'; b.innerHTML = '<div class="wrap"><div class="side-logo"><img src="icon-192.png" alt=""><b>더오를<em>패스</em></b></div>' + html + '</div>'; document.body.appendChild(b); }
 const TI = { home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.3 2.6a1 1 0 011.4 0l8.5 8a1 1 0 01-.7 1.7H19v8a1.7 1.7 0 01-1.7 1.7h-3.1v-5.5h-4.4V22H6.7A1.7 1.7 0 015 20.3v-8H3.5a1 1 0 01-.7-1.7z"/></svg>',
   study: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4.5" height="9" rx="1.5"/><rect x="9.75" y="7" width="4.5" height="14" rx="1.5"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.5"/></svg>',
   note: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm3 5a1 1 0 000 2h8a1 1 0 100-2zm0 4a1 1 0 000 2h5a1 1 0 100-2z"/></svg>',
   my: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.5"/><path d="M3.5 20.5c0-4 3.8-7 8.5-7s8.5 3 8.5 7a1 1 0 01-1 1h-15a1 1 0 01-1-1z"/></svg>' };
-function tabbar() { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); const b = document.createElement('nav'); b.className = 'tabbar'; b.innerHTML = '<div class="wrap">' + [['home', '홈'], ['study', '기록'], ['note', '복습노트'], ['my', '내 정보']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="go('${k}')">${TI[k]}${l}</button>`).join('') + '</div>'; document.body.appendChild(b); }
+function tabbar() { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); const b = document.createElement('nav'); b.className = 'tabbar'; b.innerHTML = '<div class="wrap"><div class="side-logo"><img src="icon-192.png" alt=""><b>더오를<em>패스</em></b></div>' + [['home', '홈'], ['study', '기록'], ['note', '복습노트'], ['my', '내 정보']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="go('${k}')">${TI[k]}${l}</button>`).join('') + '</div>'; document.body.appendChild(b); }
 function topBar(title, right, backFn) { return `<div class="top"><button class="back" onclick="${backFn || 'go(tab)'}" aria-label="뒤로"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#191F28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="ttl">${title}</div><div class="right" id="tr">${right || ''}</div></div>`; }
 function go(t) { stopTimer(); run = null; $app.classList.remove('wide'); if (t === 'note' && !isPro()) { paywall('wrong'); return; } tab = t; window.scrollTo(0, 0); ({ home, study: studyTab, note: wrongNote, my: myTab })[t](); }
 const lockTag = () => `<span class="tag pro">${IC.lock()} PRO</span>`;
@@ -662,60 +688,61 @@ function home() {
   const dd = dday(), td = today(), g = S.goal, pct = Math.min(1, td / g), st = streak(), wn = S.wrong.length + S.wrongOx.length, seen = S.seen.length, remain = Q.length - seen;
   const week = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); return d; });
   const wk = weakest(), pro = isPro();
+  const subj = `<button class="menu mt" onclick="subjectSheet()"><div class="ico">${IC.subject()}</div><div class="grow"><div class="t">과목별로 풀기</div><div class="d">${SK.map(k => k + '과목').join('·')} 골라서 해설과 함께</div></div><span class="tag free">무료</span></button>`;
+  const note = `<button class="menu mt" onclick="go('note')"><div class="ico">${IC.note()}</div><div class="grow"><div class="t">오답노트 · 별표 문제</div><div class="d">${wn || S.star.length ? `틀린 문제 <b style="color:var(--red)">${wn}</b> · 별표 <b style="color:#E0A000">${S.star.length}</b>개가 모였어요` : '틀린 문제가 자동으로 모여요'}</div></div>${pro ? '<span class="chev">›</span>' : lockTag()}</button>`;
   $app.innerHTML = brandBar() + `
-  <div class="pad hwrap"><div class="hl">
-    <div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 자격증 합격까지<br>오늘도 한 계단 <em>더 오를</em> 차례!</div>
-    ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div><span class="x" onclick="event.stopPropagation();G.installHidden=true;save();home()">✕</span></button>` : ''}
-    <div class="hero">
+  <div class="pad hgrid">
+    <div class="b-greet"><div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 자격증 합격까지<br>오늘도 한 계단 <em>더 오를</em> 차례!</div>
+    ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div><span class="x" onclick="event.stopPropagation();G.installHidden=true;save();home()">✕</span></button>` : ''}</div>
+    <div class="b-hero"><div class="hero">
       ${heroArt(seen / Q.length)}
       <button class="set" onclick="examSheet()">${S.exam ? '변경' : '시험일 설정'}</button>
       <div class="k">${esc(C.name)} 시험까지</div>
       <div class="dd">${dd === null ? 'D-?' : dd > 0 ? 'D-' + dd : dd === 0 ? 'D-DAY' : '시험 끝!'}</div>
       <div class="m">${dd === null ? '시험일을 정하면 하루 목표를 계산해 드려요' : dd > 0 ? (remain > 0 ? `하루 ${Math.max(1, Math.ceil(remain / dd))}문제씩이면 1회독 완료` : '1회독 완료! 이제 오답 복습할 차례') : dd === 0 ? '지금까지 푼 문제를 믿어요!' : '수고 많으셨어요'}</div>
       <div class="bank"><div class="tr"><i style="width:${seen / Q.length * 100}%"></i></div><div class="tx">문제은행 ${seen} / ${Q.length} 풀었어요</div></div>
-    </div>
-    <div class="card">
+    </div></div>
+    <div class="b-goal"><div class="card">
       <div class="goal">
         <div class="ring"><svg width="64" height="64"><circle cx="32" cy="32" r="27" stroke="#EEF0F3" stroke-width="7" fill="none"/><circle cx="32" cy="32" r="27" stroke="${pct >= 1 ? '#00C471' : '#3182F6'}" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 27}" stroke-dashoffset="${2 * Math.PI * 27 * (1 - pct)}"/></svg><b>${Math.round(pct * 100)}%</b></div>
         <div class="grow"><div class="lbl">오늘의 목표 <a style="color:var(--blue);cursor:pointer" onclick="goalSheet()">변경</a></div><div class="val">${td}<small>/ ${g}문제</small></div></div>
         <div style="text-align:right"><div class="lbl">연속 학습</div><div class="val fl">${IC.flame()}${st}<small>일</small></div></div>
       </div>
       <div class="streak">${week.map(d => { const k = dkey(d), on = !!S.days[k], t = k === dkey(); return `<div><i class="${on ? 'on' : ''} ${t ? 'today' : ''}">${on ? IC.flame() : ''}</i>${'일월화수목금토'[d.getDay()]}</div>`; }).join('')}</div>
-    </div>
-    <div class="donly"><div class="sec">합격 예측 <a onclick="go('study')">자세히 ›</a></div>${passCard()}</div>
-    </div><div class="hr">
-    <div class="sec">문제 풀기</div>
-    <div class="grid2">
+    </div></div>
+
+    <div class="b-play"><div class="sec">문제 풀기</div>
+    <div class="grid2 g3">
       <button class="tile" onclick="startMock()"><span class="tag free">무료</span><div class="ico">${IC.exam()}</div><div class="t">실전 모의고사</div><div class="d">${Q.length}문항 · 실제 시험 시간 비율</div></button>
       <button class="tile" onclick="startQuick()"><span class="tag free">무료</span><div class="ico">${IC.quick()}</div><div class="t">빠른 10문제</div><div class="d">안 푼 문제부터 5분</div></button>
-    </div>
-    <button class="menu" onclick="subjectSheet()"><div class="ico">${IC.subject()}</div><div class="grow"><div class="t">과목별로 풀기</div><div class="d">${SK.map(k => k + '과목').join('·')} 골라서 해설과 함께</div></div><span class="tag free">무료</span></button>
+      ${subj}
+    </div></div>
 
-    <div class="sec"><span>맞춤 복습<span class="pro">PRO</span></span></div>
-    <div class="grid2">
+    <div class="b-rev"><div class="sec"><span>맞춤 복습<span class="pro">PRO</span></span></div>
+    <div class="grid2 g3">
       <button class="tile ${pro ? '' : 'locked'}" onclick="${pro ? 'startOx(0)' : "paywall('ox')"}">${pro ? '' : `<span class="tag pro">${IC.lock()}</span>`}<div class="ico">${IC.ox()}</div><div class="t">OX 선지 퀴즈</div><div class="d">선지 ${OX.length}개 빠른 복습</div></button>
       <button class="tile ${pro ? '' : 'locked'}" onclick="${pro ? 'startWeak()' : "paywall('weak')"}">${pro ? '' : `<span class="tag pro">${IC.lock()}</span>`}<div class="ico">${IC.target()}</div><div class="t">약점 과목 집중</div><div class="d">${wk ? SUBJ[wk.s] + ' · 정답률 ' + wk.a + '%' : '가장 약한 과목만'}</div></button>
-    </div>
-    <button class="menu" onclick="go('note')"><div class="ico">${IC.note()}</div><div class="grow"><div class="t">오답노트 · 별표 문제</div><div class="d">${wn || S.star.length ? `틀린 문제 <b style="color:var(--red)">${wn}</b> · 별표 <b style="color:#E0A000">${S.star.length}</b>개가 모였어요` : '틀린 문제가 자동으로 모여요'}</div></div>${pro ? '<span class="chev">›</span>' : lockTag()}</button>
+      ${note}
+    </div></div>
 
-    ${OX.length ? `<div class="sec">오늘의 OX 한 문제</div>${dailyOx()}` : ''}
+    ${OX.length ? `<div class="b-ox"><div class="sec">오늘의 OX 한 문제</div>${dailyOx()}</div>` : ''}
 
-    <div class="monly"><div class="sec">합격 예측 <a onclick="go('study')">자세히 ›</a></div>
+    <div class="b-pass"><div class="sec">합격 예측 <a onclick="go('study')">자세히 ›</a></div>
     ${passCard()}</div>
 
-    <div class="sec">시험 안내</div>
+    <div class="b-info"><div class="sec">시험 안내</div>
     <div class="card examinfo">
       <div class="eh">${badge(C, 48)}<div class="grow"><div style="font-size:17px;font-weight:800">${esc(C.name)}</div><div style="font-size:13px;color:var(--gray);margin-top:2px">${esc(C.info.org)} 주관 · ${esc(C.info.eligibility)}</div></div></div>
       <div class="eg"><div><b>${C.info.count}</b>문항</div><div><b>${C.info.minutes}</b>분</div><div><b>${esc(C.info.format.replace(/[^0-9]/g, '') || C.info.format)}</b>${C.info.format.replace(/[0-9]/g, '')}</div></div>
       <div class="er"><span class="ok">합격</span>전체 정답률 <b>${PASS.total}% 이상</b><br><span class="no">과락</span>과목별 정답률 <b>${PASS.sub}% 미만</b></div>
       <div style="font-size:12px;color:var(--gray);margin-top:10px">※ 접수·일정은 ${esc(C.info.org)} 공고를 꼭 확인하세요</div>
-    </div>
+    </div></div>
 
-    <button class="menu" onclick="certPicker()" style="margin-top:20px"><div class="ico">${IC.cert()}</div><div class="grow"><div class="t">다른 자격증도 준비 중이에요</div><div class="d">${SOON.map(c => c.short).join('·')} 곧 열려요 · 기록은 자격증별로 따로 저장돼요</div></div><span class="chev">›</span></button>
-
-    <a class="promo" href="${PDF_LINK}" target="_blank" rel="noopener">${bookArt()}<div class="grow"><div class="t">헷갈리는 개념은 정리본으로</div><div class="d">시험에 나오는 수치·공식만 모은<br>더오를 ${esc(C.short)} 핵심 정리본 PDF</div></div><span class="chev" style="color:#6B7684">›</span></a>
-    <div class="foot">더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>
-  </div></div>`;
+    <div class="b-more"><div class="sec dsec">더 보기</div>
+    <button class="menu" onclick="certPicker()"><div class="ico">${IC.cert()}</div><div class="grow"><div class="t">다른 자격증도 준비 중이에요</div><div class="d">${SOON.map(c => c.short).join('·')} 곧 열려요 · 기록은 자격증별로 따로 저장돼요</div></div><span class="chev">›</span></button>
+    <a class="promo" href="${PDF_LINK}" target="_blank" rel="noopener">${bookArt()}<div class="grow"><div class="t">헷갈리는 개념은 정리본으로</div><div class="d">시험에 나오는 수치·공식만 모은<br>더오를 ${esc(C.short)} 핵심 정리본 PDF</div></div><span class="chev" style="color:#6B7684">›</span></a></div>
+    <div class="foot b-foot">더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>
+  </div>`;
   $app.classList.add('wide'); tabbar();
 }
 
