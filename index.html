@@ -247,6 +247,20 @@ textarea.memo{width:100%;min-height:70px;border:1px solid #F0D68A;background:#FF
 .st span{font-size:13px;font-weight:700;color:var(--sub)}.st em{font-style:normal;font-size:11px;color:var(--gray)}
 .allpass{margin-top:16px}
 .ap-ic{width:40px;height:40px;flex-shrink:0}.ap-ic svg{width:100%;height:100%}
+.rc{position:relative;overflow:hidden;background:linear-gradient(160deg,#EEF4FF 0%,#fff 55%)!important;border:1.5px solid #DCE7FF!important;padding:22px!important}
+.rc.on{border-color:var(--blue)!important}
+.rc-deco{position:absolute;right:-6px;top:6px;width:200px;color:var(--cc);opacity:.13;pointer-events:none}
+.rc-top,.rc-subs,.rc-meta,.rc-foot,.rc-bar{position:relative}
+.rc-open{font-size:12px;font-weight:800;color:#0A8F55;background:#E3F8EE;border-radius:7px;padding:4px 8px;flex-shrink:0}
+.rc-subs{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.rc-subs span{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#1B3A7A;background:#fff;border:1px solid #DCE7FF;border-radius:999px;padding:5px 11px 5px 5px}
+.rc-subs i{font-style:normal;width:19px;height:19px;border-radius:50%;background:var(--cc);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
+.rc-meta{margin:10px 0 16px!important}
+.rc-meta span{background:rgba(255,255,255,.8)!important;border:1px solid #EEF1F5}
+.rc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #E8EEF8;padding-top:14px}
+.rc-n{font-size:13px;color:var(--gray)}.rc-n b{color:var(--text)}
+.rc-cta{font-size:14px;font-weight:800;color:#fff;background:var(--cc);border-radius:12px;padding:10px 14px;flex-shrink:0}
+@media(max-width:600px){.rc-foot{flex-direction:column;align-items:stretch}.rc-cta{text-align:center;padding:13px}}
 .sgrid2{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:900px){.sgrid2{grid-template-columns:1fr 1fr}}
 .sc{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border-radius:22px;padding:18px;border:1.5px dashed #D9DEE4}
@@ -553,10 +567,15 @@ function certPicker(first) {
   stopTimer(); run = null; window.scrollTo(0, 0); $app.classList.add('wide');
   const totalQ = READY.reduce((n, c) => n + c.questions.length, 0);
   const big = c => { const d = G.data[c.id], pro = G.passAll || G.passCerts.includes(c.id), dd = d ? dday(d.exam) : null, seen = d ? d.seen.length : 0, pct = Math.round(seen / c.questions.length * 100);
-    return `<button class="rc ${G.cur === c.id && !first ? 'on' : ''}" onclick="pickCert('${c.id}')">
-      <div class="rc-top">${badge(c, 52)}<div class="grow"><div class="rc-cat">${esc(c.cat)} · ${esc(c.info.org)}</div><div class="rc-name">${esc(c.name)}</div></div>${pro ? '<span class="tag on">PRO</span>' : dd !== null && dd >= 0 ? `<span class="tag free">D-${dd}</span>` : ''}</div>
-      <div class="rc-meta"><span><b>${c.questions.length}</b>문항</span><span>합격 <b>${c.pass.total}</b>점</span><span><b>${c.info.count}</b>문항 · <b>${c.info.minutes}</b>분 시험</span></div>
-      ${seen ? `<div class="rc-bar"><i style="width:${pct}%"></i></div><div class="rc-go">${seen}문제 풀었어요 · 이어서 풀기 →</div>` : `<div class="rc-go">무료로 시작하기 →</div>`}
+    const subs = Object.entries(c.subjects).map(([k, v]) => `<span><i>${k}</i>${esc(v.short)}</span>`).join('');
+    const tag = pro ? '<span class="tag on">PRO</span>' : dd !== null && dd >= 0 ? `<span class="tag free">D-${dd}</span>` : '<span class="rc-open">무료 오픈</span>';
+    return `<button class="rc ${G.cur === c.id && !first ? 'on' : ''}" style="--cc:${c.color}" onclick="pickCert('${c.id}')">
+      <svg class="rc-deco" viewBox="0 0 220 120" aria-hidden="true"><path d="M0 104 L40 86 L70 94 L110 60 L140 70 L180 34 L220 14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M0 104 L40 86 L70 94 L110 60 L140 70 L180 34 L220 14 V120 H0Z" fill="currentColor" opacity=".25"/></svg>
+      <div class="rc-top">${badge(c, 56)}<div class="grow"><div class="rc-cat">${esc(c.info.org)} · ${esc(c.desc || c.cat)}</div><div class="rc-name">${esc(c.name)}</div></div>${tag}</div>
+      <div class="rc-subs">${subs}</div>
+      <div class="rc-meta"><span><b>${c.info.count}</b>문항 · <b>${c.info.minutes}</b>분</span><span>${esc(c.info.format)}</span><span>평균 <b>${c.pass.total}</b> · 과락 <b>${c.pass.sub}</b></span><span>${esc(c.info.eligibility)}</span></div>
+      ${seen ? `<div class="rc-bar"><i style="width:${pct}%"></i></div>` : ''}
+      <div class="rc-foot"><span class="rc-n">자체 제작 <b>${c.questions.length}</b>문항 · 해설 포함</span><span class="rc-cta">${seen ? `${seen}문제 풀었어요 · 이어서 →` : '무료로 시작하기 →'}</span></div>
     </button>`; };
   const tile = c => `<button class="sc" onclick="toast('${esc(c.name)} 문제를 열심히 만들고 있어요')">${badge(c, 48)}<div class="grow"><div class="sc-top"><span class="sc-name">${esc(c.name)}</span><span class="sc-tag">준비 중</span></div><div class="sc-d">${esc(c.org || c.cat)}${c.desc ? ' · ' + esc(c.desc) : ''}</div>${c.meta ? `<div class="sc-m">${c.meta.map(m => `<span>${esc(m)}</span>`).join('')}</div>` : ''}</div></button>`;
   $app.innerHTML = `<div class="top ftop"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()"><b>더오를<em>패스</em></b></div>${first ? '' : `<button class="back-x" onclick="go(tab)">닫기</button>`}</div>
