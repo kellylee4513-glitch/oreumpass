@@ -350,7 +350,7 @@ nav.tabbar .side-logo .wm{height:23px}
 .inkbar .sw{width:20px;height:20px;border-radius:50%;border:2px solid transparent}.inkbar .sw.on{border-color:#fff}
 .inkbar .tx{color:#fff;background:rgba(255,255,255,.14);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700}
 .tw{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #F2F4F6}
-.tw .rk{width:26px;height:26px;border-radius:8px;background:#F2F4F6;color:var(--sub);font-weight:800;font-size:13px;display:grid;place-items:center;flex-shrink:0}
+.tw .rk{width:26px!important;height:26px!important;padding:0!important;border-radius:8px;background:#F2F4F6;color:var(--sub);font-weight:800;font-size:13px;display:grid;place-items:center;flex-shrink:0}
 .tw .rk.top{background:#FFEBEE;color:var(--red)}
 .tw .t{font-size:14px;font-weight:600;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}.tw .d{font-size:12px;color:var(--gray);margin-top:2px}
 .tw .wr{font-size:15px;font-weight:800;color:var(--red)}
@@ -419,8 +419,47 @@ button,a{touch-action:manipulation}
 .fc-a{font-size:18px;font-weight:800;margin-top:14px;line-height:1.5;color:#F6DC95}
 .fc-c{font-size:15.5px;line-height:1.75;margin-top:14px;color:#E5E8EB}
 .fc-meta{text-align:center;font-size:13px;color:var(--gray);margin-top:14px}
-@media(min-width:900px){.hgrid{grid-template-areas:"greet greet greet" "hero hero goal" "plan plan plan" "play play play" "rev rev rev" "ox ox pass" "info more more" "foot foot foot"}.b-plan{grid-area:plan}.g2b{grid-template-columns:repeat(3,1fr)!important}
-.plan-c{display:grid;grid-template-columns:1fr 1.4fr auto;align-items:center;gap:20px;padding:22px 26px}.pc-list{grid-template-columns:1fr 1fr;margin:0}.pc-go{width:auto;padding:0 26px}}
+@media(min-width:900px){.g2b{grid-template-columns:repeat(2,1fr)!important}.hgrid{grid-template-areas:"greet greet greet" "hero hero goal" "plan plan plan" "play play play" "rev rev rev" "ox ox pass" "info more more" "foot foot foot"}.b-plan{grid-area:plan}
+.plan-c{padding:24px 28px}.pc-list{grid-template-columns:repeat(3,minmax(0,1fr));margin:16px 0}.pc-i{min-height:72px}.pc-go{display:block;width:auto;min-width:240px;margin-left:auto;padding:0 28px}}
+@keyframes pgIn{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pad.in{animation:pgIn .22s ease-out}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.025)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.opt.correct{animation:pop .32s ease-out}.opt.wrong{animation:shake .32s ease-out}
+.opt,.tile,.menu,.btn,.chip,.pick,.setc,.bq{transition:transform .12s,background-color .15s,box-shadow .15s}
+.opt:active:not(:disabled),.btn:active,.chip:active,.pick:active,.bq:active{transform:scale(.97)}
+.gArc{transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1)}
+mark{background:linear-gradient(transparent 58%,#FFE58A 58%);color:inherit;padding:0 1px;border-radius:2px}
+mark.n{background:linear-gradient(transparent 58%,#CFE3FF 58%);font-weight:700}
+.rx-f{background:#F4F7FF;border:1.5px solid #CFE0FF;border-radius:14px;padding:12px 14px;margin:12px 0;font-size:14.5px;font-weight:700;line-height:1.6;color:#123E9A}
+.rx-f .lb,.rx-m .lb{font-size:11.5px;font-weight:800;letter-spacing:.04em;margin-bottom:4px}
+.rx-f .lb{color:#3A6BD8}
+.rx-m{background:linear-gradient(135deg,#FFF8E6,#FFF1C9);border:1.5px solid #F5D98A;border-radius:14px;padding:12px 14px;margin:12px 0;font-size:14.5px;font-weight:600;line-height:1.6;color:#5C4210}
+.rx-m .lb{color:#B07A00}.rx-m .lb:before{content:"⚡ "}
+button.ref.nt{width:100%;text-align:left;background:#F2F4F6;border:none;font:inherit;cursor:pointer}
+.pp-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#F7F8FA;border-radius:16px;padding:10px 14px 10px 8px;margin-bottom:14px}
+.pp-g{position:relative;width:104px;height:49px;flex-shrink:0}.pp-g svg{position:absolute;inset:0;width:104px;height:49px}.pp-g b{position:absolute;left:0;right:0;bottom:-2px;text-align:center;font-size:18px;font-weight:800}
+.pp-row .t{font-size:15px;font-weight:800}.pp-row .d{font-size:12px;color:var(--gray);margin-top:2px}
+.rp-h{text-align:center;padding:26px 20px 22px}
+.rp-g{position:relative;width:196px;margin:0 auto}.rp-g svg{display:block;width:196px;height:auto}
+.rp-n{position:absolute;left:0;right:0;bottom:2px}.rp-n b{font-size:48px;font-weight:800;letter-spacing:-.03em}.rp-n small{font-size:20px;font-weight:700;color:var(--gray)}
+.rp-k{font-size:15px;font-weight:700;color:var(--sub);margin-top:10px}.rp-m{font-size:19px;font-weight:800;margin-top:4px}
+.rp-c{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;border-radius:999px;padding:5px 10px}.rp-c.c0,.rp-c.c1{background:#FFF4D6;color:#8A5D00}.rp-c.c2{background:#E3F8EE;color:#0A8F55}
+.rp-s{font-size:12px;font-weight:700;margin-top:4px}.rp-s.ok{color:var(--green)}.rp-s.no{color:var(--red)}
+.pc-i.dq{width:100%;text-align:left;color:#fff;cursor:pointer}
+.bdg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:900px){.bdg{grid-template-columns:repeat(6,1fr)}}
+.bg{background:var(--card);border-radius:18px;padding:14px 8px;text-align:center;opacity:.55}
+.bg.on{opacity:1;box-shadow:0 0 0 1.5px #F3D27A inset}
+.bg .bi{width:40px;height:40px;margin:0 auto}.bg .bi svg{width:100%;height:100%}
+.bg:not(.on) .bi{width:26px;height:26px;margin:7px auto;color:#B0B8C1}
+.bg .bn{font-size:13px;font-weight:800;margin-top:6px}.bg .bd{font-size:11px;color:var(--gray);margin-top:2px;line-height:1.35}
+.nt-h{background:radial-gradient(120% 120% at 0% 0%,#2A2D34,#0F1014);color:#fff;border-radius:22px;padding:20px 22px;margin-bottom:12px}
+.nt-h .t{font-size:20px;font-weight:800}.nt-h .d{font-size:13px;color:#C9A24A;margin-top:4px;font-weight:600}
+.nt-c{display:flex;gap:14px;background:var(--card);border-radius:20px;padding:18px;margin-bottom:10px;transition:box-shadow .3s}
+.nt-c.focus{box-shadow:0 0 0 2px var(--blue)}
+.nt-n{font-family:Inter,sans-serif;font-weight:800;font-size:15px;color:#C9A24A;flex-shrink:0;padding-top:1px}
+.nt-t{font-size:16px;font-weight:800;line-height:1.5}.nt-b{font-size:14.5px;line-height:1.75;color:var(--sub);margin-top:6px}
 .sgrid2{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:900px){.sgrid2{grid-template-columns:1fr 1fr}}
 .sc{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border-radius:22px;padding:18px;border:1.5px dashed #D9DEE4}
@@ -766,7 +805,7 @@ function record(s, ok, qid) {
   S.solved++; if (ok) S.correct++; S.subj[s].t++; if (ok) S.subj[s].c++;
   const k = dkey(); S.days[k] = (S.days[k] || 0) + 1;
   if (qid !== undefined && !S.seen.includes(qid)) S.seen.push(qid);
-  if (qid !== undefined) srsHit(qid, ok);
+  if (qid !== undefined) { srsHit(qid, ok); const uk = unitKey(Q[qid]); S.ustat = S.ustat || {}; const u = S.ustat[uk] = S.ustat[uk] || { t: 0, c: 0 }; u.t++; if (ok) u.c++; }
   if (S.days[k] >= S.goal && S.goalDone !== k) { S.goalDone = k; setTimeout(celebrate, 350); }
 }
 function celebrate() { const c = document.createElement('div'); c.className = 'confetti'; const col = ['#3182F6', '#FFB800', '#F04452', '#00C471', '#FF8A00']; for (let i = 0; i < 60; i++) { const e = document.createElement('i'); e.style.left = Math.random() * 100 + '%'; e.style.background = col[i % 5]; e.style.animationDelay = Math.random() * .5 + 's'; e.style.animationDuration = 1.2 + Math.random() + 's'; c.appendChild(e); } document.body.appendChild(c); setTimeout(() => c.remove(), 2800); toast('오늘 목표 ' + S.goal + '문제 달성! 🎉'); }
@@ -777,7 +816,7 @@ const TI = { home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.3 
   study: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4.5" height="9" rx="1.5"/><rect x="9.75" y="7" width="4.5" height="14" rx="1.5"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.5"/></svg>',
   note: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm3 5a1 1 0 000 2h8a1 1 0 100-2zm0 4a1 1 0 000 2h5a1 1 0 100-2z"/></svg>',
   my: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.5"/><path d="M3.5 20.5c0-4 3.8-7 8.5-7s8.5 3 8.5 7a1 1 0 01-1 1h-15a1 1 0 01-1-1z"/></svg>' };
-function tabbar() { document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); const b = document.createElement('nav'); b.className = 'tabbar'; b.innerHTML = '<div class="wrap"><div class="side-logo"><img src="icon-192.png" alt="">' + WORDMARK + '</div>' + [['home', '홈'], ['study', '기록'], ['note', '복습노트'], ['my', '내 정보']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="go('${k}')">${TI[k]}${l}</button>`).join('') + '</div>'; document.body.appendChild(b); }
+function tabbar() { enterAnim(); document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); const b = document.createElement('nav'); b.className = 'tabbar'; b.innerHTML = '<div class="wrap"><div class="side-logo"><img src="icon-192.png" alt="">' + WORDMARK + '</div>' + [['home', '홈'], ['study', '기록'], ['note', '복습노트'], ['my', '내 정보']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="go('${k}')">${TI[k]}${l}</button>`).join('') + '</div>'; document.body.appendChild(b); }
 function topBar(title, right, backFn) { return `<div class="top"><button class="back" onclick="${backFn || 'go(tab)'}" aria-label="뒤로"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#191F28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="ttl">${title}</div><div class="right" id="tr">${right || ''}</div></div>`; }
 function go(t) { stopTimer(); run = null; $app.classList.remove('wide'); if (t === 'note' && !isPro()) { paywall('wrong'); return; } tab = t; window.scrollTo(0, 0); ({ home, study: studyTab, note: wrongNote, my: myTab })[t](); }
 const lockTag = () => `<span class="tag pro">${IC.lock()} PRO</span>`;
@@ -856,18 +895,18 @@ function home() {
       <button class="tile" onclick="startQuick()"><span class="tag free">무료</span><div class="ico">${IC.quick()}</div><div class="t">빠른 10문제</div><div class="d">안 푼 문제부터 5분</div></button>
       ${subj}
     </div>
-    <div class="grid2 g2b"><button class="menu" onclick="setPage()"><div class="ico">${IC.sets()}</div><div class="grow"><div class="t">세트별 실전 문제</div><div class="d">${SET_N}문항씩 ${setsOf().length}세트 · 점수 기록</div></div><span class="chev">›</span></button><button class="menu" onclick="bankPage()"><div class="ico">${IC.bank()}</div><div class="grow"><div class="t">문제은행 검색</div><div class="d">전체 ${Q.length}문항 · 키워드·상태로 찾기</div></div><span class="chev">›</span></button><button class="menu" onclick="cardPage()"><div class="ico">${IC.book()}</div><div class="grow"><div class="t">1분 개념 카드</div><div class="d">핵심 개념 ${Q.filter(q => q.c).length}장 · 뒤집어 외우기</div></div><span class="chev">›</span></button></div></div>
+    <div class="grid2 g2b"><button class="menu" onclick="setPage()"><div class="ico">${IC.sets()}</div><div class="grow"><div class="t">세트별 실전 문제</div><div class="d">${SET_N}문항씩 ${setsOf().length}세트 · 점수 기록</div></div><span class="chev">›</span></button><button class="menu" onclick="bankPage()"><div class="ico">${IC.bank()}</div><div class="grow"><div class="t">문제은행 검색</div><div class="d">전체 ${Q.length}문항 · 키워드·상태로 찾기</div></div><span class="chev">›</span></button><button class="menu" onclick="cardPage()"><div class="ico">${IC.book()}</div><div class="grow"><div class="t">1분 개념 카드</div><div class="d">핵심 개념 ${Q.filter(q => q.c).length}장 · 뒤집어 외우기</div></div><span class="chev">›</span></button><button class="menu" onclick="notePage()"><div class="ico">${IC.note()}</div><div class="grow"><div class="t">단권화 요약 노트</div><div class="d">단원별 핵심·공식·암기 팁 한곳에</div></div><span class="chev">›</span></button></div></div>
 
     <div class="b-rev"><div class="sec"><span>맞춤 복습<span class="pro">PRO</span></span></div>
     <div class="grid2 g3">
       <button class="tile ${pro ? '' : 'locked'}" onclick="${pro ? 'startOx(0)' : "paywall('ox')"}">${pro ? '' : `<span class="tag pro">${IC.lock()}</span>`}<div class="ico">${IC.ox()}</div><div class="t">OX 선지 퀴즈</div><div class="d">선지 ${OX.length}개 빠른 복습</div></button>
-      <button class="tile ${pro ? '' : 'locked'}" onclick="${pro ? 'startWeak()' : "paywall('weak')"}">${pro ? '' : `<span class="tag pro">${IC.lock()}</span>`}<div class="ico">${IC.target()}</div><div class="t">약점 과목 집중</div><div class="d">${wk ? SUBJ[wk.s] + ' · 정답률 ' + wk.a + '%' : '가장 약한 과목만'}</div></button>
+      <button class="tile ${pro ? '' : 'locked'}" onclick="startCustom()">${pro ? '' : `<span class="tag pro">${IC.lock()}</span>`}<div class="ico">${IC.target()}</div><div class="t">내 약점 맞춤 문제집</div><div class="d">약한 단원·틀린 문제로 20문항 자동 구성</div></button>
       ${note}
     </div></div>
 
     ${OX.length ? `<div class="b-ox"><div class="sec">오늘의 OX 한 문제</div>${dailyOx()}</div>` : ''}
 
-    <div class="b-pass"><div class="sec">합격 예측 <a onclick="go('study')">자세히 ›</a></div>
+    <div class="b-pass"><div class="sec">합격 예측 <a onclick="reportPage()">리포트 ›</a></div>
     ${passCard()}</div>
 
     <div class="b-info"><div class="sec">시험 안내</div>
@@ -884,7 +923,7 @@ function home() {
     <a class="promo" href="${PDF_LINK}" target="_blank" rel="noopener">${bookArt()}<div class="grow"><div class="t">헷갈리는 개념은 정리본으로</div><div class="d">시험에 나오는 수치·공식만 모은<br>더오를 ${esc(C.short)} 핵심 정리본 PDF</div></div><span class="chev" style="color:#6B7684">›</span></a></div>
     <div class="foot b-foot">${policyLinks()}더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>
   </div>`;
-  $app.classList.add('wide'); tabbar();
+  $app.classList.add('wide'); tabbar(); checkBadges(); setTimeout(reviewPopup, 900);
 }
 
 function passCard() {
@@ -892,7 +931,8 @@ function passCard() {
   const sub = SK.map(s => ({ s, a: acc(s) })), cut = sub.some(x => x.a !== null && x.a < M);
   const st = rate === null ? ['아직 몰라요', 'var(--gray)', '문제를 풀면 합격 가능성을 알려 드려요', 'var(--bg)'] : rate >= T && !cut ? ['합격권', 'var(--green)', '지금 실력이면 합격선을 넘어요', 'var(--green-soft)'] : cut ? ['과락 주의', 'var(--red)', M + '% 미만 과목이 있어요', 'var(--red-soft)'] : ['조금 더', 'var(--orange)', `합격선까지 ${T - rate}%p 남았어요`, 'var(--orange-soft)'];
   const wk = weakest();
-  return `<div class="card pass">
+  const pp = S.solved >= 20 ? passProb().p : null;
+  return `<div class="card pass"><button class="pp-row" onclick="reportPage()"><div class="pp-g">${gaugeSVG(pp || 0, false)}<b>${pp === null ? '?' : pp + '%'}</b></div><div class="grow"><div class="t">합격 확률 (추정)</div><div class="d">${pp === null ? `${20 - S.solved}문제 더 풀면 예측이 열려요` : '정답률·풀이 속도·과락까지 반영한 추정치'}</div></div><span class="chev">›</span></button>
     <div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div class="lbl">현재 정답률</div><div class="val" style="font-size:30px">${rate === null ? '-' : rate}<small>%</small></div></div><div style="text-align:right"><span class="tag" style="background:${st[3]};color:${st[1]};font-size:13px">${st[0]}</span><div style="font-size:13px;color:var(--gray);margin-top:6px">${st[2]}</div></div></div>
     <div class="gauge"><i style="width:${rate || 0}%;background:${st[1]}"></i><span class="mk" style="left:${T}%"><em>합격 ${T}</em></span></div>
     ${sub.map(({ s, a }) => `<div class="bar"><span class="nm">${SUBJ[s]} <span style="color:var(--gray);font-weight:500">${SUBJ_SHORT[s]}</span></span><span class="tr cutline" style="--cut:${M}%"><i style="width:${a || 0}%;${a !== null && a < M ? 'background:var(--red)' : a !== null && a < T ? 'background:var(--orange)' : ''}"></i></span><span class="v">${a === null ? '-' : a + '%'}</span></div>`).join('')}
@@ -928,9 +968,12 @@ const NUM = '①②③④';
 function explainHTML(q, pick) {
   const answered = pick !== null && pick !== undefined, ok = pick === q.a, qs = (S.qstat || {})[q.id];
   let h = `<div class="rx-band ${!answered ? '' : ok ? 'ok' : 'no'}"><div class="rx-ic">${!answered ? IC.medal() : ok ? IC.trophy() : IC.climb()}</div><div><div class="rx-t">${!answered ? '정답' : ok ? '맞혔어요!' : '한 번 더 오르면 돼요'}</div><div class="rx-s">정답 ${NUM[q.a]} ${esc(q.o[q.a])}</div></div></div>`;
-  if (q.c) h += `<div class="rx-blk"><div class="rx-lbl"><i>01</i>한 줄 개념</div><p>${esc(q.c)}</p></div>`;
-  h += `<div class="rx-blk"><div class="rx-lbl"><i>${q.c ? '02' : '01'}</i>왜 정답이 ${NUM[q.a]}일까</div><p>${esc(q.e)}</p></div>`;
-  if (q.w) h += `<div class="rx-blk"><div class="rx-lbl"><i>03</i>보기별 함정 체크</div><table class="rx-tb">${q.o.map((o, k) => `<tr class="${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><td class="k">${NUM[k]}</td><td class="j">${k === q.a ? '<b class="o">O</b>' : '<b class="x">X</b>'}</td><td>${k === q.a ? '정답 보기예요.' : esc(q.w[k] || '')}${k === pick && k !== q.a ? ' <span class="pk">내 선택</span>' : ''}</td></tr>`).join('')}</table></div>`;
+  if (q.c) h += `<div class="rx-blk"><div class="rx-lbl"><i>01</i>한 줄 개념</div><p>${hl(q.c)}</p></div>`;
+  if (q.f) h += `<div class="rx-f"><div class="lb">핵심 공식</div>${hl(q.f)}</div>`;
+  h += `<div class="rx-blk"><div class="rx-lbl"><i>${q.c ? '02' : '01'}</i>왜 정답이 ${NUM[q.a]}일까</div><p>${hl(q.e)}</p></div>`;
+  if (q.w) h += `<div class="rx-blk"><div class="rx-lbl"><i>03</i>보기별 함정 체크</div><table class="rx-tb">${q.o.map((o, k) => `<tr class="${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><td class="k">${NUM[k]}</td><td class="j">${k === q.a ? '<b class="o">O</b>' : '<b class="x">X</b>'}</td><td>${k === q.a ? '정답 보기예요.' : hl(q.w[k] || '')}${k === pick && k !== q.a ? ' <span class="pk">내 선택</span>' : ''}</td></tr>`).join('')}</table></div>`;
+  if (q.m) h += `<div class="rx-m"><div class="lb">10초 암기 팁</div>${esc(q.m)}</div>`;
+  if (q.c) h += `<button class="ref nt" onclick="notePage('${unitKey(q)}',${q.id})">${IC.note()}<span>요약 노트에서 ‘${esc(unitName(q))}’ 이어 보기 ›</span></button>`;
   h += `<a class="ref" href="${PDF_LINK}" target="_blank" rel="noopener">${IC.book()}<span>${esc(C.short)} 정리본 ${SUBJ[q.s]} ‘${esc(SUBJ_SHORT[q.s])}’ 펼쳐 보기 ›</span></a>`;
   if (qs && qs.t) h += `<div class="xp-me">나의 풀이 ${qs.t}회 · 오답 ${qs.w}회</div>`;
   return h;
@@ -938,6 +981,7 @@ function explainHTML(q, pick) {
 function drawQ() { markNav();
   const r = run, q = r.items[r.i], st = r.st[r.i], n = r.items.length; window.scrollTo(0, 0);
   const M = r.mode, cls = k => { if (M === 'open') return k === q.a ? 'correct' : ''; if (M === 'exam') return k === st.pick ? 'sel' : ''; if (!st.done) return ''; if (k === q.a) return 'correct'; if (k === st.pick) return 'wrong'; return 'faded'; };
+  if (!st.done && !st.t0) st.t0 = Date.now();
   const memo = (S.memo || {})[q.id] || '', solved = r.st.filter(x => x.done || (M === 'exam' && x.pick !== null)).length;
   $app.classList.add('wide');
   $app.innerHTML = `<div class="top qtop"><button class="back" onclick="quitQuiz()" aria-label="나가기"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#191F28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -962,7 +1006,7 @@ function drawQ() { markNav();
 }
 function goQ(i) { run.i = Math.max(0, Math.min(run.items.length - 1, i)); run.memo = false; drawQ(); }
 function gradeOne(q, k) { const ok = k === q.a; record(q.s, ok, q.id); S.qstat = S.qstat || {}; const qs = S.qstat[q.id] = S.qstat[q.id] || { t: 0, w: 0 }; qs.t++; if (!ok) qs.w++; if (ok) { if (run.retry) S.wrong = S.wrong.filter(x => x !== q.id); } else if (!S.wrong.includes(q.id)) S.wrong.push(q.id); }
-function answer(k) { const r = run, q = r.items[r.i], st = r.st[r.i]; if (r.mode === 'open') return; if (r.mode === 'exam') { st.pick = k; drawQ(); return; } if (st.done) return; st.pick = k; st.done = true; const ok = k === q.a; record(q.s, ok, q.id);
+function answer(k) { const r = run, q = r.items[r.i], st = r.st[r.i]; if (r.mode === 'open') return; if (r.mode === 'exam') { if (st.pick === null) speedHit(Date.now() - st.t0); st.pick = k; drawQ(); return; } if (st.done) return; speedHit(Date.now() - st.t0); buzz(k === q.a); st.pick = k; st.done = true; const ok = k === q.a; record(q.s, ok, q.id);
   S.qstat = S.qstat || {}; const qs = S.qstat[q.id] = S.qstat[q.id] || { t: 0, w: 0 }; qs.t++; if (!ok) qs.w++;
   if (ok) { if (r.retry) S.wrong = S.wrong.filter(x => x !== q.id); } else if (!S.wrong.includes(q.id)) S.wrong.push(q.id); save(); drawQ(); }
 function retryQ() { run.st[run.i] = { pick: null, done: false }; drawQ(); }
@@ -996,12 +1040,13 @@ function drawMock() { markNav(); const r = run, q = r.items[r.i], a = r.ans[q.id
 let submitArm = false;
 function submitMock(force) { const r = run, n = Object.keys(r.ans).length;
   if (!force && n < r.items.length && !submitArm) { submitArm = true; toast(`안 푼 문제가 ${r.items.length - n}개 있어요. 한 번 더 누르면 제출`); setTimeout(() => submitArm = false, 2500); return; } submitArm = false;
+  { const na = Object.keys(r.ans).length; if (na) { S.spd = S.spd || { n: 0, ms: 0 }; S.spd.n += na; S.spd.ms += Math.min(Date.now() - r.start, na * 300000); } }
   r.score = 0; r.wrongIds = []; r.items.forEach(q => { const a = r.ans[q.id], ok = a === q.a; if (a !== undefined) record(q.s, ok, q.id); if (ok) r.score++; else { r.wrongIds.push(q.id); if (!S.wrong.includes(q.id)) S.wrong.push(q.id); } }); save(); result(); }
 
 /* ===== 결과 ===== */
 function result() { markNav(); stopTimer(); $app.classList.remove('wide'); const r = run; window.scrollTo(0, 0); const T = PASS.total, M = PASS.sub;
   const pct = Math.round(r.score / r.items.length * 100), pass = pct >= T, wn = r.wrongIds.length, ms = Date.now() - r.start;
-  S.hist.unshift({ d: dkey(), l: r.label, s: r.score, t: r.items.length, ms }); S.hist = S.hist.slice(0, 30); if (r.setNo) { S.setBest = S.setBest || {}; S.setBest[r.setNo] = Math.max(S.setBest[r.setNo] || 0, pct); } save();
+  S.hist.unshift({ d: dkey(), l: r.label, s: r.score, t: r.items.length, ms }); S.hist = S.hist.slice(0, 30); if (r.daily) S.dq = { d: dkey(), s: r.score }; checkBadges(); if (r.setNo) { S.setBest = S.setBest || {}; S.setBest[r.setNo] = Math.max(S.setBest[r.setNo] || 0, pct); } save();
   const by = {}; r.items.forEach(q => { by[q.s] = by[q.s] || { t: 0, c: 0 }; by[q.s].t++; if (!r.wrongIds.includes(q.id)) by[q.s].c++; });
   const cut = Object.keys(by).some(k => by[k].c / by[k].t * 100 < M);
   $app.innerHTML = `<div class="top"><div class="ttl" style="text-align:center">결과</div></div><div class="pad">
@@ -1041,6 +1086,8 @@ function studyTab() { const rate = S.solved ? Math.round(S.correct / S.solved * 
     <div class="row"><div class="card"><div class="lbl">연속 학습</div><div class="val fl" style="justify-content:flex-start">${IC.flame()}${streak()}<small>일</small></div></div><div class="card"><div class="lbl">문제은행</div><div class="val">${S.seen.length}<small>/ ${Q.length}</small></div></div></div>
     <div class="sec">과목별 정답률</div>
     <div class="card">${SK.map(s => { const a = acc(s), o = S.subj[s]; return `<div class="bar"><span class="nm">${SUBJ[s]}${a !== null && a < T ? '<span class="weak">' + (a < M ? '과락' : T + ' 미만') + '</span>' : ''}</span><span class="tr"><i style="width:${a || 0}%;${a !== null && a < M ? 'background:var(--red)' : a !== null && a < T ? 'background:var(--orange)' : ''}"></i></span><span class="v">${a === null ? '-' : a + '%'}</span></div><div style="font-size:13px;color:var(--gray);margin:-6px 0 6px">${esc(SUBJ_FULL[s])} · ${o.c}/${o.t}</div>`; }).join('')}</div>
+    <button class="menu" style="margin-top:14px" onclick="reportPage()"><div class="ico">${IC.target()}</div><div class="grow"><div class="t">합격 예측 리포트</div><div class="d">합격 확률 · 과목별 예상 점수 · 집중할 단원</div></div><span class="chev">›</span></button>
+    ${badgeHTML()}
     ${whyStatsHTML()}
     ${topWrongHTML()}
     <div class="sec">최근 풀이</div>
@@ -1235,7 +1282,7 @@ window.addEventListener('popstate', () => {
 });
 function onSub() { return !document.querySelector('.tabbar') || !!document.querySelector('.top .back'); }
 /* ===== 간격 반복(SRS) · 오늘의 학습 플랜 · 오답 원인 · 개념 카드 ===== */
-const SRS_INT = [1, 2, 4, 7, 15, 30];
+const SRS_INT = [1, 3, 7, 15, 30];
 function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return dkey(d); }
 function srsHit(id, ok) { S.srs = S.srs || {}; const o = S.srs[id] || { b: 0, d: '' }; if (ok) { o.b = Math.min(o.b + (o.d ? 1 : 2), SRS_INT.length - 1); o.d = addDays(SRS_INT[o.b]); } else { o.b = 0; o.d = addDays(1); } S.srs[id] = o; }
 function dueIds() { const t = dkey(), m = S.srs || {}; return Object.keys(m).map(Number).filter(id => Q[id] && m[id].d && m[id].d <= t).sort((a, b) => m[a].b - m[b].b); }
@@ -1250,7 +1297,8 @@ function planCard() {
     <div class="pc-h"><div><div class="pc-k">오늘의 학습 플랜</div><div class="pc-t">${target ? `${target}문제면 오늘 할 일 끝` : '오늘 할 일을 다 했어요!'}</div></div><div class="pc-r"><svg viewBox="0 0 44 44" width="44" height="44"><circle cx="22" cy="22" r="18" stroke="rgba(255,255,255,.18)" stroke-width="5" fill="none"/><circle cx="22" cy="22" r="18" stroke="#F3D27A" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 18}" stroke-dashoffset="${2 * Math.PI * 18 * (1 - pct)}" transform="rotate(-90 22 22)"/></svg><b>${Math.round(pct * 100)}%</b></div></div>
     <div class="pc-list">
       <div class="pc-i"><span class="d1">NEW</span><div class="grow">새 문제<small>${S.exam ? '시험일까지 1회독 페이스' : '하루 목표 기준'}</small></div><b>${p.nNew}</b></div>
-      <div class="pc-i ${pro ? '' : 'lk'}"><span class="d2">복습</span><div class="grow">잊을 때쯤 다시 보기<small>틀린 문제는 1·2·4·7·15일 간격으로 돌아와요</small></div>${pro ? `<b>${p.nDue}</b>` : `<span class="tag pro">${IC.lock()} PRO</span>`}</div>
+      <div class="pc-i ${pro ? '' : 'lk'}"><span class="d2">복습</span><div class="grow">잊을 때쯤 다시 보기<small>1·3·7·15·30일 뒤 다시 출제</small></div>${pro ? `<b>${p.nDue}</b>` : `<span class="tag pro">${IC.lock()} PRO</span>`}</div>
+      <button class="pc-i dq" onclick="startDaily()"><span class="d1">5분</span><div class="grow">오늘의 5분 퀴즈<small>매일 바뀌는 5문제 · 전국 같은 문제</small></div>${S.dq && S.dq.d === dkey() ? `<b>${S.dq.s}/5 ✓</b>` : '<b>›</b>'}</button>
     </div>
     <button class="pc-go" onclick="startToday()">${p.done ? '이어서 학습하기' : '오늘 학습 시작'} →</button>
   </div>`;
@@ -1291,7 +1339,7 @@ function drawCard() {
     <div class="fc ${CD.flip ? 'flip' : ''}" onclick="CD.flip=!CD.flip;drawCard()">
       <div class="fc-in">
         <div class="fc-f"><div class="fc-tag">${SUBJ[q.s]} · ${esc(q.sec || SUBJ_SHORT[q.s])}</div><div class="fc-q">${esc(q.q.split('\n')[0])}</div><div class="fc-hint">탭해서 핵심 개념 보기</div></div>
-        <div class="fc-b"><div class="fc-tag">정답 ${NUM[q.a]}</div><div class="fc-a">${esc(q.o[q.a])}</div><div class="fc-c">${esc(q.c)}</div></div>
+        <div class="fc-b"><div class="fc-tag">정답 ${NUM[q.a]}${q.t ? ' · ' + esc(q.t) : ''}</div><div class="fc-a">${esc(q.o[q.a])}</div><div class="fc-c">${esc(q.c)}</div></div>
       </div>
     </div>
     <div class="fc-meta">외운 카드 ${known} / ${CD.deck.length}</div>
@@ -1300,6 +1348,92 @@ function drawCard() {
 }
 function cardNext(ok) { const id = CD.deck[CD.i].id; S.cardOk = S.cardOk || []; if (ok && !S.cardOk.includes(id)) S.cardOk.push(id); if (!ok) S.cardOk = S.cardOk.filter(x => x !== id); save();
   if (CD.i + 1 < CD.deck.length) { CD.i++; CD.flip = false; drawCard(); } else { toast(`카드 ${CD.deck.length}장을 다 봤어요`); CD = null; go('home'); } }
+
+/* ===== 초개인화: 속도·단원 통계 · 합격 확률 · 맞춤 문제집 ===== */
+const unitKey = q => q.s + '|' + (q.sec || '');
+const unitName = q => q.sec || SUBJ_SHORT[q.s] + ' 종합';
+function speedHit(ms) { if (!ms || ms < 800) return; S.spd = S.spd || { n: 0, ms: 0 }; S.spd.n++; S.spd.ms += Math.min(ms, 300000); }
+function avgSec() { const s = S.spd; return s && s.n >= 3 ? Math.round(s.ms / s.n / 1000) : null; }
+function unitAcc(uk) { const o = (S.ustat || {})[uk]; return o && o.t ? o.c / o.t : null; }
+function randG(k) { if (k < 1) return randG(k + 1) * Math.pow(Math.random(), 1 / k); const d = k - 1 / 3, c = 1 / Math.sqrt(9 * d); for (;;) { let x, v; do { const u1 = Math.random(), u2 = Math.random(); x = Math.sqrt(-2 * Math.log(u1 || 1e-9)) * Math.cos(2 * Math.PI * u2); v = 1 + c * x; } while (v <= 0); v = v * v * v; const u = Math.random(); if (u < 1 - 0.0331 * x * x * x * x || Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v; } }
+function randBeta(a, b) { const x = randG(a), y = randG(b); return x / (x + y); }
+function passProb() {
+  const dist = C.dist || Object.fromEntries(SK.map(s => [s, Math.round(C.info.count / SK.length)])), n = S.solved, sp = avgSec(), lim = C.secPerQ || Math.round(C.info.minutes * 60 / C.info.count);
+  const reach = sp && sp > lim ? lim / sp : 1, T = PASS.total / 100, Mn = PASS.sub / 100, N = 2500;
+  const tot = Object.values(dist).reduce((a, b) => a + b, 0); let pass = 0; const sums = {}; SK.forEach(s => sums[s] = 0);
+  for (let i = 0; i < N; i++) { let score = 0, ok = true;
+    for (const s of SK) { const o = S.subj[s] || { t: 0, c: 0 }, p = randBeta(o.c + 2, o.t - o.c + 2) * reach, m = dist[s] || 0; let k = 0; for (let j = 0; j < m; j++) if (Math.random() < p) k++; score += k; sums[s] += k / (m || 1); if (m && k / m < Mn) ok = false; }
+    if (ok && score / tot >= T) pass++; }
+  return { p: Math.round(pass / N * 100), n, sp, lim, reach, conf: n < 20 ? 0 : n < 60 ? 1 : 2, subs: SK.map(s => ({ s, est: Math.round(sums[s] / N * 100), q: dist[s] })) };
+}
+function weakUnits() { const m = new Map(); pool(0).forEach(q => { const k = unitKey(q); if (!m.has(k)) m.set(k, { k, name: unitName(q), s: q.s, n: 0 }); m.get(k).n++; }); return [...m.values()].map(u => { const o = (S.ustat || {})[u.k]; return Object.assign(u, { t: o ? o.t : 0, a: o && o.t ? Math.round(o.c / o.t * 100) : null }); }).filter(u => u.t >= 2).sort((a, b) => a.a - b.a); }
+function buildCustom() {
+  const due = new Set(dueIds()), srs = S.srs || {};
+  const sc = pool(0).map(q => { const ua = unitAcc(unitKey(q)); let w = 1 - (ua === null ? 0.5 : ua); if (S.wrong.includes(q.id)) w += 1; if (due.has(q.id)) w += 0.8; if (!S.seen.includes(q.id) && ua !== null && ua < PASS.total / 100) w += 0.4; if (srs[q.id] && srs[q.id].b >= 3) w -= 0.8; if ((S.why || {})[q.id] === 'concept') w += 0.3; return { q, w: w + Math.random() * 0.15 }; });
+  return sc.sort((a, b) => b.w - a.w).slice(0, 20).map(x => x.q);
+}
+function startCustom() { if (!isPro()) { paywall('weak'); return; } if (S.solved < 5) { toast('5문제 이상 풀면 내 약점을 분석해 드려요'); startToday(); return; } modeSheet(buildCustom(), '내 약점 맞춤 문제집'); }
+
+function gaugeSVG(p, big) { const r = big ? 86 : 40, w = r * 2 + 24, sw = big ? 16 : 9, L = Math.PI * r, col = p >= 70 ? '#00B862' : p >= 40 ? '#FF9500' : '#F04452';
+  return `<svg viewBox="0 0 ${w} ${r + sw}" width="${w}" height="${r + sw}"><path d="M${12} ${r + sw / 2}a${r} ${r} 0 0 1 ${2 * r} 0" fill="none" stroke="#EEF0F3" stroke-width="${sw}" stroke-linecap="round"/><path d="M${12} ${r + sw / 2}a${r} ${r} 0 0 1 ${2 * r} 0" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L * (1 - p / 100)}" class="gArc"/></svg>`; }
+function reportPage() {
+  markNav(); window.scrollTo(0, 0); $app.classList.remove('wide');
+  if (S.solved < 20) { $app.innerHTML = topBar('합격 예측 리포트') + `<div class="pad"><div class="card" style="text-align:center;padding:30px 20px"><div class="e" style="width:72px;height:72px;margin:0 auto 10px">${IC.target()}</div><div style="font-size:19px;font-weight:800">${20 - S.solved}문제만 더 풀면 열려요</div><div style="color:var(--gray);font-size:14px;margin-top:6px;line-height:1.6">정확한 예측을 위해 최소 20문제의<br>정답률과 풀이 속도가 필요해요</div><div class="ub" style="margin:18px auto 0;max-width:240px"><i style="width:${S.solved / 20 * 100}%"></i></div><button class="btn" style="margin-top:18px;width:100%" onclick="startToday()">문제 풀러 가기</button></div></div>`; tabbar(); return; }
+  const r = passProb(), W = weakUnits().slice(0, 3), T = PASS.total, M = PASS.sub, cov = Math.round(S.seen.length / Q.length * 100);
+  const msg = r.p >= 80 ? '지금 시험 봐도 합격 가능성이 높아요' : r.p >= 50 ? '합격선 근처예요. 약점만 잡으면 돼요' : r.p >= 20 ? '조금만 더 오르면 합격권이에요' : '지금은 기초를 쌓을 때예요';
+  $app.innerHTML = topBar('합격 예측 리포트') + `<div class="pad">
+    <div class="card rp-h"><div class="rp-g">${gaugeSVG(r.p, true)}<div class="rp-n"><b>${r.p}</b><small>%</small></div></div>
+      <div class="rp-k">지금 시험 보면 합격 확률</div><div class="rp-m">${msg}</div>
+      <span class="rp-c c${r.conf}">${['데이터 부족', '참고용 · 문제를 더 풀수록 정확해져요', '신뢰도 높음'][r.conf]}</span></div>
+    <div class="sec">과목별 예상 점수</div>
+    <div class="card">${r.subs.map(x => `<div class="bar"><span class="nm">${SUBJ[x.s]} <span style="color:var(--gray);font-weight:500">${x.q}문항</span></span><span class="tr cutline" style="--cut:${M}%"><i style="width:${x.est}%;${x.est < M ? 'background:var(--red)' : x.est < T ? 'background:var(--orange)' : ''}"></i></span><span class="v">${x.est}점</span></div>`).join('')}<div style="font-size:12px;color:var(--gray);margin-top:4px">실제 시험 배점(${r.subs.map(x => x.q).join('·')}문항)으로 2,500번 모의 시험을 돌린 결과예요</div></div>
+    <div class="row"><div class="card"><div class="lbl">평균 풀이 속도</div><div class="val">${r.sp === null ? '-' : r.sp}<small>초</small></div><div class="rp-s ${r.sp && r.sp > r.lim ? 'no' : 'ok'}">${r.sp === null ? '아직 측정 중' : r.sp > r.lim ? `시험 기준 ${r.lim}초보다 느려요` : `시험 기준 ${r.lim}초 안이에요`}</div></div><div class="card"><div class="lbl">학습 범위</div><div class="val">${cov}<small>%</small></div><div class="rp-s ${cov < 50 ? 'no' : 'ok'}">문제은행 ${S.seen.length}/${Q.length}</div></div></div>
+    <div class="sec">집중해야 할 단원</div>
+    <div class="card" style="padding:6px 20px">${W.length ? W.map((u, i) => `<div class="tw"><span class="rk ${i === 0 ? 'top' : ''}">${i + 1}</span><div class="grow"><div class="t">${esc(u.name)}</div><div class="d">${SUBJ[u.s]} · ${u.t}번 풀이</div></div><span class="wr" style="color:${u.a < M ? 'var(--red)' : u.a < T ? 'var(--orange)' : 'var(--green)'}">${u.a}%</span></div>`).join('') : '<div class="soon">단원마다 2문제 이상 풀면 분석돼요</div>'}</div>
+    <button class="upsell" style="margin-top:16px" onclick="startCustom()"><div class="deco">${IC.target()}</div><div class="t">내 약점만 모은<br>맞춤 문제집 20문항</div><div class="d">약한 단원·틀린 문제·잊을 때가 된 문제로 자동 구성</div><span class="go">${isPro() ? '' : IC.lock() + ' '}맞춤 문제집 풀기</span></button>
+    <div class="note" style="margin-top:12px">예측은 지금까지의 정답률과 풀이 속도로 계산한 추정치예요. 실제 시험 결과를 보장하지 않아요.</div>
+  </div>`; tabbar();
+}
+
+/* ===== 해설 강화: 키워드 하이라이트 · 공식 상자 · 10초 암기 팁 ===== */
+function hl(t) { return esc(t).replace(/(&quot;|‘|“|')([^'’”&]{1,24})(&quot;|’|”|')/g, '<mark>$1$2$3</mark>').replace(/(\d[\d,.]*\s?(%|만원|억원|원|년|개월|일|배|세|명))/g, '<mark class="n">$1</mark>'); }
+
+/* ===== 단권화 요약 노트 ===== */
+let NT = { k: '' };
+function notePage(k, focus) {
+  markNav(); window.scrollTo(0, 0); $app.classList.remove('wide');
+  const units = []; const seen = new Set(); pool(0).forEach(q => { const uk = unitKey(q); if (!seen.has(uk)) { seen.add(uk); units.push({ k: uk, name: unitName(q), s: q.s }); } });
+  NT.k = k || NT.k || (units.find(u => pool(0).some(q => unitKey(q) === u.k && q.c)) || units[0]).k;
+  const items = pool(0).filter(q => unitKey(q) === NT.k && q.c), u = units.find(x => x.k === NT.k);
+  $app.innerHTML = topBar('단권화 요약 노트') + `<div class="pad">
+    <div class="chips" style="flex-wrap:wrap;margin-bottom:12px">${units.map(x => `<button class="chip ${x.k === NT.k ? 'on' : ''}" onclick="notePage('${x.k}')">${SUBJ[x.s]} ${esc(x.name)}</button>`).join('')}</div>
+    <div class="nt-h"><div class="t">${esc(u ? u.name : '')}</div><div class="d">핵심 개념 ${items.length}개 · 문제를 풀다가 막히면 여기로 와요</div></div>
+    ${items.length ? items.map((q, i) => `<div class="nt-c ${q.id === focus ? 'focus' : ''}" id="nt${q.id}"><div class="nt-n">${pad2(i + 1)}</div><div class="grow"><div class="nt-t">${esc(q.t || q.o[q.a])}</div><div class="nt-b">${hl(q.c)}</div>${q.f ? `<div class="rx-f"><div class="lb">핵심 공식</div>${hl(q.f)}</div>` : ''}${q.m ? `<div class="rx-m"><div class="lb">10초 암기 팁</div>${esc(q.m)}</div>` : ''}<button class="tlink" onclick="startQuiz([Object.assign({id:${q.id}},Q[${q.id}])],'요약 노트 확인 문제','explain')">관련 문제 풀기 ›</button></div></div>`).join('') : `<div class="empty"><div class="e">${IC.book()}</div>이 단원 요약은 문제를 늘리면서 함께 채워요</div>`}
+  </div>`; tabbar();
+  if (focus !== undefined) setTimeout(() => { const el = document.getElementById('nt' + focus); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 120);
+}
+
+/* ===== 게이미피케이션: 오늘의 5분 퀴즈 · 배지 · 복습 알림 ===== */
+function seedRand(seed) { let x = seed % 2147483647; if (x <= 0) x += 2147483646; return () => (x = x * 16807 % 2147483647) / 2147483647; }
+function dailyItems() { const k = dkey() + C.id, r = seedRand([...k].reduce((a, c) => a * 31 + c.charCodeAt(0), 7) >>> 0); return pool(0).map(q => [r(), q]).sort((a, b) => a[0] - b[0]).slice(0, 5).map(x => x[1]); }
+function startDaily() { startQuiz(dailyItems(), '오늘의 5분 퀴즈', 'explain'); run.daily = true; }
+const BADGES = [
+  ['s3', '3일 연속', '3일 연속 공부했어요', () => streak() >= 3], ['s7', '일주일 개근', '7일 연속 공부했어요', () => streak() >= 7], ['s10', '10일 불꽃', '10일 연속 공부했어요', () => streak() >= 10], ['s30', '한 달 완주', '30일 연속 공부했어요', () => streak() >= 30],
+  ['q10', '첫걸음', '10문제를 풀었어요', () => S.solved >= 10], ['q50', '탄력 받는 중', '50문제를 풀었어요', () => S.solved >= 50], ['q100', '백 문제 돌파', '100문제를 풀었어요', () => S.solved >= 100], ['q300', '문제은행 정복자', '300문제를 풀었어요', () => S.solved >= 300],
+  ['pass', '합격권 진입', '모의고사·세트에서 합격선을 넘었어요', () => (S.hist || []).some(h => h.t >= 10 && h.s / h.t * 100 >= PASS.total)], ['card', '개념 수집가', '개념 카드 20장을 외웠어요', () => (S.cardOk || []).length >= 20],
+  ['why', '자기 분석가', '틀린 이유를 10번 기록했어요', () => Object.values(S.why || {}).filter(Boolean).length >= 10], ['daily', '5분의 기적', '오늘의 5분 퀴즈를 끝냈어요', () => !!S.dq]];
+function checkBadges(silent) { S.badges = S.badges || {}; const got = []; BADGES.forEach(([id, n, d, f]) => { try { if (!S.badges[id] && f()) { S.badges[id] = dkey(); got.push(n); } } catch (e) {} }); if (got.length) { save(); if (!silent) setTimeout(() => toast('🏅 배지 획득: ' + got.join(', ')), 600); } }
+function badgeHTML() { const b = S.badges || {}, n = Object.keys(b).length; return `<div class="sec">획득한 배지 <span style="font-size:14px;color:var(--gray);font-weight:600">${n} / ${BADGES.length}</span></div><div class="bdg">${BADGES.map(([id, nm, d]) => `<div class="bg ${b[id] ? 'on' : ''}" title="${d}"><div class="bi">${b[id] ? IC.medal() : IC.lock()}</div><div class="bn">${nm}</div><div class="bd">${b[id] ? b[id].slice(5).replace('-', '.') + ' 획득' : d}</div></div>`).join('')}</div>`; }
+function reviewPopup() {
+  const due = dueIds(); if (!due.length || S.popDay === dkey() || document.getElementById('sheet').classList.contains('show')) return;
+  S.popDay = dkey(); save();
+  openSheet(`<div class="hi">${IC.climb()}</div><h3>잊기 직전인 문제가<br>${due.length}개 돌아왔어요</h3><div class="p">틀렸던 문제를 1·3·7·15·30일 간격으로 다시 보여 드려요. 지금 풀면 기억이 훨씬 오래가요.</div>
+    ${isPro() ? `<button class="btn" style="width:100%;margin-top:6px" onclick="closeSheet();startReview()">지금 ${Math.min(due.length, 30)}문제 복습하기</button>` : `<button class="btn" style="width:100%;margin-top:6px" onclick="closeSheet();paywall('wrong')">${IC.lock()} PRO로 복습 열기</button>`}
+    <button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">나중에 할게요</button>`);
+}
+function startReview() { const ids = dueIds().slice(0, 30); if (!ids.length) { toast('지금 복습할 문제가 없어요'); return; } startQuiz(ids.map(id => Object.assign({ id }, Q[id])), '망각 곡선 복습', 'explain'); }
+function enterAnim() { requestAnimationFrame(() => { const p = $app.querySelector('.pad'); if (p) p.classList.add('in'); }); }
+function buzz(ok) { try { navigator.vibrate && navigator.vibrate(ok ? 18 : [30, 40, 30]); } catch (e) {} }
 
 /* ===== 시트 ===== */
 function openSheet(html) { markNav(); const sh = document.getElementById('sheet'); sh.innerHTML = '<div class="grab"></div>' + html; document.getElementById('dim').classList.add('show'); sh.classList.add('show'); }
