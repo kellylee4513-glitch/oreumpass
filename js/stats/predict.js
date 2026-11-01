@@ -14,7 +14,7 @@ function passProb() {
   for (let i = 0; i < N; i++) { let score = 0, ok = true;
     for (const s of SK) { const o = S.subj[s] || { t: 0, c: 0 }, p = randBeta(o.c + 2, o.t - o.c + 2) * reach, m = dist[s] || 0; let k = 0; for (let j = 0; j < m; j++) if (Math.random() < p) k++; score += k; sums[s] += k / (m || 1); if (m && k / m < Mn) ok = false; }
     if (ok && score / tot >= T) pass++; }
-  return { p: Math.round(pass / N * 100), n, sp, lim, reach, conf: n < 20 ? 0 : n < 60 ? 1 : 2, subs: SK.map(s => ({ s, est: Math.round(sums[s] / N * 100), q: dist[s] })) };
+  return { p: Math.round(pass / N * 100), n, sp, lim, reach, conf: n < 30 ? 1 : n < 80 ? 1 : 2, subs: SK.map(s => ({ s, est: Math.round(sums[s] / N * 100), q: dist[s] })) };
 }
 function weakUnits() { const m = new Map(); pool(0).forEach(q => { const k = unitKey(q); if (!m.has(k)) m.set(k, { k, name: unitName(q), s: q.s, n: 0 }); m.get(k).n++; }); return [...m.values()].map(u => { const o = (S.ustat || {})[u.k]; return Object.assign(u, { t: o ? o.t : 0, a: o && o.t ? Math.round(o.c / o.t * 100) : null }); }).filter(u => u.t >= 2).sort((a, b) => a.a - b.a); }
 function buildCustom() {
@@ -28,7 +28,7 @@ function gaugeSVG(p, big) { const r = big ? 86 : 40, w = r * 2 + 24, sw = big ? 
   return `<svg viewBox="0 0 ${w} ${r + sw}" width="${w}" height="${r + sw}"><path d="M${12} ${r + sw / 2}a${r} ${r} 0 0 1 ${2 * r} 0" fill="none" stroke="#EEF0F3" stroke-width="${sw}" stroke-linecap="round"/><path d="M${12} ${r + sw / 2}a${r} ${r} 0 0 1 ${2 * r} 0" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L * (1 - p / 100)}" class="gArc"/></svg>`; }
 function reportPage() {
   markNav(); window.scrollTo(0, 0); $app.classList.remove('wide');
-  if (S.solved < 20) { $app.innerHTML = topBar('합격 예측 리포트') + `<div class="pad"><div class="card" style="text-align:center;padding:30px 20px"><div class="e" style="width:72px;height:72px;margin:0 auto 10px">${IC.target()}</div><div style="font-size:19px;font-weight:800">${20 - S.solved}문제만 더 풀면 열려요</div><div style="color:var(--gray);font-size:14px;margin-top:6px;line-height:1.6">정확한 예측을 위해 최소 20문제의<br>정답률과 풀이 속도가 필요해요</div><div class="ub" style="margin:18px auto 0;max-width:240px"><i style="width:${S.solved / 20 * 100}%"></i></div><button class="btn" style="margin-top:18px;width:100%" onclick="startToday()">문제 풀러 가기</button></div></div>`; tabbar(); return; }
+  if (S.solved < 10) { $app.innerHTML = topBar('합격 예측 리포트') + `<div class="pad"><div class="card" style="text-align:center;padding:30px 20px"><div class="e" style="width:72px;height:72px;margin:0 auto 10px">${IC.target()}</div><div style="font-size:19px;font-weight:800">${10 - S.solved}문제만 더 풀면 열려요</div><div style="color:var(--gray);font-size:14px;margin-top:6px;line-height:1.6">정확한 예측을 위해 최소 10문제의<br>정답률과 풀이 속도가 필요해요</div><div class="ub" style="margin:18px auto 0;max-width:240px"><i style="width:${S.solved / 10 * 100}%"></i></div><button class="btn" style="margin-top:18px;width:100%" onclick="startToday()">문제 풀러 가기</button></div></div>`; tabbar(); return; }
   const r = passProb(), W = weakUnits().slice(0, 3), T = PASS.total, M = PASS.sub, cov = Math.round(S.seen.length / Q.length * 100);
   const msg = r.p >= 80 ? '지금 시험 봐도 합격 가능성이 높아요' : r.p >= 50 ? '합격선 근처예요. 약점만 잡으면 돼요' : r.p >= 20 ? '조금만 더 오르면 합격권이에요' : '지금은 기초를 쌓을 때예요';
   $app.innerHTML = topBar('합격 예측 리포트') + `<div class="pad">

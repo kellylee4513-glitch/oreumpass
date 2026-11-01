@@ -17,11 +17,11 @@ const NUM = '①②③④';
 function explainHTML(q, pick) {
   const answered = pick !== null && pick !== undefined, ok = pick === q.a, qs = (S.qstat || {})[q.id];
   let h = `<div class="rx-band ${!answered ? '' : ok ? 'ok' : 'no'}"><div class="rx-ic">${!answered ? IC.medal() : ok ? IC.trophy() : IC.climb()}</div><div><div class="rx-t">${!answered ? '정답' : ok ? '맞혔어요!' : '한 번 더 오르면 돼요'}</div><div class="rx-s">정답 ${NUM[q.a]} ${esc(q.o[q.a])}</div></div></div>`;
+  if (q.m) h += `<div class="rx-m first"><div class="lb">10초 암기 팁</div>${esc(q.m)}</div>`;
   if (q.c) h += `<div class="rx-blk"><div class="rx-lbl"><i>01</i>한 줄 개념</div><p>${hl(q.c)}</p></div>`;
   if (q.f) h += `<div class="rx-f"><div class="lb">핵심 공식</div>${hl(q.f)}</div>`;
   h += `<div class="rx-blk"><div class="rx-lbl"><i>${q.c ? '02' : '01'}</i>왜 정답이 ${NUM[q.a]}일까</div><p>${hl(q.e)}</p></div>`;
   if (q.w) h += `<div class="rx-blk"><div class="rx-lbl"><i>03</i>보기별 함정 체크</div><table class="rx-tb">${q.o.map((o, k) => `<tr class="${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><td class="k">${NUM[k]}</td><td class="j">${k === q.a ? '<b class="o">O</b>' : '<b class="x">X</b>'}</td><td>${k === q.a ? '정답 보기예요.' : hl(q.w[k] || '')}${k === pick && k !== q.a ? ' <span class="pk">내 선택</span>' : ''}</td></tr>`).join('')}</table></div>`;
-  if (q.m) h += `<div class="rx-m"><div class="lb">10초 암기 팁</div>${esc(q.m)}</div>`;
   if (q.c) h += `<button class="ref nt" onclick="notePage('${unitKey(q)}',${q.id})">${IC.note()}<span>요약 노트에서 ‘${esc(unitName(q))}’ 이어 보기 ›</span></button>`;
   h += `<a class="ref" href="${PDF_LINK}" target="_blank" rel="noopener">${IC.book()}<span>${esc(C.short)} 정리본 ${SUBJ[q.s]} ‘${esc(SUBJ_SHORT[q.s])}’ 펼쳐 보기 ›</span></a>`;
   if (qs && qs.t) h += `<div class="xp-me">나의 풀이 ${qs.t}회 · 오답 ${qs.w}회</div>`;
@@ -35,7 +35,7 @@ function drawQ() { markNav();
   $app.classList.add('wide');
   $app.innerHTML = `<div class="top qtop"><button class="back" onclick="quitQuiz()" aria-label="나가기"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#191F28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="ttl">${esc(r.label)}<small><b class="mchip m-${M}">${MODE_NAME[M]}</b><span class="mtxt">${M === 'open' ? '정답·해설 펼쳐 보기' : solved + '문제 ' + (M === 'exam' ? '답함' : '풀었어요')}</span></small></div>
-    <div class="qnav"><button class="ar" ${r.i === 0 ? 'disabled' : ''} onclick="goQ(${r.i - 1})" aria-label="이전 문제">‹</button><button class="pg" onclick="jumpSheet()"><svg viewBox="0 0 24 24" width="15" height="15"><rect x="3" y="3" width="7" height="7" rx="2" fill="currentColor"/><rect x="14" y="3" width="7" height="7" rx="2" fill="currentColor"/><rect x="3" y="14" width="7" height="7" rx="2" fill="currentColor"/><rect x="14" y="14" width="7" height="7" rx="2" fill="currentColor" opacity=".4"/></svg>${r.i + 1}<em>/${n}</em></button><button class="ar" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}" aria-label="다음 문제">›</button></div></div>
+    <div class="qnav"><button class="pg" onclick="jumpSheet()" aria-label="번호판 열기"><svg viewBox="0 0 24 24" width="15" height="15"><rect x="3" y="3" width="7" height="7" rx="2" fill="currentColor"/><rect x="14" y="3" width="7" height="7" rx="2" fill="currentColor"/><rect x="3" y="14" width="7" height="7" rx="2" fill="currentColor"/><rect x="14" y="14" width="7" height="7" rx="2" fill="currentColor" opacity=".4"/></svg>${r.i + 1}<em>/${n}</em></button></div></div></div>
   <div class="pad"><div class="prog"><i style="width:${solved / n * 100}%"></i></div>
   <div class="qwrap">
     <div class="qcard">
@@ -44,12 +44,13 @@ function drawQ() { markNav();
       ${run.memo || memo ? `<textarea class="memo" placeholder="내 노트: 헷갈린 포인트를 적어 두세요" oninput="(S.memo=S.memo||{})[${q.id}]=this.value;save()">${esc(memo)}</textarea>` : ''}
       <div class="qtext">${esc(q.q)}</div>
       ${q.o.map((o, k) => `<button class="opt ${cls(k)}" ${(M === 'explain' && st.done) || M === 'open' ? 'disabled' : ''} onclick="answer(${k})"><span class="num">${k + 1}</span><span>${esc(o)}</span></button>`).join('')}
-      ${M === 'exam' ? `<div class="qact"><button class="btn ghost" ${r.i === 0 ? 'disabled' : ''} onclick="goQ(${r.i - 1})">이전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음 문제' : '채점하기'}</button></div>` : M === 'open' ? `<div class="qact"><button class="btn ghost" ${r.i === 0 ? 'disabled' : ''} onclick="goQ(${r.i - 1})">이전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음 문제' : '끝내기'}</button></div>` : ''}
-      ${M === 'explain' && st.done ? `<div class="qact"><button class="btn ghost" onclick="retryQ()">↺ 다시 도전</button><button class="btn" onclick="${r.i + 1 < n ? `goQ(${r.i + 1})` : 'finishQuiz()'}">${r.i + 1 < n ? '다음으로' : '결과 보기'}</button></div>` : ''}
+      ${M === 'explain' && st.done ? `<button class="retry" onclick="retryQ()">↺ 이 문제 다시 풀기</button>` : ''}
     </div>
-    <div class="xcard ${st.done || M === 'open' ? 'open' : ''}">${M === 'open' ? explainHTML(q, null) : M === 'exam' ? `<div class="xp-wait">${IC.exam()}<p>시험 모드예요<br>다 풀고 <b>채점하기</b>를 누르면<br>해설이 한꺼번에 열려요</p></div>` : st.done ? (st.pick !== q.a ? whyHTML(q.id) : '') + explainHTML(q, st.pick) : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
+    <div class="xcard ${st.done || M === 'open' ? 'open' : ''}">${M === 'open' ? explainHTML(q, null) : M === 'exam' ? `<div class="xp-wait">${IC.exam()}<p>시험 모드예요<br>다 풀고 <b>채점하기</b>를 누르면<br>해설이 한꺼번에 열려요</p></div>` : st.done ? explainHTML(q, st.pick) + (st.pick !== q.a ? whyHTML(q.id) : '') : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
   </div></div>`;
-  document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove());
+  const last = r.i + 1 >= n, nextFn = last ? 'finishQuiz()' : `goQ(${r.i + 1})`, ready = M !== 'explain' || st.done;
+  const nextLbl = last ? (M === 'exam' ? '채점하기' : M === 'open' ? '끝내기' : '결과 보기') : (ready ? '다음 문제' : '건너뛰기');
+  bottom(`<button class="btn ghost qprev" ${r.i === 0 ? 'disabled' : ''} onclick="goQ(${r.i - 1})"><span class="ar">‹</span>이전 문제</button><button class="btn qnext ${ready ? '' : 'skip'}" onclick="${nextFn}">${nextLbl}<span class="ar">›</span></button>`);
   if (r.pen) setTimeout(mountPen, 30);
   if (M === 'explain' && st.done && window.innerWidth < 900) { const x = document.querySelector('.xcard'); if (x) setTimeout(() => x.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120); }
 }

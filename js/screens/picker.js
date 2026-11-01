@@ -22,6 +22,7 @@ function certPicker(first) { if (!first) markNav();
       <div class="fh-k">자격증 CBT · 더오를패스</div>
       <h1>한 문제씩 <em>더 오를</em><br>자격증 합격까지</h1>
       <p>실제 시험처럼 풀고, 틀린 문제만 골라 다시 올라가요.</p>
+      ${READY[0] ? `<button class="fh-cta" onclick="quickStart('${READY[0].id}')"><span class="grow"><b>${esc(READY[0].name)}</b><span>바로 문제 풀기</span></span><span class="go">→</span></button><div class="fh-sub">가입 없이 바로 · 10문제 5분 · 해설 무료</div>` : ''}
       <div class="fh-stats"><div><b>${READY.length}</b><span>열린 자격증</span></div><div><b>${totalQ}</b><span>문항</span></div><div><b>100%</b><span>해설 포함</span></div></div>
       <ul class="fh-pt"><li>${IC.exam()}<span>실전 시간 그대로 모의고사</span></li><li>${IC.target()}<span>합격선·과락선 기준 실력 진단</span></li><li>${IC.note()}<span>틀린 문제만 모으는 복습노트</span></li></ul>
     </section>
@@ -37,3 +38,5 @@ function certPicker(first) { if (!first) markNav();
 }
 function pickCert(id) { useCert(id); save(); tab = 'home'; $app.classList.remove('wide'); go('home'); toast(C.name + '(으)로 바꿨어요'); }
 
+
+function quickStart(id) { useCert(id); G.cur = id; save(); tab = 'home'; $app.classList.remove('wide'); const all = pool(0), un = shuffle(all.filter(q => !S.seen.includes(q.id))); startQuiz(un.concat(shuffle(all.filter(q => S.seen.includes(q.id)))).slice(0, 10), C.short + ' 바로 풀기', 'explain'); }

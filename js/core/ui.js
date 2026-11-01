@@ -18,6 +18,7 @@ function record(s, ok, qid) {
   S.solved++; if (ok) S.correct++; S.subj[s].t++; if (ok) S.subj[s].c++;
   const k = dkey(); S.days[k] = (S.days[k] || 0) + 1;
   if (qid !== undefined && !S.seen.includes(qid)) S.seen.push(qid);
+  if (qid !== undefined && !ok) { const d = dkey(); if (!S.tw || S.tw.d !== d) S.tw = { d, ids: [] }; if (!S.tw.ids.includes(qid)) S.tw.ids.push(qid); }
   if (qid !== undefined) { srsHit(qid, ok); const uk = unitKey(Q[qid]); S.ustat = S.ustat || {}; const u = S.ustat[uk] = S.ustat[uk] || { t: 0, c: 0 }; u.t++; if (ok) u.c++; }
   if (S.days[k] >= S.goal && S.goalDone !== k) { S.goalDone = k; setTimeout(celebrate, 350); }
 }
