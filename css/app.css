@@ -770,3 +770,21 @@ mark{background:linear-gradient(transparent 62%,#FFEFB0 62%)!important}
 /* 접근성: 작은 링크도 손가락으로 누르기 쉽게(최소 24px), 위험 버튼 글자 대비 */
 .foot button,.foot a{display:inline-flex;align-items:center;min-height:32px;padding:0 4px}
 .li.danger{color:#D21F33!important}
+
+/* 정리본 PDF 판매 페이지 */
+.sh-hero{background:linear-gradient(135deg,#1E2129,#363B47);color:#fff;border-radius:24px;padding:24px 22px;margin-bottom:8px}
+.sh-hero .k{font-size:13px;font-weight:700;color:#F3D27A}.sh-hero .t{font-size:21px;font-weight:800;line-height:1.4;margin-top:6px}
+.sh-hero .d{font-size:14.5px;opacity:.85;line-height:1.6;margin-top:8px}
+.sh-price{margin-top:16px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.sh-price b{font-size:24px;font-weight:800}
+.sh-price s{font-size:14px;opacity:.6}.sh-price .off{font-size:15px;font-weight:800;color:#FF8A8A}
+.sh-list{padding:6px 18px}.sh-it{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.sh-it:last-child{border-bottom:0}
+.sh-it .no{flex:none;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);color:var(--blue-dark);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sh-it .t{font-size:15.5px;font-weight:700}.sh-it .d{font-size:14px;color:var(--sub);margin-top:3px;line-height:1.55}
+.sh-pv{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scroll-snap-type:x mandatory}
+.sh-pv img{flex:none;width:72%;max-width:320px;border-radius:14px;border:1px solid var(--line);background:#fff;scroll-snap-align:start}
+.sh-pv.empty{background:var(--card);border-radius:18px;padding:28px 16px;justify-content:center;color:var(--gray);font-size:14px}
+.sh-for{font-size:14.5px;color:var(--sub);line-height:1.75}
+.sh-buy{display:block;width:100%;text-align:center;background:var(--blue);color:#fff;font-weight:800;font-size:17px;padding:17px;border-radius:16px;margin:18px 0 6px;text-decoration:none}
+.sh-buy:active{transform:scale(.98)}.sh-buy.off{background:#C9CED6}
+.sh-note{text-align:center;font-size:13px;color:var(--gray);margin-bottom:8px}
+.sh-pol{font-size:13.5px;color:var(--sub);line-height:1.7}.sh-pol div+div{margin-top:10px}.sh-pol b{color:var(--text);margin-right:6px}

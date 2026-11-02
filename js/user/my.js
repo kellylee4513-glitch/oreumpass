@@ -10,7 +10,7 @@ function myTab() {
       <button class="li" onclick="go('certs')"><span class="ico">${badge(C, 32)}</span>공부 중인 자격증<span class="r">${esc(C.name)} ›</span></button>
       <button class="li" onclick="examSheet()"><span class="ico">${IC.calendar()}</span>시험일<span class="r">${S.exam ? S.exam.replace(/-/g, '.') : '설정 안 함'} ›</span></button>
       <button class="li" onclick="goalSheet()"><span class="ico">${IC.goal()}</span>하루 목표<span class="r">${S.goal}문제 ›</span></button>
-${PDF_LINK && PDF_LINK !== '#' ? `<a class="li" href="${PDF_LINK}" target="_blank" rel="noopener"><span class="ico">${IC.book()}</span>${esc(C.short)} 핵심 정리본 PDF<span class="r">›</span></a>` : ''}
+${shopEntry()}
     </div>
     <div class="card list" style="padding:4px 20px">
       <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>
