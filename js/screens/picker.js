@@ -5,7 +5,7 @@ function certPicker(first) {
   const totalQ = READY.reduce((n, c) => n + c.questions.length, 0);
   const big = c => { const d = G.data[c.id], pro = G.passAll || G.passCerts.includes(c.id), dd = d ? dday(d.exam) : null, seen = d ? d.seen.length : 0, pct = Math.round(seen / c.questions.length * 100);
     const subs = Object.entries(c.subjects).map(([k, v]) => `<span><i>${k}</i>${esc(v.short)}</span>`).join('');
-    const tag = pro ? '<span class="tag on">PRO</span>' : dd !== null && dd >= 0 ? `<span class="tag free">D-${dd}</span>` : '<span class="rc-open">무료 오픈</span>';
+    const tag = pro ? '<span class="tag on">PRO</span>' : dd !== null && dd >= 0 ? `<span class="tag free">D-${dd}</span>` : '';
     return `<button class="rc ${G.cur === c.id && !first ? 'on' : ''}" style="--cc:${c.accent || c.color}" onclick="pickCert('${c.id}')">
       <svg class="rc-deco" viewBox="0 0 220 120" aria-hidden="true"><path d="M0 104 L40 86 L70 94 L110 60 L140 70 L180 34 L220 14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div class="rc-top">${badge(c, 56)}<div class="grow"><div class="rc-cat">${esc(c.info.org)} · ${esc(c.desc || c.cat)}</div><div class="rc-name">${esc(c.name)}</div></div>${tag}</div>

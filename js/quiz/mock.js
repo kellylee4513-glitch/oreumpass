@@ -1,6 +1,20 @@
 /* [quiz/mock.js] 문제 풀이: 실전 모의고사(타이머·OMR) */
 /* ===== 실전 모의고사 ===== */
-function startMock() { closeSheet(); const items = shuffle(pool(0)); const mins = Math.max(5, Math.round(C.info.minutes / C.info.count * items.length));
+/* 실전과 같은 구성: 과목별 문항 수(dist)를 맞추고, 과목 안에서는 단원 비중대로 뽑기 */
+function mockSet() {
+  const all = pool(0), total = C.info.count || 100; if (all.length <= total) return shuffle(all);
+  const dist = C.dist || Object.fromEntries(SK.map(s => [s, Math.round(total / SK.length)])), out = [];
+  SK.forEach(s => {
+    const qs = all.filter(q => q.s == s), need = Math.min(dist[s] || 0, qs.length); if (!need) return;
+    const by = {}; qs.forEach(q => (by[q.sec || ''] = by[q.sec || ''] || []).push(q));
+    const keys = Object.keys(by), raw = keys.map(k => by[k].length * need / qs.length), n = raw.map(Math.floor);
+    let left = need - n.reduce((a, b) => a + b, 0);
+    keys.map((k, i) => [raw[i] - n[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { n[i]++; left--; } });
+    keys.forEach((k, i) => out.push(...shuffle(by[k]).slice(0, n[i])));
+  });
+  return out;
+}
+function startMock() { closeSheet(); const items = mockSet(); const mins = items.length >= C.info.count ? C.info.minutes : Math.max(5, Math.round(C.info.minutes / C.info.count * items.length));
   run = { mock: true, items, i: 0, ans: {}, start: Date.now(), limit: mins * 60000, label: '실전 모의고사' }; stopTimer();
   timer = setInterval(() => { if (!run || !run.mock) return; const left = run.limit - (Date.now() - run.start); const el = document.getElementById('tr'); if (el) { el.textContent = '남은 시간 ' + fmt(left); el.style.color = left < 300000 ? 'var(--red)' : ''; } if (left <= 0) { toast('시간이 끝나 자동 제출했어요'); submitMock(true); } }, 1000); drawMock(); }
 function drawMock() { markNav(); const r = run, q = r.items[r.i], a = r.ans[q.id]; window.scrollTo(0, 0); const n = Object.keys(r.ans).length;

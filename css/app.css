@@ -38,7 +38,7 @@ svg{display:block}
 .tag.free{background:var(--blue-soft);color:var(--blue-dark)}
 .tag.pro{background:var(--gold-soft);color:var(--gold)}
 .tag.on{background:var(--green-soft);color:var(--green)}
-.chev{color:#C4CAD0;font-size:22px}
+.chev{color:#8B95A1;font-size:22px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .tile{background:var(--card);border-radius:24px;padding:18px;text-align:left;transition:transform .12s;position:relative;min-height:150px;display:flex;flex-direction:column}
 .tile .ico{width:52px;height:52px}
@@ -852,3 +852,4 @@ mark{background:linear-gradient(transparent 62%,#FFEFB0 62%)!important}
 .top .switch{flex:none;white-space:nowrap}.top .logo{min-width:0}
 @media(max-width:420px){.topnav button{width:34px;height:34px}.topnav{gap:0}.top .switch{padding:4px 8px 4px 4px;font-size:13px}}
 @media(max-width:360px){.top .logo .wm{height:17px}.logo img{width:26px!important;height:26px!important}.top .switch+.topnav{margin-left:2px}}
+.acct-b{display:flex;flex-direction:column;gap:6px;flex:none;align-items:stretch}.acct-b .tag{text-align:center}

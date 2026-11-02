@@ -21,7 +21,7 @@ function home() {
 
     <div class="b-play"><div class="sec">문제 풀기</div>
       <div class="grid4">
-        ${tile('startMock()', IC.exam(), '실전 모의고사', `${pool(0).length}문항 · ${Math.max(5, Math.round(C.info.minutes / C.info.count * pool(0).length))}분 타이머`, '')}
+        ${tile('startMock()', IC.exam(), '실전 모의고사', `${Math.min(C.info.count, pool(0).length)}문항 · ${C.info.minutes}분 · 실전 비율`, '')}
         ${tile('startQuick()', IC.quick(), '빠른 10문제', '안 푼 문제부터 5분', '')}
         ${tile('subjectSheet()', IC.subject(), '과목·단원별', '원하는 단원만 골라 풀기', '')}
         ${tile('setPage()', IC.sets(), '세트별 실전', `${SET_N}문항 × ${setsOf().length}세트`, '')}
