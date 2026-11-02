@@ -841,3 +841,14 @@ mark{background:linear-gradient(transparent 62%,#FFEFB0 62%)!important}
 .cm-form .field{margin-bottom:10px}.cm-ta{min-height:260px;resize:vertical;font-family:inherit;line-height:1.6}.cm-row2{display:flex;gap:8px;margin-bottom:10px}.cm-row2 .cm-sel{flex:1}
 
 @media(max-width:380px){.tabbar button{font-size:10px;letter-spacing:-.4px}.tabbar button svg{width:22px;height:22px}}
+
+/* 휴대폰: 커뮤니티·내 정보를 위쪽으로 */
+.topnav{display:flex;gap:2px;margin-left:auto;flex:none}
+.topnav button{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#8B95A1}
+.topnav button svg{width:22px;height:22px}.topnav button.on{color:var(--text);background:var(--card)}
+.top .switch+.topnav,.top .cm-w+.topnav{margin-left:6px}
+@media(max-width:899px){.tabbar button.side-only{display:none}}
+@media(min-width:900px){.topnav{display:none}}
+.top .switch{flex:none;white-space:nowrap}.top .logo{min-width:0}
+@media(max-width:420px){.topnav button{width:34px;height:34px}.topnav{gap:0}.top .switch{padding:4px 8px 4px 4px;font-size:13px}}
+@media(max-width:360px){.top .logo .wm{height:17px}.logo img{width:26px!important;height:26px!important}.top .switch+.topnav{margin-left:2px}}
