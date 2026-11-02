@@ -24,7 +24,7 @@ async function commLoad(reset) {
   const el = document.getElementById('cmList'); if (!el) return;
   try {
     await authInit(); if (!AU.sb) throw new Error(AU.err || 'no');
-    let q = AU.sb.from('posts').select('id,board,cert,title,views,likes,comments,pinned,created_at,user_id,profiles(nickname)');
+    let q = AU.sb.from('posts').select('id,board,cert,title,views,likes,comments,pinned,created_at,user_id,profiles!posts_user_id_fkey(nickname)');
     if (CM.board !== 'all') q = q.eq('board', CM.board);
     if (CM.cert !== 'all') q = q.eq('cert', CM.cert);
     if (CM.q) q = q.ilike('title', '%' + CM.q.replace(/[%_,()]/g, '') + '%');
@@ -43,10 +43,10 @@ async function commOpen(id) { markNav();
   window.scrollTo(0, 0);
   $app.innerHTML = topBar('커뮤니티', '', "go('comm')") + `<div class="pad upage"><div class="cm-load">불러오는 중…</div></div>`; tabbar();
   try {
-    const { data: p, error } = await AU.sb.from('posts').select('*, profiles(nickname)').eq('id', id).maybeSingle();
+    const { data: p, error } = await AU.sb.from('posts').select('*, profiles!posts_user_id_fkey(nickname)').eq('id', id).maybeSingle();
     if (error || !p) throw error || 0;
     AU.sb.rpc('view_post', { pid: id }).then(() => {}, () => {});
-    const { data: cs } = await AU.sb.from('comments').select('id,body,created_at,user_id,profiles(nickname)').eq('post_id', id).order('created_at');
+    const { data: cs } = await AU.sb.from('comments').select('id,body,created_at,user_id,profiles!posts_user_id_fkey(nickname)').eq('post_id', id).order('created_at');
     let liked = false; if (AU.user) { const { data: lk } = await AU.sb.from('likes').select('post_id').eq('post_id', id).maybeSingle(); liked = !!lk; }
     const mine = AU.user && AU.user.id === p.user_id;
     $app.querySelector('.upage').innerHTML = `<div class="card cm-post"><div class="cm-tags"><span class="tg">${esc(certLabel(p.cert))}</span><span class="tg b">${esc(boardName(p.board))}</span></div>
