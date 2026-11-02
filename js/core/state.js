@@ -17,6 +17,14 @@ function useCert(id) {
   G.cur = C.id;
   G.data[C.id] = cleanCert(G.data[C.id]);
   S = G.data[C.id];
+  /* 문제은행이 새로 바뀌면 문항 번호에 묶인 기록만 비우기(학습량·시험일·통계는 유지) */
+  if (C.bankVer && S.bv !== C.bankVer) {
+    const had = S.bv || S.seen.length || S.wrong.length || S.star.length;
+    ['wrong', 'star', 'seen'].forEach(k => S[k] = []);
+    ['srs', 'qstat', 'why', 'memo', 'setBest'].forEach(k => S[k] = {}); S.tw = null;
+    S.bv = C.bankVer; save();
+    if (had) setTimeout(() => typeof toast === 'function' && toast('문제가 새로 바뀌어 오답·즐겨찾기 기록을 정리했어요'), 400);
+  }
   NT.k = ''; BK.s = 0; BK.q = ''; unitSel = [];
   SK.forEach(k => { if (!S.subj[k]) S.subj[k] = { t: 0, c: 0 }; });
 }
@@ -58,6 +66,7 @@ function cleanCert(d) {
   o.why = mapObj(d.why, idKey, v => typeof v === 'string' && /^[a-z]{1,12}$/.test(v) ? v : undefined);
   o.setBest = mapObj(d.setBest, idKey, v => Number.isFinite(+v) ? Math.max(0, Math.min(100, Math.round(+v))) : undefined);
   o.memo = mapObj(d.memo, idKey, v => typeof v === 'string' ? v.slice(0, 2000) : undefined);
+  o.bv = typeof d.bv === 'string' ? d.bv.slice(0, 30) : '';
   return o;
 }
 function cleanG(v, keepPay) {

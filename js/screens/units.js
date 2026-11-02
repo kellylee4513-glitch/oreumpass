@@ -1,7 +1,7 @@
 /* [screens/units.js] 과목·단원별 풀기 */
 /* 단원별 */
 let unitSel = [];
-function unitsOf() { const m = new Map(); pool(0).forEach(q => { const k = q.s + '|' + (q.sec || ''); if (!m.has(k)) m.set(k, { k, s: q.s, name: q.sec || SUBJ_SHORT[q.s] + ' 종합', items: [] }); m.get(k).items.push(q); }); return [...m.values()].sort((a, b) => a.s - b.s || (a.name.includes('종합') ? 1 : -1)); }
+function unitsOf() { const m = new Map(); pool(0).forEach(q => { const k = q.s + '|' + (q.sec || ''); if (!m.has(k)) m.set(k, { k, s: q.s, name: q.sec || SUBJ_SHORT[q.s] + ' 종합', items: [] }); m.get(k).items.push(q); }); const ord = n => { const i = (C.unitOrder || []).indexOf(n); return n.includes('종합') ? 999 : i < 0 ? 500 : i; }; return [...m.values()].sort((a, b) => a.s - b.s || ord(a.name) - ord(b.name)); }
 function unitPage() { markNav();
   window.scrollTo(0, 0); $app.classList.remove('wide');
   const U = unitsOf(), cnt = U.filter(u => unitSel.includes(u.k)).reduce((n, u) => n + u.items.length, 0);
