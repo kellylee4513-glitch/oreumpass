@@ -13,5 +13,5 @@ function drawPay() { const one = kind => `<button class="plan ${payPick === kind
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payPick === 'all' ? won(ALL_PRICE) : won(C.price)} 결제하기</button>
     <div class="note">시제품이라 실제 결제는 되지 않고 바로 잠금이 풀려요</div>`); }
 function buy() { if (payPick === 'all') G.passAll = true; else if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id); save(); closeSheet(); toast((payPick === 'all' ? '더오를패스 ALL' : C.short + ' PRO') + '가 열렸어요 🎉');
-  setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'all') go(tab); else { tab = 'note'; go('note'); } }, 300); }
+  setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'custom') startCustom(); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'all') go(tab); else { tab = 'note'; go('note'); } }, 300); }
 

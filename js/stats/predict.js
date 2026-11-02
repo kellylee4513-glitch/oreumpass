@@ -14,7 +14,7 @@ function passProb() {
   for (let i = 0; i < N; i++) { let score = 0, ok = true;
     for (const s of SK) { const o = S.subj[s] || { t: 0, c: 0 }, p = randBeta(o.c + 2, o.t - o.c + 2) * reach, m = dist[s] || 0; let k = 0; for (let j = 0; j < m; j++) if (Math.random() < p) k++; score += k; sums[s] += k / (m || 1); if (m && k / m < Mn) ok = false; }
     if (ok && score / tot >= T) pass++; }
-  return { p: Math.round(pass / N * 100), n, sp, lim, reach, conf: n < 30 ? 1 : n < 80 ? 1 : 2, subs: SK.map(s => ({ s, est: Math.round(sums[s] / N * 100), q: dist[s] })) };
+  return { p: Math.round(pass / N * 100), n, sp, lim, reach, conf: n < 30 ? 0 : n < 80 ? 1 : 2, subs: SK.map(s => ({ s, est: Math.round(sums[s] / N * 100), q: dist[s] })) };
 }
 function weakUnits() { const m = new Map(); pool(0).forEach(q => { const k = unitKey(q); if (!m.has(k)) m.set(k, { k, name: unitName(q), s: q.s, n: 0 }); m.get(k).n++; }); return [...m.values()].map(u => { const o = (S.ustat || {})[u.k]; return Object.assign(u, { t: o ? o.t : 0, a: o && o.t ? Math.round(o.c / o.t * 100) : null }); }).filter(u => u.t >= 2).sort((a, b) => a.a - b.a); }
 function buildCustom() {
@@ -22,7 +22,7 @@ function buildCustom() {
   const sc = pool(0).map(q => { const ua = unitAcc(unitKey(q)); let w = 1 - (ua === null ? 0.5 : ua); if (S.wrong.includes(q.id)) w += 1; if (due.has(q.id)) w += 0.8; if (!S.seen.includes(q.id) && ua !== null && ua < PASS.total / 100) w += 0.4; if (srs[q.id] && srs[q.id].b >= 3) w -= 0.8; if ((S.why || {})[q.id] === 'concept') w += 0.3; return { q, w: w + Math.random() * 0.15 }; });
   return sc.sort((a, b) => b.w - a.w).slice(0, 20).map(x => x.q);
 }
-function startCustom() { if (!isPro()) { paywall('weak'); return; } if (S.solved < 5) { toast('5문제 이상 풀면 내 약점을 분석해 드려요'); startToday(); return; } modeSheet(buildCustom(), '내 약점 맞춤 문제집'); }
+function startCustom() { closeSheet(); if (!isPro()) { paywall('custom'); return; } if (S.solved < 5) { toast('5문제 이상 풀면 내 약점을 분석해 드려요'); startToday(); return; } modeSheet(buildCustom(), '내 약점 맞춤 문제집'); }
 
 function gaugeSVG(p, big) { const r = big ? 86 : 40, w = r * 2 + 24, sw = big ? 16 : 9, L = Math.PI * r, col = p >= 70 ? '#00B862' : p >= 40 ? '#FF9500' : '#F04452';
   return `<svg viewBox="0 0 ${w} ${r + sw}" width="${w}" height="${r + sw}"><path d="M${12} ${r + sw / 2}a${r} ${r} 0 0 1 ${2 * r} 0" fill="none" stroke="#EEF0F3" stroke-width="${sw}" stroke-linecap="round"/><path d="M${12} ${r + sw / 2}a${r} ${r} 0 0 1 ${2 * r} 0" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L * (1 - p / 100)}" class="gArc"/></svg>`; }

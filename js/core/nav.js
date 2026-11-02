@@ -6,6 +6,7 @@ window.addEventListener('popstate', () => {
   navDepth = false;
   const sh = document.getElementById('sheet');
   if (sh && sh.classList.contains('show')) { closeSheet(); if (onSub()) markNav(); return; }
+  if (run && NT.back && document.querySelector('.nt-h')) { NT.back = false; drawQ(); return; }
   if (run || onSub()) { stopTimer(); run = null; quitArm = false; $app.classList.remove('wide'); go(tab === 'home' || !tab ? 'home' : tab); return; }
   try { history.back(); } catch (e) {}
 });

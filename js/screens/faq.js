@@ -13,9 +13,9 @@ function faqPage() { markNav();
     ['환불은 어떻게 되나요?', `지금은 시제품이라 실제 결제가 일어나지 않아요. 정식 출시 때 환불 규정을 결제 화면과 이 페이지에 함께 안내할게요.`]
   ];
   $app.innerHTML = topBar('이용 안내') + `<div class="pad upage"><div class="lead">${esc(C.name)} · 자주 묻는 질문</div>
-    ${F.map(([q, a], i) => `<div class="faq ${i === 0 ? 'open' : ''}" onclick="this.classList.toggle('open')"><div class="fq"><span class="qm">Q</span><span class="grow">${q}</span><span class="ar">⌄</span></div><div class="fa">${a}</div></div>`).join('')}
+    ${F.map(([q, a], i) => `<div class="faq ${i === 0 ? 'open' : ''}" role="button" tabindex="0" onclick="this.classList.toggle('open')"><div class="fq"><span class="qm">Q</span><span class="grow">${q}</span><span class="ar">⌄</span></div><div class="fa">${a}</div></div>`).join('')}
     <div class="foot">${policyLinks()}</div></div>`; tabbar();
 }
-function policyLinks() { return `<div class="pol"><a onclick="toast('정식 출시 전에 공개돼요')">이용약관</a><a onclick="toast('정식 출시 전에 공개돼요')">개인정보처리방침</a><a onclick="toast('정식 출시 전에 공개돼요')">환불 규정</a><a onclick="faqPage()">이용 안내</a></div>`; }
+function policyLinks() { return `<div class="pol"><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">이용약관</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">개인정보처리방침</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">환불 규정</a><a role="button" tabindex="0" onclick="faqPage()">이용 안내</a></div>`; }
 
 

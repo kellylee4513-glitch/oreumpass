@@ -1,6 +1,6 @@
 /* [quiz/ox.js] 문제 풀이: OX 선지 퀴즈 */
 /* ===== OX ===== */
-function startOx(s, list) { const items = shuffle(list || OX.map((x, i) => Object.assign({ id: i }, x)).filter(x => !s || x.s === s)); if (!items.length) { toast('OX 문제가 아직 없어요'); return; } run = { ox: true, items, i: 0, ans: null, score: 0, retry: !!list }; drawOx(); }
+function startOx(s, list) { closeSheet(); const items = shuffle(list || OX.map((x, i) => Object.assign({ id: i }, x)).filter(x => !s || x.s === s)); if (!items.length) { toast('OX 문제가 아직 없어요'); return; } run = { ox: true, items, i: 0, ans: null, score: 0, retry: !!list }; drawOx(); }
 function drawOx() { markNav(); const r = run, x = r.items[r.i]; window.scrollTo(0, 0); const answered = r.ans !== null, ok = answered && r.ans === x.a;
   $app.innerHTML = topBar('OX 선지 퀴즈', `${r.i + 1} / ${r.items.length}`) + `<div class="pad"><div class="prog"><i style="width:${(r.i + (answered ? 1 : 0)) / r.items.length * 100}%"></i></div>
     <div class="oxcard"><div class="s">${SUBJ[x.s]}</div>${esc(x.t)}</div>

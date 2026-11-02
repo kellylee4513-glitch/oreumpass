@@ -5,7 +5,7 @@ function mountPen() {
   const card = document.querySelector('.qcard'); if (!card || card.querySelector('.inkc')) return;
   card.style.position = 'relative';
   const cv = document.createElement('canvas'); cv.className = 'inkc'; const bar = document.createElement('div'); bar.className = 'inkbar';
-  bar.innerHTML = `<span>펜 필기 중</span>${['#F04452', '#3182F6', '#191F28'].map((c, i) => `<button class="sw ${i === 0 ? 'on' : ''}" style="background:${c}" data-c="${c}"></button>`).join('')}<button class="tx" data-a="clr">지우기</button><button class="tx" data-a="end">닫기</button>`;
+  bar.innerHTML = `<span>펜 필기 중</span>${['#F04452', '#3182F6', '#191F28'].map((c, i) => `<button class="sw ${i === 0 ? 'on' : ''}" style="background:${c}" data-c="${c}" aria-label="${['빨강', '파랑', '검정'][i]} 펜"></button>`).join('')}<button class="tx" data-a="clr">지우기</button><button class="tx" data-a="end">닫기</button>`;
   card.appendChild(cv); card.appendChild(bar);
   const dpr = window.devicePixelRatio || 1, W = card.clientWidth, H = card.clientHeight; cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
   const g = cv.getContext('2d'); g.scale(dpr, dpr); g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = 2.6; g.strokeStyle = '#F04452';

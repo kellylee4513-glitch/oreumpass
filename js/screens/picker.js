@@ -12,7 +12,7 @@ function certPicker(first) {
       <div class="rc-subs">${subs}</div>
       <div class="rc-meta"><span><b>${c.info.count}</b>문항 · <b>${c.info.minutes}</b>분</span><span>${esc(c.info.format)}</span><span>평균 <b>${c.pass.total}</b> · 과락 <b>${c.pass.sub}</b></span><span>${esc(c.info.eligibility)}</span></div>
       ${seen ? `<div class="rc-bar"><i style="width:${pct}%"></i></div>` : ''}
-      <div class="rc-foot"><span class="rc-n">자체 제작 <b>${c.questions.length}</b>문항 · 해설 포함</span><span class="rc-cta">${seen ? `${seen}문제 풀었어요 · 이어서 →` : '무료로 시작하기 →'}</span></div>
+      <div class="rc-foot"><span class="rc-n">자체 제작 <b>${c.questions.length}</b>문항 · 해설 포함</span><span class="rc-cta">${seen ? `${seen}문제 풀었어요 · 이어서 풀기` : '무료로 시작하기'}</span></div>
     </button>`; };
   const tile = c => `<button class="sc" onclick="toast('${esc(c.name)} 문제를 열심히 만들고 있어요')">${badge(c, 48)}<div class="grow"><div class="sc-top"><span class="sc-name">${esc(c.name)}</span><span class="sc-tag">준비 중</span></div><div class="sc-d">${esc(c.org || c.cat)}${c.desc ? ' · ' + esc(c.desc) : ''}</div>${c.meta ? `<div class="sc-m">${c.meta.map(m => `<span>${esc(m)}</span>`).join('')}</div>` : ''}</div></button>`;
   $app.innerHTML = `<div class="top ftop"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()">${WORDMARK}</div></div>

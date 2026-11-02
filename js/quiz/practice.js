@@ -1,15 +1,15 @@
 /* [quiz/practice.js] 문제 풀이: 진입(빠른·약점·과목) · 연습 화면(문제+해설) · 채점 · 번호판 · 제보 */
 /* ===== 풀이 진입 ===== */
-function startQuick() { const all = pool(0), un = shuffle(all.filter(q => !S.seen.includes(q.id))), sn = shuffle(all.filter(q => S.seen.includes(q.id))); startQuiz(un.concat(sn).slice(0, 10), '빠른 10문제'); }
-function startWeak() { const w = weakest(); if (!w) { toast('먼저 문제를 풀어 실력을 확인해 볼게요'); startQuick(); return; } const ws = pool(w.s); const wr = ws.filter(q => S.wrong.includes(q.id)); startQuiz(wr.concat(shuffle(ws.filter(q => !S.wrong.includes(q.id)))), '약점 집중 · ' + SUBJ[w.s]); }
+function startQuick() { closeSheet(); const all = pool(0), un = shuffle(all.filter(q => !S.seen.includes(q.id))), sn = shuffle(all.filter(q => S.seen.includes(q.id))); startQuiz(un.concat(sn).slice(0, 10), '빠른 10문제'); }
+function startWeak() { closeSheet(); const w = weakest(); if (!w) { toast('먼저 문제를 풀어 실력을 확인해 볼게요'); startQuick(); return; } const ws = pool(w.s); const wr = ws.filter(q => S.wrong.includes(q.id)); startQuiz(wr.concat(shuffle(ws.filter(q => !S.wrong.includes(q.id)))), '약점 집중 · ' + SUBJ[w.s]); }
 function subjectSheet() { unitPage(); }
 function subjectSheetOld() { openSheet(`<h3>어떤 과목을 풀까요?</h3><div class="p">문제마다 바로 정답과 해설을 보여 드려요</div>
-  ${SK.map(s => { const a = acc(s); return `<button class="pick" onclick="closeSheet();startQuiz(pool(${s}),'${SUBJ[s]} 풀기')"><div class="grow"><div class="t">${SUBJ[s]} · ${esc(SUBJ_FULL[s])}</div><div class="d">${pool(s).length}문항${a !== null ? ' · 정답률 ' + a + '%' : ''}</div></div><span class="chev">›</span></button>`; }).join('')}
-  <button class="pick" onclick="closeSheet();startQuiz(pool(0),'전 과목 풀기')"><div class="grow"><div class="t">전 과목 순서대로</div><div class="d">${Q.length}문항</div></div><span class="chev">›</span></button>`); }
+  ${SK.map(s => { const a = acc(s); return `<button class="pick" onclick="closeSheet();startQuiz(pool(${s}),'${SUBJ[s]} 풀기')"><div class="grow"><div class="t">${SUBJ[s]} · ${esc(SUBJ_FULL[s])}</div><div class="d">${pool(s).length}문항${a !== null ? ' · 정답률 ' + a + '%' : ''}</div></div><span class="chev" aria-hidden="true">›</span></button>`; }).join('')}
+  <button class="pick" onclick="closeSheet();startQuiz(pool(0),'전 과목 풀기')"><div class="grow"><div class="t">전 과목 순서대로</div><div class="d">${Q.length}문항</div></div><span class="chev" aria-hidden="true">›</span></button>`); }
 
 /* ===== 연습 모드: 문제 + 해설 2단 구조 ===== */
-function startQuiz(items, label, mode, at) { if (!items.length) { toast('풀 문제가 없어요'); return; }
-  run = { mode: mode || 'explain', items, i: at || 0, st: items.map(() => ({ pick: null, done: false })), score: 0, wrongIds: [], start: Date.now(), label, retry: label === '오답 다시 풀기', memo: false };
+function startQuiz(items, label, mode, at) { closeSheet(); if (!items.length) { toast('풀 문제가 없어요'); return; }
+  run = { mode: mode || 'explain', items, i: at || 0, st: items.map(() => ({ pick: null, done: false })), score: 0, wrongIds: [], start: Date.now(), label, retry: /오답|틀린|복습|약점|자주/.test(label || ''), memo: false };
   stopTimer(); drawQ(); }
 function starBtn(id) { return `<button class="sb" onclick="toggleStar(${id})" aria-label="별표">${IC.starLine(S.star.includes(id))}</button>`; }
 function toggleStar(id) { const on = S.star.includes(id); S.star = on ? S.star.filter(x => x !== id) : S.star.concat(id); save(); toast(on ? '북마크를 뺐어요' : '북마크에 담았어요 ⭐'); run && run.mock ? drawMock() : drawQ(); }
@@ -25,7 +25,7 @@ function explainHTML(q, pick) {
   if (q.m) h += `<div class="ex-tip"><div class="ex-lb">10초 암기</div><p>${esc(q.m)}</p></div>`;
   if (q.c) h += `<section class="ex-sec"><h4>핵심 개념${q.t ? `<span>${esc(q.t)}</span>` : ''}</h4><p>${hl(q.c)}</p>${q.f ? `<div class="ex-f"><span>공식</span><div class="fx">${hl(q.f)}</div></div>` : ''}</section>`;
   h += `<section class="ex-sec"><h4>왜 정답이 ${NUM[q.a]}일까</h4><p>${hl(q.e)}</p></section>`;
-  if (q.w) h += `<section class="ex-sec"><h4>보기 분석</h4><div class="ex-ol">${q.o.map((o, k) => `<div class="ex-o ${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><span class="k">${NUM[k]}</span><div class="grow"><div class="ot">${esc(o)}${k === q.a ? '<em class="t ok">정답</em>' : ''}${k === pick && k !== q.a ? '<em class="t my">내 선택</em>' : ''}</div><div class="ow">${k === q.a ? '정답 보기 — 위 설명을 확인하세요' : hl(q.w[k] || '')}</div></div></div>`).join('')}</div></section>`;
+  if (q.w) h += `<section class="ex-sec"><h4>보기 분석</h4><div class="ex-ol">${q.o.map((o, k) => `<div class="ex-o ${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><span class="k">${NUM[k]}</span><div class="grow"><div class="ot">${esc(o)}${k === q.a ? '<em class="t ok">정답</em>' : ''}${k === pick && k !== q.a ? '<em class="t my">내 선택</em>' : ''}</div><div class="ow">${k === q.a ? '정답이에요. 위의 ‘왜 정답일까’를 확인하세요' : hl(q.w[k] || '')}</div></div></div>`).join('')}</div></section>`;
   h += `<div class="ex-foot">${q.c ? `<button class="ex-link" onclick="notePage('${unitKey(q)}',${q.id})">요약 노트 · ${esc(unitName(q))} <span>›</span></button>` : ''}${PDF_LINK && PDF_LINK !== '#' ? `<a class="ex-link" href="${PDF_LINK}" target="_blank" rel="noopener">${esc(C.short)} 정리본 PDF <span>›</span></a>` : ''}${qs && qs.t ? `<div class="ex-me">이 문제 ${qs.t}번 풀이 · 오답 ${qs.w}번</div>` : ''}</div></div>`;
   return h;
 }
@@ -42,7 +42,7 @@ function drawQ() { markNav();
   <div class="qwrap">
     <div class="qcard">
       <div class="qhead"><span class="qno">${r.i + 1}</span><span class="tagS">${SUBJ[q.s]} · ${esc(SUBJ_SHORT[q.s])}</span>${q.lv ? `<span class="tagL">난이도 ${q.lv}</span>` : ''}${q.rev ? '<span class="tagR">2026 개정</span>' : ''}
-        <div class="tools"><button title="북마크" onclick="toggleStar(${q.id})">${IC.starLine(S.star.includes(q.id))}</button><button title="내 노트" onclick="run.memo=!run.memo;drawQ()" class="${memo ? 'has' : ''}"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 20h4l10-10-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button><button title="펜 필기" class="${run.pen ? 'has' : ''}" onclick="togglePen()"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 21c3-1 5-3 6-5M14.5 4.5l5 5L10 19l-5.5.5L5 14z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></button><button title="문제 제보" onclick="reportSheet(${q.id})"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3l9 16H3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4M12 16.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div></div>
+        <div class="tools"><button title="북마크" aria-label="북마크" onclick="toggleStar(${q.id})">${IC.starLine(S.star.includes(q.id))}</button><button title="내 노트" aria-label="내 노트" onclick="run.memo=!run.memo;drawQ()" class="${memo ? 'has' : ''}"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 20h4l10-10-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button><button title="펜 필기" aria-label="펜 필기" class="${run.pen ? 'has' : ''}" onclick="togglePen()"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 21c3-1 5-3 6-5M14.5 4.5l5 5L10 19l-5.5.5L5 14z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></button><button title="문제 제보" aria-label="문제 제보" onclick="reportSheet(${q.id})"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3l9 16H3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4M12 16.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div></div>
       ${run.memo || memo ? `<textarea class="memo" placeholder="내 노트: 헷갈린 포인트를 적어 두세요" oninput="(S.memo=S.memo||{})[${q.id}]=this.value;save()">${esc(memo)}</textarea>` : ''}
       <div class="qtext">${esc(q.q)}</div>
       ${q.o.map((o, k) => `<button class="opt ${cls(k)}" ${(M === 'explain' && st.done) || M === 'open' ? 'disabled' : ''} onclick="answer(${k})"><span class="num">${k + 1}</span><span>${esc(o)}</span></button>`).join('')}
@@ -58,10 +58,10 @@ function drawQ() { markNav();
 }
 function goQ(i) { run.i = Math.max(0, Math.min(run.items.length - 1, i)); run.memo = false; drawQ(); }
 function gradeOne(q, k) { const ok = k === q.a; record(q.s, ok, q.id); S.qstat = S.qstat || {}; const qs = S.qstat[q.id] = S.qstat[q.id] || { t: 0, w: 0 }; qs.t++; if (!ok) qs.w++; if (ok) { if (run.retry) S.wrong = S.wrong.filter(x => x !== q.id); } else if (!S.wrong.includes(q.id)) S.wrong.push(q.id); }
-function answer(k) { const r = run, q = r.items[r.i], st = r.st[r.i]; if (r.mode === 'open') return; if (r.mode === 'exam') { if (st.pick === null) speedHit(Date.now() - st.t0); st.pick = k; drawQ(); return; } if (st.done) return; speedHit(Date.now() - st.t0); buzz(k === q.a); st.pick = k; st.done = true; const ok = k === q.a; record(q.s, ok, q.id);
+function answer(k) { const r = run, q = r.items[r.i], st = r.st[r.i]; if (r.mode === 'open') return; if (r.mode === 'exam') { if (st.pick === null) speedHit(Date.now() - st.t0); st.pick = k; drawQ(); return; } if (st.done) return; if (st.again) { st.pick = k; st.done = true; buzz(k === q.a); if (k === q.a && S.wrong.includes(q.id)) { S.wrong = S.wrong.filter(x => x !== q.id); save(); } drawQ(); return; } speedHit(Date.now() - st.t0); buzz(k === q.a); st.pick = k; st.done = true; const ok = k === q.a; record(q.s, ok, q.id);
   S.qstat = S.qstat || {}; const qs = S.qstat[q.id] = S.qstat[q.id] || { t: 0, w: 0 }; qs.t++; if (!ok) qs.w++;
   if (ok) { if (r.retry) S.wrong = S.wrong.filter(x => x !== q.id); } else if (!S.wrong.includes(q.id)) S.wrong.push(q.id); save(); drawQ(); }
-function retryQ() { run.st[run.i] = { pick: null, done: false }; drawQ(); }
+function retryQ() { run.st[run.i] = { pick: null, done: false, again: true }; drawQ(); }
 function finishQuiz() { const r = run; if (r.mode === 'open') { toast('오픈북 학습을 마쳤어요'); quitArm = true; quitQuiz(); return; }
   if (r.mode === 'exam') { const un = r.st.filter(x => x.pick === null).length; if (un && !r.gradeArm) { r.gradeArm = true; toast(`안 푼 문제 ${un}개는 빼고 채점해요. 한 번 더 누르세요`); setTimeout(() => r.gradeArm = false, 2500); return; } r.ans = {}; r.items.forEach((q, i) => { const st = r.st[i]; if (st.pick !== null) { st.done = true; r.ans[q.id] = st.pick; gradeOne(q, st.pick); } }); save(); r.review = true; }
   if (!r.st.some(x => x.done)) { toast('먼저 한 문제 이상 풀어 주세요'); return; }

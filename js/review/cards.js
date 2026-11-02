@@ -11,7 +11,7 @@ function drawCard() {
   const q = CD.deck[CD.i], n = CD.deck.length, known = (S.cardOk || []).length;
   $app.innerHTML = topBar('1분 개념 카드', `<span class="tcount">${CD.i + 1} / ${n}</span>`) + `<div class="pad">
     <div class="prog"><i style="width:${(CD.i + 1) / n * 100}%"></i></div>
-    <div class="fc ${CD.flip ? 'flip' : ''}" onclick="CD.flip=!CD.flip;drawCard()">
+    <div class="fc ${CD.flip ? 'flip' : ''}" role="button" tabindex="0" onclick="CD.flip=!CD.flip;drawCard()">
       <div class="fc-in">
         <div class="fc-f"><div class="fc-tag">${SUBJ[q.s]} · ${esc(q.sec || SUBJ_SHORT[q.s])}</div><div class="fc-q">${esc(q.q.split('\n')[0])}</div><div class="fc-hint">탭해서 핵심 개념 보기</div></div>
         <div class="fc-b"><div class="fc-tag">정답 ${NUM[q.a]}${q.t ? ' · ' + esc(q.t) : ''}</div><div class="fc-a">${esc(q.o[q.a])}</div><div class="fc-c">${esc(q.c)}</div></div>

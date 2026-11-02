@@ -4,16 +4,15 @@ function home() {
   const dd = dday(), seen = S.seen.length, remain = Q.length - seen, pro = isPro(), wn = S.wrong.length + S.wrongOx.length;
   const tile = (fn, ic, t, d, tag) => `<button class="tile" onclick="${fn}">${tag || ''}<div class="ico">${ic}</div><div class="t">${t}</div><div class="d">${d}</div></button>`;
   const mini = (fn, ic, t, d, lock) => `<button class="mini ${lock ? 'locked' : ''}" onclick="${fn}">${lock ? `<span class="lk">${IC.lock()}</span>` : ''}<span class="mi">${ic}</span><span class="mt">${t}</span><span class="md">${d}</span></button>`;
-  const free = '<span class="tag free">무료</span>';
   $app.innerHTML = brandBar() + `
   <div class="pad hgrid">
     <div class="b-greet"><div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 합격까지<br>오늘도 한 계단 <em>더 오를</em> 차례!</div>
-    ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div><span class="x" onclick="event.stopPropagation();G.installHidden=true;save();home()">✕</span></button>` : ''}</div>
+    ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div></button><button class="x-close" aria-label="앱 추가 안내 닫기" onclick="G.installHidden=true;save();home()">✕</button>` : ''}</div>
     <div class="b-hero"><div class="hero">
       ${heroArt(seen / Q.length)}
       <button class="set" onclick="examSheet()">${S.exam ? '변경' : '시험일 설정'}</button>
       <div class="k">${esc(C.name)} 시험까지</div>
-      <div class="dd">${dd === null ? 'D-?' : dd > 0 ? 'D-' + dd : dd === 0 ? 'D-DAY' : '시험 끝!'}</div>
+      <div class="dd">${dd === null ? 'D-day' : dd > 0 ? 'D-' + dd : dd === 0 ? 'D-DAY' : '시험 끝!'}</div>
       <div class="m">${dd === null ? '시험일을 정하면 하루 목표를 계산해 드려요' : dd > 0 ? (remain > 0 ? `하루 ${Math.max(1, Math.ceil(remain / dd))}문제씩이면 1회독 완료` : '1회독 완료! 이제 오답 복습할 차례') : dd === 0 ? '지금까지 푼 문제를 믿어요!' : '수고 많으셨어요'}</div>
       <div class="bank"><div class="tr"><i style="width:${seen / Q.length * 100}%"></i></div><div class="tx">문제은행 ${seen} / ${Q.length} 풀었어요</div></div>
     </div></div>
@@ -22,10 +21,10 @@ function home() {
 
     <div class="b-play"><div class="sec">문제 풀기</div>
       <div class="grid4">
-        ${tile('startMock()', IC.exam(), '실전 모의고사', '실제 시험 시간 비율', free)}
-        ${tile('startQuick()', IC.quick(), '빠른 10문제', '안 푼 문제부터 5분', free)}
-        ${tile('subjectSheet()', IC.subject(), '과목·단원별', '단원 골라 함께 풀기', free)}
-        ${tile('setPage()', IC.sets(), '세트별 실전', `${SET_N}문항 × ${setsOf().length}세트`, free)}
+        ${tile('startMock()', IC.exam(), '실전 모의고사', `${pool(0).length}문항 · ${Math.max(5, Math.round(C.info.minutes / C.info.count * pool(0).length))}분 타이머`, '')}
+        ${tile('startQuick()', IC.quick(), '빠른 10문제', '안 푼 문제부터 5분', '')}
+        ${tile('subjectSheet()', IC.subject(), '과목·단원별', '원하는 단원만 골라 풀기', '')}
+        ${tile('setPage()', IC.sets(), '세트별 실전', `${SET_N}문항 × ${setsOf().length}세트`, '')}
       </div>
       <div class="sec sm">공부 도구</div>
       <div class="grid3m">
@@ -43,7 +42,7 @@ function home() {
       </div>
     </div>
 
-    <div class="b-pass"><div class="sec">합격 예측 <a onclick="reportPage()">리포트 ›</a></div>${passCard()}</div>
+    <div class="b-pass"><div class="sec">합격 예측 <button class="sec-link" onclick="reportPage()">리포트 ›</button></div>${passCard()}</div>
     ${OX.length ? `<div class="b-ox"><div class="sec">오늘의 OX 한 문제</div>${dailyOx()}</div>` : ''}
 
     <div class="b-more"><div class="sec">더 보기</div>
@@ -71,7 +70,7 @@ function passCard() {
   const st = rate === null ? ['아직 몰라요', 'var(--gray)', '문제를 풀면 합격 가능성을 알려 드려요', 'var(--bg)'] : rate >= T && !cut ? ['합격권', 'var(--green)', '지금 실력이면 합격선을 넘어요', 'var(--green-soft)'] : cut ? ['과락 주의', 'var(--red)', M + '% 미만 과목이 있어요', 'var(--red-soft)'] : ['조금 더', 'var(--orange)', `합격선까지 ${T - rate}%p 남았어요`, 'var(--orange-soft)'];
   const wk = weakest();
   const pp = S.solved >= 10 ? passProb().p : null;
-  return `<div class="card pass"><button class="pp-row" onclick="reportPage()"><div class="pp-g">${gaugeSVG(pp || 0, false)}<b>${pp === null ? '?' : pp + '%'}</b></div><div class="grow"><div class="t">합격 확률 (추정)</div><div class="d">${pp === null ? `${10 - S.solved}문제 더 풀면 예측이 열려요` : '정답률·풀이 속도·과락까지 반영한 추정치'}</div></div><span class="chev">›</span></button>
+  return `<div class="card pass"><button class="pp-row" onclick="reportPage()"><div class="pp-g">${gaugeSVG(pp || 0, false)}<b>${pp === null ? '?' : pp + '%'}</b></div><div class="grow"><div class="t">합격 확률 (추정)</div><div class="d">${pp === null ? `${10 - S.solved}문제 더 풀면 예측이 열려요` : '정답률·풀이 속도·과락까지 반영한 추정치'}</div></div><span class="chev" aria-hidden="true">›</span></button>
     ${sub.map(({ s, a }) => `<div class="bar"><span class="nm">${SUBJ[s]} <span style="color:var(--gray);font-weight:500">${SUBJ_SHORT[s]}</span></span><span class="tr cutline" style="--cut:${M}%"><i style="width:${a || 0}%;${a !== null && a < M ? 'background:var(--red)' : a !== null && a < T ? 'background:var(--orange)' : ''}"></i></span><span class="v">${a === null ? '-' : a + '%'}</span></div>`).join('')}
     <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-top:2px"><span>┆ 표시는 과락선 ${M}%</span>${wk && wk.a < 100 ? `<a style="color:var(--blue);font-weight:700;cursor:pointer;font-size:13px" onclick="${isPro() ? 'startWeak()' : "paywall('weak')"}">${SUBJ[wk.s]} 약점 집중 ›</a>` : ''}</div>
   </div>`;
