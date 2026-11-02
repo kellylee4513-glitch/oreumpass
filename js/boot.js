@@ -7,3 +7,6 @@ else { useCert(G.cur); go('certs'); }
 /* ===== 앱 저장(서비스 워커): 내 주소(https)에 올렸을 때만 동작 ===== */
 try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !/claude|anthropic/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
 
+
+/* ===== 로그인 세션 복원 (설정돼 있을 때만) ===== */
+try { if (authOn()) authInit(); } catch (e) {}

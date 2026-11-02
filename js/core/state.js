@@ -78,7 +78,7 @@ function cleanG(v, keepPay) {
 }
 try { const raw = localStorage.getItem(KEY); if (raw) G = cleanG(JSON.parse(raw), true); } catch (e) { try { localStorage.setItem(KEY + '_backup', localStorage.getItem(KEY) || ''); } catch (x) {} G = blankG(); }
 let saveWarned = false;
-function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch (e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('저장 공간이 부족해 기록이 저장되지 않아요'), 50); } } }
+function save(noSync) { if (!noSync && typeof syncPush === 'function' && typeof AU !== 'undefined' && AU.user) syncPush(); try { localStorage.setItem(KEY, JSON.stringify(G)); } catch (e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('저장 공간이 부족해 기록이 저장되지 않아요'), 50); } } }
 /* 다른 탭(설치 앱·브라우저)에서 기록이 바뀌면 새로 불러오기 */
 window.addEventListener('storage', e => { if (e.key === KEY && !run) location.reload(); });
 const isPro = () => G.passAll || G.passCerts.includes(C.id);
