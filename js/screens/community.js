@@ -46,7 +46,7 @@ async function commOpen(id) { markNav();
     const { data: p, error } = await AU.sb.from('posts').select('*, profiles!posts_user_id_fkey(nickname)').eq('id', id).maybeSingle();
     if (error || !p) throw error || 0;
     AU.sb.rpc('view_post', { pid: id }).then(() => {}, () => {});
-    const { data: cs } = await AU.sb.from('comments').select('id,body,created_at,user_id,profiles!posts_user_id_fkey(nickname)').eq('post_id', id).order('created_at');
+    const { data: cs } = await AU.sb.from('comments').select('id,body,created_at,user_id,profiles!comments_user_id_fkey(nickname)').eq('post_id', id).order('created_at');
     let liked = false; if (AU.user) { const { data: lk } = await AU.sb.from('likes').select('post_id').eq('post_id', id).maybeSingle(); liked = !!lk; }
     const mine = AU.user && AU.user.id === p.user_id;
     $app.querySelector('.upage').innerHTML = `<div class="card cm-post"><div class="cm-tags"><span class="tg">${esc(certLabel(p.cert))}</span><span class="tg b">${esc(boardName(p.board))}</span></div>
