@@ -21,7 +21,7 @@ function certPicker(first) {
       <h1 class="pk-h">공부할 자격증을 골라 주세요</h1>
       ${READY.map(big).join('')}
       ${SOON.length ? `<div class="fl-h sm">곧 열려요 <span>${SOON.length}개</span></div><div class="sgrid2">${SOON.map(tile).join('')}</div>` : ''}
-      ${G.passAll ? '' : `<button class="allpass" onclick="paywall('all')"><div class="ap-ic">${IC.trophy()}</div><div class="grow"><div class="t">더오를패스 ALL</div><div class="d">모든 자격증 PRO · 새 자격증도 자동 포함</div></div><span class="go">${won(ALL_PRICE)}</span></button>`}
+      
       <div class="foot">문제는 출제 논점을 바탕으로 더오를이 직접 만든 문항이에요.</div>
     </section>
   </div>`;
