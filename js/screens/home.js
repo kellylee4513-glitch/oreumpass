@@ -30,7 +30,7 @@ function home() {
       <div class="grid3m">
         ${mini('bankPage()', IC.bank(), '문제은행', `${Q.length}문항 검색`)}
         ${mini('cardPage()', IC.book(), '개념 카드', `${Q.filter(q => q.c).length}장`)}
-        ${mini('notePage()', IC.note(), '요약 노트', '공식·암기 팁')}
+        ${mini('notePage()', IC.note(), '단원 정리', '공식·암기 팁')}
       </div>
     </div>
 
@@ -50,7 +50,7 @@ function home() {
         <button class="li" onclick="examInfoSheet()"><span class="ico">${badge(C, 30)}</span>${esc(C.short)} 시험 안내<span class="r">${C.info.count}문항 · ${C.info.minutes}분 ›</span></button>
         <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>
         <button class="li" onclick="go('certs')"><span class="ico">${IC.cert()}</span>다른 자격증<span class="r">${SOON.map(c => c.short).join('·')} 준비 중 ›</span></button>
-${shopEntry()}
+
       </div>
     </div>
     <div class="foot b-foot">${policyLinks()}더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>

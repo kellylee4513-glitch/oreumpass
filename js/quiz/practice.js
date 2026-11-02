@@ -26,7 +26,7 @@ function explainHTML(q, pick) {
   if (q.c) h += `<section class="ex-sec"><h4>핵심 개념${q.t ? `<span>${esc(q.t)}</span>` : ''}</h4><p>${hl(q.c)}</p>${q.f ? `<div class="ex-f"><span>공식</span><div class="fx">${hl(q.f)}</div></div>` : ''}</section>`;
   h += `<section class="ex-sec"><h4>왜 정답이 ${NUM[q.a]}일까</h4><p>${hl(q.e)}</p></section>`;
   if (q.w) h += `<section class="ex-sec"><h4>보기 분석</h4><div class="ex-ol">${q.o.map((o, k) => `<div class="ex-o ${k === q.a ? 'c' : ''} ${k === pick && k !== q.a ? 'm' : ''}"><span class="k">${NUM[k]}</span><div class="grow"><div class="ot">${esc(o)}${k === q.a ? '<em class="t ok">정답</em>' : ''}${k === pick && k !== q.a ? '<em class="t my">내 선택</em>' : ''}</div><div class="ow">${k === q.a ? '정답이에요. 위의 ‘왜 정답일까’를 확인하세요' : hl(q.w[k] || '')}</div></div></div>`).join('')}</div></section>`;
-  h += `<div class="ex-foot">${q.c ? `<button class="ex-link" onclick="notePage('${unitKey(q)}',${q.id})">요약 노트 · ${esc(unitName(q))} <span>›</span></button>` : ''}${shopOn() ? `<button class="ex-link" onclick="pdfShop()">${esc(C.short)} 정리본 PDF <span>›</span></button>` : ''}${qs && qs.t ? `<div class="ex-me">이 문제 ${qs.t}번 풀이 · 오답 ${qs.w}번</div>` : ''}</div></div>`;
+  h += `<div class="ex-foot">${q.c ? `<button class="ex-link" onclick="notePage('${unitKey(q)}',${q.id})">단원 정리 · ${esc(unitName(q))} <span>›</span></button>` : ''}${shopOn() ? `<button class="ex-link" onclick="shopDetail('${shopInfo().id}')">${esc(C.short)} 정리본 PDF <span>›</span></button>` : ''}${qs && qs.t ? `<div class="ex-me">이 문제 ${qs.t}번 풀이 · 오답 ${qs.w}번</div>` : ''}</div></div>`;
   return h;
 }
 function drawQ() { markNav();
