@@ -1,6 +1,9 @@
 /* [user/pay.js] 결제: 자격증별 PRO 30일권 (+ 요약노트 묶음) */
-/* PAY_LIVE: config.js 에 토스 클라이언트 키(tossClientKey)가 있으면 실결제, 없으면 오픈 준비 기간 무료 체험으로 30일 열어 줌 */
-const PAY_LIVE = !!((window.OP_CFG || {}).tossClientKey);
+/* 결제 모드: 라이브 키(live_)면 모두 실결제. 테스트 키(test_)면 운영자 계정만 테스트 결제, 나머지는 오픈 준비 기간 무료 30일 */
+const PAY_KEY = (window.OP_CFG || {}).tossClientKey || '';
+const PAY_REAL = /^live_/.test(PAY_KEY);
+const OP_ADMINS = ['a06d0a06-48a7-4f07-ae65-f1264f4df8aa', 'a12aaa8a-c3d5-4d97-bcea-e57f7fc3a90a'];
+const payOn = () => !!PAY_KEY && (PAY_REAL || !!(typeof AU !== 'undefined' && AU.user && OP_ADMINS.includes(AU.user.id)));
 const PRO_PLAN = { price: 4900, days: 30 };
 const BUNDLE = { price: 9900 };
 let payPick = 'pro';
@@ -17,11 +20,11 @@ function drawPay() {
     <div style="height:10px"></div>
     ${opt('pro', `${esc(C.short)} PRO 30일 <span class="pp-off">오픈 기념가</span>`, '결제한 날부터 30일 · 자동 결제 없음', PRO_PLAN.price, 0)}
     ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + 6500)}`, BUNDLE.price, PRO_PLAN.price + 6500) : ''}
-    <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${PAY_LIVE ? won(sel) + ' 결제하기' : '오픈 기념 무료로 30일 열기'}</button>
-    <div class="note">${PAY_LIVE ? '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : '결제 오픈 준비 중이에요. 지금은 무료로 30일 동안 열어 드려요.'}</div>`);
+    <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : '오픈 기념 무료로 30일 열기'}</button>
+    <div class="note">${payOn() ? '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : '결제 오픈 준비 중이에요. 지금은 무료로 30일 동안 열어 드려요.'}</div>`);
 }
 function buy() {
-  if (PAY_LIVE) { payStart(payPick === 'bundle' ? 'bundle' : 'pro'); return; }
+  if (payOn()) { payStart(payPick === 'bundle' ? 'bundle' : 'pro'); return; }
   G.passExp = G.passExp || {}; if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id);
   G.passExp[C.id] = Date.now() + PRO_PLAN.days * 864e5; save(); closeSheet(); toast(C.short + ' PRO가 30일 동안 열렸어요 🎉');
   setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'custom') startCustom(); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'mock') startMock(true); else go(tab); }, 300);
@@ -81,8 +84,8 @@ async function payReturn() {
 /* 서버의 결제 내역 → 이용권·요약노트 보유 상태 */
 async function syncPurchases() {
   if (!AU.sb || !AU.user) return;
-  const { data } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at').order('created_at', { ascending: false }).limit(100);
-  PAY.orders = data || []; PAY.owned = {};
+  const { data } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at,test').order('created_at', { ascending: false }).limit(100);
+  PAY.orders = (data || []).filter(o => !(PAY_REAL && o.test)); PAY.owned = {}; /* 정식 오픈 뒤에는 테스트 결제를 무시 */
   const paid = PAY.orders.filter(o => o.status === 'paid').sort((a, b) => new Date(a.approved_at) - new Date(b.approved_at));
   const exp = {};
   paid.forEach(o => {
@@ -99,4 +102,4 @@ async function noteDownload(cert) {
   catch (e) { toast(e && e.message === 'not_paid' ? '구매 내역을 찾지 못했어요' : '파일을 준비하지 못했어요. 잠시 뒤 다시 해 주세요'); }
 }
 /* 로그인하고 돌아왔을 때 결제 이어 하기 */
-function payResume() { let b = null; try { b = JSON.parse(sessionStorage.getItem('op_buy') || 'null'); sessionStorage.removeItem('op_buy'); } catch (e) {} if (b && AU.user && PAY_LIVE) setTimeout(() => payStart(b.item, b.cert), 500); }
+function payResume() { let b = null; try { b = JSON.parse(sessionStorage.getItem('op_buy') || 'null'); sessionStorage.removeItem('op_buy'); } catch (e) {} if (b && AU.user && payOn()) setTimeout(() => payStart(b.item, b.cert), 500); }

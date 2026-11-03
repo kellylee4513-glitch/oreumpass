@@ -20,7 +20,7 @@ window.SHOP = [
       ['빈칸 학습지 12쪽', '정리본과 배치가 똑같아서, 정답은 정리본의 같은 쪽 같은 자리에 있어요.'],
       ['부록', '2026년 달라진 것, 시험장 숫자 총정리, 핵심 공식 모음']
     ],
-    previews: ['img/tuunsa-pv1.jpg', 'img/tuunsa-pv2.jpg', 'img/tuunsa-pv3.jpg', 'img/tuunsa-pv4.jpg', 'img/tuunsa-pv5.jpg', 'img/tuunsa-pv6.jpg', 'img/tuunsa-pv7.jpg'] },
+    sample: 'files/tuunsa_sample.pdf', previews: ['img/tuunsa-pv1.jpg', 'img/tuunsa-pv2.jpg', 'img/tuunsa-pv3.jpg', 'img/tuunsa-pv4.jpg', 'img/tuunsa-pv5.jpg', 'img/tuunsa-pv6.jpg', 'img/tuunsa-pv7.jpg'] },
   { id: 'history', cat: 'job', short: '한국사능력검정', cv: '한국사|능력검정', title: '한능검 요약노트 PDF', tint: '#B5762E', soon: true },
   { id: 'comp', cat: 'job', short: '컴퓨터활용능력', cv: '컴퓨터|활용능력', title: '컴활 필기 요약노트 PDF', tint: '#16B871', soon: true }
 ];

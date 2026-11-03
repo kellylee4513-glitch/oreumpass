@@ -1,7 +1,7 @@
 /* [user/shop.js] 요약노트 PDF 탭: 상품 목록(카드) + 상세 페이지. 결제는 외부 판매 링크로 이동 */
 const SHOPS = () => window.SHOP || [];
 const shopById = id => SHOPS().find(p => p.id === id);
-const shopLive = p => !!(p && !p.soon && (/^https:\/\//.test(p.url || '') || (typeof PAY_LIVE !== 'undefined' && PAY_LIVE && p.cert)));
+const shopLive = p => !!(p && !p.soon && (/^https:\/\//.test(p.url || '') || (typeof PAY_KEY !== 'undefined' && PAY_KEY && p.cert)));
 /* 현재 자격증의 요약노트(해설 화면 링크용) */
 const shopInfo = () => SHOPS().find(p => p.cert === (C && C.id) && !p.soon) || null;
 const shopOn = () => shopLive(shopInfo());
@@ -39,13 +39,16 @@ function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab 
     ? `<div class="sh-pv">${n.previews.map(src => `<a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="요약노트 미리보기" loading="lazy"></a>`).join('')}</div>`
     : `<div class="sh-pv empty">미리보기 페이지를 준비하고 있어요</div>`;
   const price = n.price ? `<div class="sh-price">${off ? `<span class="off">${off}%</span><s>${won(n.list)}</s>` : ''}<b>${won(n.price)}</b></div>` : '';
-  const buy = PAY_LIVE && n.cert
+  const buy = PAY_KEY && n.cert
     ? (noteOwned(n.cert)
       ? `<button class="sh-buy" onclick="noteDownload('${n.cert}')">PDF 내려받기</button><div class="sh-note">구매한 요약노트예요. 언제든 다시 내려받을 수 있어요.</div>`
-      : `<button class="sh-buy" onclick="payStart('note','${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.</div>`)
+      : payOn()
+      ? `<button class="sh-buy" onclick="payStart('note','${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.</div>`
+      : `<button class="sh-buy off" onclick="toast('결제 오픈 준비 중이에요. 곧 열려요')">곧 판매 시작</button><div class="sh-note">결제 오픈 준비 중이에요. 아래 무료 샘플로 먼저 살펴보세요.</div>`)
     : shopLive(n)
     ? `<a class="sh-buy" href="${esc(n.url)}" target="_blank" rel="noopener">구매하러 가기</a><div class="sh-note">구매 버튼을 누르면 판매 페이지로 이동해 결제해요.</div>`
     : `<button class="sh-buy off" onclick="toast('판매 준비 중이에요. 조금만 기다려 주세요')">판매 준비 중</button>`;
+  const smp = n.sample && !(n.cert && noteOwned(n.cert)) ? `<a class="btn ghost" style="display:block;text-align:center;width:100%;box-sizing:border-box;margin-top:10px;text-decoration:none" href="${esc(n.sample)}" download="투자자산운용사_합격세트_무료샘플.pdf" target="_blank" rel="noopener">무료 샘플 PDF 받기 (8쪽)</a>` : '';
   $app.innerHTML = topBar('요약노트', '', "go('shop')") + `<div class="pad upage">
     <div class="sh-hero"><div class="k">${esc(n.short)} · PDF</div><div class="t">${esc(n.title)}</div><div class="d">${esc(n.sub || '')}</div>${price}</div>
     <div class="sec">구성</div><div class="card sh-list">${items}</div>
@@ -54,7 +57,7 @@ function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab 
     <div class="card sh-for"><div>· 시험 직전, 두꺼운 기본서를 한 번에 정리하고 싶은 분</div><div>· 세율·기한·공식처럼 헷갈리는 숫자를 반복해서 외우고 싶은 분</div><div>· 출력해서 손으로 채우며 공부하는 분</div></div>
     <div class="sec">앱과 함께 쓰면</div>
     <div class="card sh-for"><div>앱에서 문제를 풀다 틀린 단원은 요약노트의 같은 단원을 보고, 빈칸 학습지로 다시 외워 보세요. 문제 풀이와 정리 회독을 번갈아 하면 오래 기억에 남아요.</div></div>
-    ${buy}
+    ${buy}${smp}
     <div class="sec">구매 전 확인해 주세요</div>
     <div class="card sh-pol">
       <div><b>상품 형태</b> 디지털 콘텐츠(PDF)예요. 실물 배송은 없어요.</div>
