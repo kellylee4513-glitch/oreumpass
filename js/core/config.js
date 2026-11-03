@@ -6,5 +6,5 @@ window.OP_CFG = {
   sbKey: 'sb_publishable_iSRIY5V5EFvDtFs-U7Q5sw_njb7Qcxn',
   webUrl: 'https://kellylee4513-glitch.github.io/oreumpass/',
   sbLib: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9/dist/umd/supabase.js',
-  kakaoChannel: ''
+  kakaoChannel: 'https://pf.kakao.com/_ByRxeX'
 };

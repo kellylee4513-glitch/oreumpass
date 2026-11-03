@@ -41,3 +41,7 @@ function brandBar() { return `<div class="top"><div class="logo"><img src="icon-
 
 /* 키보드: 버튼 역할을 하는 카드도 Enter·Space로 누를 수 있게 */
 document.addEventListener('keydown', e => { const t = e.target; if ((e.key === 'Enter' || e.key === ' ') && t && t.getAttribute && t.getAttribute('role') === 'button' && t.tagName !== 'BUTTON') { e.preventDefault(); t.click(); } });
+
+/* 카카오톡 채널 1:1 문의 */
+const kakaoCh = () => (window.OP_CFG || {}).kakaoChannel || '';
+function kakaoAsk() { const u = kakaoCh(); if (!u) { toast('문의 채널을 준비하고 있어요'); return; } window.open(u.replace(/\/$/, '') + '/chat', '_blank', 'noopener'); }

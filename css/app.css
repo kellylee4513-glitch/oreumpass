@@ -1009,3 +1009,4 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 @media(min-width:1000px){.sp-wrap .sp-shelf{grid-template-columns:repeat(3,1fr)}}
 .hero .hero-cta{margin-top:12px;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700}
 .cm-guide{padding:14px 16px;margin-bottom:12px}.cm-guide .cm-gd{font-size:13px;color:var(--sub);line-height:1.65;margin-top:6px}
+.ka-btn{width:100%;margin:14px 0 4px;background:#FEE500;color:#191919}
