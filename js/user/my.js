@@ -18,7 +18,6 @@ function myTab() {
       <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>
       <button class="li" onclick="kakaoAsk()"><span class="ico">${IC.faq()}</span>카카오톡으로 문의하기<span class="r">›</span></button>
       <button class="li" onclick="syncSheet()"><span class="ico">${IC.phone()}</span>기기 간 기록 옮기기<span class="r">아이폰·안드로이드·PC ›</span></button>
-      <button class="li" onclick="installGuide()"><span class="ico">${IC.phone()}</span>홈 화면에 추가<span class="r">›</span></button>
       <button class="li danger" onclick="resetAll()"><span class="ico"></span>${esc(C.short)} 학습 기록 초기화</button>
       ${AU.user ? `<button class="li danger" onclick="withdrawPage()"><span class="ico"></span>회원 탈퇴</button>` : ''}
     </div>
