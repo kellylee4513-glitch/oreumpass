@@ -22,7 +22,7 @@ function home() {
 
     <div class="b-play"><div class="sec">문제 풀기</div>
       <div class="grid4">
-        ${tile('startMock()', IC.exam(), '실전 모의고사', `${Math.min(C.info.count, pool(0).length)}문항 · ${C.info.minutes}분 · 실전 비율`, '')}
+        ${tile('startMock()', IC.exam(), '실전 모의고사' + (isPro() ? '' : ' <span class="pp-off" style="color:var(--blue);background:var(--blue-soft)">PRO</span>'), `${Math.min(C.info.count, pool(0).length)}문항 · ${C.info.minutes}분 · 실전 비율`, '')}
         ${tile('startQuick()', IC.quick(), '빠른 10문제', '안 푼 문제부터 5분', '')}
         ${tile('subjectSheet()', IC.subject(), '과목·단원별', '원하는 단원만 골라 풀기', '')}
         ${tile('setPage()', IC.sets(), '세트별 실전', `${SET_N}문항 × ${setsOf().length}세트`, '')}
@@ -54,7 +54,7 @@ function home() {
 
       </div>
     </div>
-    <div class="foot b-foot">${policyLinks()}더오를패스 · 자격증 CBT<br>※ 시제품이에요. 결제는 실제로 진행되지 않아요.</div>
+    <div class="foot b-foot">${policyLinks()}</div>
   </div>`;
   $app.classList.add('wide'); tabbar(); checkBadges(); setTimeout(reviewPopup, 900);
 }

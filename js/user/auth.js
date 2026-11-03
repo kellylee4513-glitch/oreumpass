@@ -70,7 +70,7 @@ async function nickSave() {
   if (error) { toast('저장하지 못했어요'); return; } AU.nick = v; closeSheet(); toast('닉네임을 바꿨어요'); authRefreshUI();
 }
 /* ===== 기록 동기화: 서버 한 줄(progress) ↔ 기기(G) ===== */
-const syncPayload = () => { const g = JSON.parse(JSON.stringify(G)); delete g.passAll; delete g.passCerts; return g; };
+const syncPayload = () => { const g = JSON.parse(JSON.stringify(G)); delete g.passAll; delete g.passCerts; delete g.passExp; return g; };
 function mergeCert(a, b) {
   a = cleanCert(a); b = cleanCert(b); const o = cleanCert(Object.assign({}, a, b));
   if (a.bv !== b.bv) return a.bv > b.bv ? a : b; /* 문제은행 버전이 다르면 최신 쪽만 */

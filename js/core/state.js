@@ -32,7 +32,7 @@ function useCert(id) {
 /* ===== 상태: G(공통) + S(현재 자격증) ===== */
 const KEY = 'oreumpass_v3';
 const blankCert = () => ({ wrong: [], wrongOx: [], star: [], seen: [], solved: 0, correct: 0, subj: {}, days: {}, hist: [], goal: 10, exam: '', dox: null, goalDone: '' });
-const blankG = () => ({ cur: '', name: '', installHidden: false, passAll: false, passCerts: [], data: {} });
+const blankG = () => ({ cur: '', name: '', installHidden: false, passAll: false, passCerts: [], passExp: {}, data: {} });
 let G = blankG(), S = null;
 /* 저장된 값(또는 가져온 기록 코드)을 안전한 모양으로 정리 */
 const isIds = a => Array.isArray(a) ? [...new Set(a.filter(x => Number.isInteger(x) && x >= 0))] : [];
@@ -72,7 +72,7 @@ function cleanCert(d) {
 function cleanG(v, keepPay) {
   v = plainObj(v); const g = blankG();
   g.cur = READY.some(c => c.id === v.cur) ? v.cur : ''; g.name = String(v.name || '').slice(0, 20); g.installHidden = !!v.installHidden;
-  if (keepPay) { g.passAll = !!v.passAll; g.passCerts = Array.isArray(v.passCerts) ? v.passCerts.filter(x => READY.some(c => c.id === x)) : []; }
+  if (keepPay) { g.passExp = {}; Object.entries(plainObj(v.passExp)).forEach(([k, t]) => { if (safeKey(k) && Number.isFinite(+t)) g.passExp[k] = +t; }); g.passAll = !!v.passAll; g.passCerts = Array.isArray(v.passCerts) ? v.passCerts.filter(x => READY.some(c => c.id === x)) : []; }
   Object.entries(plainObj(v.data)).forEach(([k, d]) => { if (safeKey(k) && READY.some(c => c.id === k)) g.data[k] = cleanCert(d); });
   return g;
 }
@@ -81,7 +81,7 @@ let saveWarned = false;
 function save(noSync) { if (!noSync && typeof syncPush === 'function' && typeof AU !== 'undefined' && AU.user) syncPush(); try { localStorage.setItem(KEY, JSON.stringify(G)); } catch (e) { if (!saveWarned) { saveWarned = true; setTimeout(() => toast('저장 공간이 부족해 기록이 저장되지 않아요'), 50); } } }
 /* 다른 탭(설치 앱·브라우저)에서 기록이 바뀌면 새로 불러오기 */
 window.addEventListener('storage', e => { if (e.key === KEY && !run) location.reload(); });
-const isPro = () => G.passAll || G.passCerts.includes(C.id);
+const isPro = () => G.passAll || (G.passCerts.includes(C.id) && !((G.passExp || {})[C.id] < Date.now()));
 
 const $app = document.getElementById('app');
 let run = null, tab = 'home', wnTab = 'cbt', afterPay = null, timer = null;

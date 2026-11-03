@@ -3,7 +3,7 @@
 function certPicker(first) {
   stopTimer(); run = null; window.scrollTo(0, 0); $app.classList.add('wide');
   const totalQ = READY.reduce((n, c) => n + c.questions.length, 0);
-  const big = c => { const d = G.data[c.id], pro = G.passAll || G.passCerts.includes(c.id), dd = d ? dday(d.exam) : null, seen = d ? d.seen.length : 0, pct = Math.round(seen / c.questions.length * 100);
+  const big = c => { const d = G.data[c.id], pro = G.passAll || (G.passCerts.includes(c.id) && !((G.passExp || {})[c.id] < Date.now())), dd = d ? dday(d.exam) : null, seen = d ? d.seen.length : 0, pct = Math.round(seen / c.questions.length * 100);
     const subs = Object.entries(c.subjects).map(([k, v]) => `<span><i>${k}</i>${esc(v.short)}</span>`).join('');
     const tag = pro ? '<span class="tag on">PRO</span>' : dd !== null && dd >= 0 ? `<span class="tag free">D-${dd}</span>` : '';
     return `<button class="rc ${G.cur === c.id && !first ? 'on' : ''}" style="--cc:${c.accent || c.color}" onclick="pickCert('${c.id}')">

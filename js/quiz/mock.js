@@ -14,7 +14,7 @@ function mockSet() {
   });
   return out;
 }
-function startMock() { closeSheet(); const items = mockSet(); const mins = items.length >= C.info.count ? C.info.minutes : Math.max(5, Math.round(C.info.minutes / C.info.count * items.length));
+function startMock(ok) { closeSheet(); if (!ok && !isPro()) { paywall('mock'); return; } const items = mockSet(); const mins = items.length >= C.info.count ? C.info.minutes : Math.max(5, Math.round(C.info.minutes / C.info.count * items.length));
   run = { mock: true, items, i: 0, ans: {}, start: Date.now(), limit: mins * 60000, label: '실전 모의고사' }; stopTimer();
   timer = setInterval(() => { if (!run || !run.mock) return; const left = run.limit - (Date.now() - run.start); const el = document.getElementById('tr'); if (el) { el.textContent = '남은 시간 ' + fmt(left); el.style.color = left < 300000 ? 'var(--red)' : ''; } if (left <= 0) { toast('시간이 끝나 자동 제출했어요'); submitMock(true); } }, 1000); drawMock(); }
 function drawMock() { markNav(); const r = run, q = r.items[r.i], a = r.ans[q.id]; window.scrollTo(0, 0); const n = Object.keys(r.ans).length;

@@ -10,12 +10,12 @@ function faqPage() { markNav();
     ['학습 기록은 어디에 저장되나요?', `지금은 회원가입 없이 이 기기의 브라우저에 자격증별로 저장돼요. 브라우저 기록을 지우거나 다른 기기에서 열면 기록이 이어지지 않아요. 로그인 기능이 생기면 기기 간에 이어 볼 수 있게 할게요.`],
     ['틀린 문제나 바뀐 법령을 발견했어요', `문제 화면 오른쪽 위 ⚠ 버튼으로 제보 내용을 복사해서 보내 주세요. 확인 후 고쳐서 반영해요.`],
     ['펜 필기는 어떻게 써요?', `문제 화면의 펜 버튼을 누르면 문제 위에 직접 밑줄을 긋거나 계산할 수 있어요. 색을 바꾸거나 지울 수 있고, 다른 문제로 넘어가면 지워져요.`],
-    ['환불은 어떻게 되나요?', `지금은 시제품이라 실제 결제가 일어나지 않아요. 정식 출시 때 환불 규정을 결제 화면과 이 페이지에 함께 안내할게요.`]
+    ['환불은 어떻게 되나요?', `요약노트 PDF는 결제 후 7일 이내이고 내려받지 않았으면 전액 환불돼요. PRO는 결제 후 7일 이내에 사용하지 않았으면 전액, 사용했으면 이용한 기간을 빼고 환불해요. 자세한 내용은 <a role="button" onclick="legalPage('refund')" style="text-decoration:underline">환불 규정</a>을 확인해 주세요.`]
   ];
   $app.innerHTML = topBar('이용 안내') + `<div class="pad upage"><div class="lead">${esc(C.name)} · 자주 묻는 질문</div>
     ${F.map(([q, a], i) => `<div class="faq ${i === 0 ? 'open' : ''}" role="button" tabindex="0" onclick="this.classList.toggle('open')"><div class="fq"><span class="qm">Q</span><span class="grow">${q}</span><span class="ar">⌄</span></div><div class="fa">${a}</div></div>`).join('')}
     <div class="foot">${policyLinks()}</div></div>`; tabbar();
 }
-function policyLinks() { return `<div class="pol"><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">이용약관</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">개인정보처리방침</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">환불 규정</a><a role="button" tabindex="0" onclick="faqPage()">이용 안내</a></div><div class="font-note">이 앱에는 차이에서 제공한 <a href="https://www.artistchai.co.kr/#/pride/identity_font" target="_blank" rel="noopener" style="text-decoration:underline">차이 활짝체</a>가 적용되어 있어요.</div>`; }
+function policyLinks() { return `<div class="pol"><a role="button" tabindex="0" onclick="legalPage('terms')">이용약관</a><a role="button" tabindex="0" onclick="legalPage('privacy')"><b>개인정보처리방침</b></a><a role="button" tabindex="0" onclick="legalPage('refund')">환불 규정</a><a role="button" tabindex="0" onclick="faqPage()">이용 안내</a></div><div class="font-note">이 앱에는 차이에서 제공한 <a href="https://www.artistchai.co.kr/#/pride/identity_font" target="_blank" rel="noopener" style="text-decoration:underline">차이 활짝체</a>가 적용되어 있어요.</div>${typeof bizInfo === "function" ? bizInfo() : ""}`; }
 
 

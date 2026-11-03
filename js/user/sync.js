@@ -16,7 +16,7 @@ function importCode() {
   const v = (document.getElementById('imp').value || '').trim();
   try { if (!v.startsWith('OREUM1:')) throw 0; const g = JSON.parse(decodeURIComponent(escape(atob(v.slice(7))))); if (!g || typeof g !== 'object' || !g.data) throw 0;
     if (!impArm) { impArm = true; toast('한 번 더 누르면 이 기기 기록이 바뀌어요'); setTimeout(() => impArm = false, 2500); return; }
-    impArm = false; const ng = cleanG(g, false); ng.passAll = G.passAll; ng.passCerts = G.passCerts.slice(); G = ng; useCert(G.cur && READY.some(c => c.id === G.cur) ? G.cur : READY[0].id); save(); closeSheet(); toast('기록을 옮겨 왔어요'); go('home');
+    impArm = false; const ng = cleanG(g, false); ng.passAll = G.passAll; ng.passCerts = G.passCerts.slice(); ng.passExp = Object.assign({}, G.passExp); G = ng; useCert(G.cur && READY.some(c => c.id === G.cur) ? G.cur : READY[0].id); save(); closeSheet(); toast('기록을 옮겨 왔어요'); go('home');
   } catch (e) { toast('기록 코드가 올바르지 않아요'); }
 }
 
