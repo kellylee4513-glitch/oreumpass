@@ -6,5 +6,7 @@ window.OP_CFG = {
   sbKey: 'sb_publishable_iSRIY5V5EFvDtFs-U7Q5sw_njb7Qcxn',
   webUrl: 'https://kellylee4513-glitch.github.io/oreumpass/',
   sbLib: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9/dist/umd/supabase.js',
-  kakaoChannel: 'https://pf.kakao.com/_ByRxeX'
+  kakaoChannel: 'https://pf.kakao.com/_ByRxeX',
+  /* 토스페이먼츠 클라이언트 키(공개용). 테스트: test_ck_… / 실결제: live_ck_… — 시크릿 키는 절대 여기에 넣지 않아요 */
+  tossClientKey: 'test_ck_c19w1NoKa5ixRYYRv4pjmo6DJ7cUcdZKIN'
 };
