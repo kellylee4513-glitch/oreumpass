@@ -853,3 +853,15 @@ mark{background:linear-gradient(transparent 62%,#FFEFB0 62%)!important}
 @media(max-width:420px){.topnav button{width:34px;height:34px}.topnav{gap:0}.top .switch{padding:4px 8px 4px 4px;font-size:13px}}
 @media(max-width:360px){.top .logo .wm{height:17px}.logo img{width:26px!important;height:26px!important}.top .switch+.topnav{margin-left:2px}}
 .acct-b{display:flex;flex-direction:column;gap:6px;flex:none;align-items:stretch}.acct-b .tag{text-align:center}
+
+/* 로그인 페이지 */
+.lp{max-width:440px;margin:0 auto}
+.lp-hero{text-align:center;padding:10px 0 18px}.lp-logo{width:64px;height:64px;border-radius:18px;box-shadow:0 8px 24px rgba(20,40,80,.15)}
+.lp-wm{display:flex;justify-content:center;margin:12px 0 0}.lp-wm .wm{height:24px}
+.lp-hero h1{font-size:22px;font-weight:800;line-height:1.45;margin:16px 0 0}
+.lp-list{padding:6px 18px}.lp-b{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.lp-b:last-child{border-bottom:0}
+.lp-ic{flex:none;width:40px;height:40px;border-radius:12px;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center}.lp-ic svg{width:22px;height:22px}
+.lp-b b{display:block;font-size:15px}.lp-b span:not(.lp-ic){display:block;font-size:13px;color:var(--gray);margin-top:2px;line-height:1.5}
+.lp-btns{margin-top:8px}.lg-btn.web{background:var(--blue);color:#fff;text-decoration:none}
+.lp-skip{display:block;margin:16px auto 0;font-size:14px;font-weight:600;color:var(--sub);text-decoration:underline;padding:6px}
+body:has(.tabbar) .app>.lp{max-width:460px}
