@@ -783,7 +783,7 @@ mark{background:linear-gradient(transparent 62%,#FFEFB0 62%)!important}
 .sh-it .no{flex:none;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);color:var(--blue-dark);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
 .sh-it .t{font-size:15.5px;font-weight:700}.sh-it .d{font-size:14px;color:var(--sub);margin-top:3px;line-height:1.55}
 .sh-pv{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scroll-snap-type:x mandatory}
-.sh-pv img{flex:none;width:72%;max-width:320px;border-radius:14px;border:1px solid var(--line);background:#fff;scroll-snap-align:start}
+.sh-pv a{flex:none;width:86%;max-width:520px;scroll-snap-align:start}.sh-pv img{display:block;width:100%;border-radius:14px;border:1px solid var(--line);background:#fff;scroll-snap-align:start}
 .sh-pv.empty{background:var(--card);border-radius:18px;padding:28px 16px;justify-content:center;color:var(--gray);font-size:14px}
 .sh-for{font-size:14.5px;color:var(--sub);line-height:1.75}
 .sh-buy{display:block;width:100%;text-align:center;background:var(--blue);color:#fff;font-weight:800;font-size:17px;padding:17px;border-radius:16px;margin:18px 0 6px;text-decoration:none}
@@ -998,3 +998,14 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 .sp-cv .sp-pdf,.lux .sp-cv .sp-pdf{font-size:.52em;font-weight:800;letter-spacing:.18em;padding:.22em .5em .22em .68em;border-radius:.18em;right:.75em;bottom:.75em;opacity:1;color:#1A2547;background:linear-gradient(180deg,#F8E7B0 0%,#E2BF6E 55%,#C79A45 100%);box-shadow:inset 0 0 0 .06em rgba(255,255,255,.55),0 0 0 .05em #A8812F,0 .12em .3em rgba(0,0,0,.35);font-family:Inter,"Pretendard Variable",Pretendard,sans-serif;text-shadow:0 .03em 0 rgba(255,255,255,.4)}
 .sp-cv .sp-pdf,.lux .sp-cv .sp-pdf{right:1.15em;bottom:1.1em}
 .sp-cv .sp-pdf,.lux .sp-cv .sp-pdf{right:2.3em;bottom:2.2em}
+.bk-more{width:100%;margin-top:12px}
+/* 출시 점검 다듬기 */
+.tag.on{color:#0A7A4B}
+.xp-wait{padding:16px 0;font-size:14px}
+.xp-wait svg{width:36px;height:36px;margin-bottom:6px}
+.sp-shelf{gap:8px}
+.sp-shelf .sp-book{padding:8px 4px 8px;font-size:.86em}
+.sp-shelf .sp-book .sp-cv{transform:scale(.82);transform-origin:center bottom;margin-top:-10%}
+@media(min-width:1000px){.sp-wrap .sp-shelf{grid-template-columns:repeat(3,1fr)}}
+.hero .hero-cta{margin-top:12px;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700}
+.cm-guide{padding:14px 16px;margin-bottom:12px}.cm-guide .cm-gd{font-size:13px;color:var(--sub);line-height:1.65;margin-top:6px}

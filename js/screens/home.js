@@ -14,7 +14,7 @@ function home() {
       <button class="set" onclick="examSheet()">${S.exam ? '변경' : '시험일 설정'}</button>
       <div class="k">${esc(C.name)} 시험까지</div>
       <div class="dd">${dd === null ? 'D-day' : dd > 0 ? 'D-' + dd : dd === 0 ? 'D-DAY' : '시험 끝!'}</div>
-      <div class="m">${dd === null ? '시험일을 정하면 하루 목표를 계산해 드려요' : dd > 0 ? (remain > 0 ? `하루 ${Math.max(1, Math.ceil(remain / dd))}문제씩이면 1회독 완료` : '1회독 완료! 이제 오답 복습할 차례') : dd === 0 ? '지금까지 푼 문제를 믿어요!' : '수고 많으셨어요'}</div>
+      <div class="m">${dd === null ? '시험일을 정하면 하루 목표를 계산해 드려요<br><button class="hero-cta" onclick="examSheet()">시험일 정하기 ›</button>' : dd > 0 ? (remain > 0 ? `하루 ${Math.max(1, Math.ceil(remain / dd))}문제씩이면 1회독 완료` : '1회독 완료! 이제 오답 복습할 차례') : dd === 0 ? '지금까지 푼 문제를 믿어요!' : '수고 많으셨어요'}</div>
       <div class="bank"><div class="tr"><i style="width:${seen / Q.length * 100}%"></i></div><div class="tx"><span class="bk-l">문제은행 </span>${seen} / ${Q.length} 풀었어요</div></div>
     </div></div>
     <div class="b-plan">${planCard()}</div>
@@ -22,7 +22,7 @@ function home() {
 
     <div class="b-play"><div class="sec">문제 풀기</div>
       <div class="grid4">
-        ${tile('startMock()', IC.exam(), '실전 모의고사' + (isPro() ? '' : ' <span class="pp-off" style="color:var(--blue);background:var(--blue-soft)">PRO</span>'), `${Math.min(C.info.count, pool(0).length)}문항 · ${C.info.minutes}분 · 실전 비율`, '')}
+        ${tile('startMock()', IC.exam(), '실전 모의고사' + (isPro() ? '' : ' <span class="pp-off" style="color:#1B4FB8;background:var(--blue-soft)">PRO</span>'), `${Math.min(C.info.count, pool(0).length)}문항 · ${C.info.minutes}분 · 실전 비율`, '')}
         ${tile('startQuick()', IC.quick(), '빠른 10문제', '안 푼 문제부터 5분', '')}
         ${tile('subjectSheet()', IC.subject(), '과목·단원별', '원하는 단원만 골라 풀기', '')}
         ${tile('setPage()', IC.sets(), '세트별 실전', `${SET_N}문항 × ${setsOf().length}세트`, '')}

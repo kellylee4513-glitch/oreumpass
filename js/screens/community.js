@@ -35,9 +35,10 @@ async function commLoad(reset) {
     CM.more = data.length > PAGE; CM.list = CM.list.concat(data.slice(0, PAGE)); CM.err = '';
   } catch (e) { CM.err = '글을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.'; }
   const row = p => `<button class="cm-row${p.pinned ? ' pin' : ''}" onclick="commOpen(${p.id})"><div class="cm-tags">${p.pinned ? '<span class="tg n">공지</span>' : ''}<span class="tg">${esc(certLabel(p.cert))}</span><span class="tg b">${esc(boardName(p.board))}</span></div><div class="cm-t">${esc(p.title)}${p.comments ? ` <span class="cm-cc">[${p.comments}]</span>` : ''}</div><div class="cm-m">${esc(p.profiles ? p.profiles.nickname : '알 수 없음')} · ${ago(p.created_at)} · 조회 ${p.views} · 좋아요 ${p.likes}</div></button>`;
+  const guide = `<div class="card cm-guide"><div class="cm-tags"><span class="tg n">공지</span><span class="tg b">운영</span></div><div class="cm-t">커뮤니티 이용 안내</div><div class="cm-gd">합격 후기, 시험장 팁, 공부 질문을 자유롭게 나눠 주세요.<br>· 시험 문제를 그대로 옮기거나 유료 자료를 올리면 삭제돼요.<br>· 욕설·광고·개인정보가 담긴 글은 신고가 5건 쌓이면 자동으로 숨겨져요.<br>· 문제 오류 제보는 문제 화면의 ⚠ 버튼이 가장 빨라요.</div></div>`;
   el.innerHTML = CM.err ? `<div class="cm-empty">${CM.err}</div>` : CM.list.length
-    ? `<div class="card cm-list">${CM.list.map(row).join('')}</div>${CM.more ? `<button class="cm-more" onclick="CM.page++;commLoad(false)">더 보기</button>` : ''}`
-    : `<div class="cm-empty"><b>아직 글이 없어요</b><div>첫 글을 남겨 보세요.</div></div>`;
+    ? guide + `<div class="card cm-list">${CM.list.map(row).join('')}</div>${CM.more ? `<button class="cm-more" onclick="CM.page++;commLoad(false)">더 보기</button>` : ''}`
+    : guide + `<div class="cm-empty"><b>아직 글이 없어요</b><div>첫 글을 남겨 보세요. 합격 후기는 다음 수험생에게 큰 힘이 돼요.</div></div>`;
 }
 async function commOpen(id) { markNav();
   window.scrollTo(0, 0);

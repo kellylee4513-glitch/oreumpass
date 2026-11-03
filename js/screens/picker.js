@@ -29,7 +29,9 @@ function certPicker(first) {
   if (first) document.querySelectorAll('.bottom,.tabbar').forEach(e => e.remove()); else tabbar();
 }
 
-function pickCert(id) { const same = G.cur === id; useCert(id); save(); tab = 'home'; $app.classList.remove('wide'); go('home'); toast(same ? C.name + ' 이어서 공부해요' : C.name + '(으)로 바꿨어요'); }
+function pickCert(id) { const same = G.cur === id; useCert(id); save(); tab = 'home'; $app.classList.remove('wide'); go('home'); toast(same ? C.name + ' 이어서 공부해요' : C.name + roJosa(C.name) + ' 바꿨어요'); }
 
 
 function quickStart(id) { useCert(id); G.cur = id; save(); tab = 'home'; $app.classList.remove('wide'); const all = pool(0), un = shuffle(all.filter(q => !S.seen.includes(q.id))); startQuiz(un.concat(shuffle(all.filter(q => S.seen.includes(q.id)))).slice(0, 10), C.short + ' 바로 풀기', 'explain'); }
+
+function roJosa(w) { const c = (w || '').charCodeAt(w.length - 1) - 0xAC00; if (c < 0 || c > 11171) return '(으)로'; const j = c % 28; return j === 0 || j === 8 ? '로' : '으로'; }

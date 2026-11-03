@@ -36,7 +36,7 @@ function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab 
   const off = n.list && n.price && n.list > n.price ? Math.round((1 - n.price / n.list) * 100) : 0;
   const items = (n.items || []).map(([t, d], i) => `<div class="sh-it"><span class="no">${i + 1}</span><div class="grow"><div class="t">${esc(t)}</div><div class="d">${esc(d)}</div></div></div>`).join('');
   const pv = (n.previews || []).length
-    ? `<div class="sh-pv">${n.previews.map(src => `<img src="${esc(src)}" alt="요약노트 미리보기" loading="lazy">`).join('')}</div>`
+    ? `<div class="sh-pv">${n.previews.map(src => `<a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="요약노트 미리보기" loading="lazy"></a>`).join('')}</div>`
     : `<div class="sh-pv empty">미리보기 페이지를 준비하고 있어요</div>`;
   const price = n.price ? `<div class="sh-price">${off ? `<span class="off">${off}%</span><s>${won(n.list)}</s>` : ''}<b>${won(n.price)}</b></div>` : '';
   const buy = shopLive(n)
