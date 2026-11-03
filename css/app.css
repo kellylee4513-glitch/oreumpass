@@ -1030,3 +1030,13 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 .ioscoach.br .ic-arrow{align-self:flex-end;margin-right:14px}
 @keyframes icB{50%{transform:translateY(10px)}}@keyframes icT{50%{transform:translateY(-10px)}}
 @media (min-width:900px){.instbar{left:auto;right:24px;bottom:24px;max-width:380px}}
+/* 홈 위쪽 안내 한 줄 카드 (로그인 / 앱 추가 중 하나만) */
+.tnudge{display:flex;align-items:center;background:var(--card);border-radius:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tnudge .tn-go{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:12px 4px 12px 14px;text-align:left;background:none;border:0}
+.tnudge .tn-ico{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;font-weight:900;font-size:15px}
+.tnudge .tn-ico.kakao{background:#FEE500;color:#191919}
+.tnudge .tn-tx{flex:1;min-width:0}.tnudge b{display:block;font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tnudge small{display:block;font-size:12.5px;color:var(--gray);margin-top:2px}
+.tnudge .tn-r{color:#B0B8C1;font-size:20px;padding:0 4px}
+.tnudge .tn-x{flex:none;width:40px;height:40px;margin-right:4px;border-radius:12px;color:#B0B8C1;font-size:14px;background:none;border:0}
+.b-greet .tnudge{margin:0;max-width:380px;flex:1}

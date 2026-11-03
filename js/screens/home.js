@@ -7,8 +7,7 @@ function home() {
   $app.innerHTML = brandBar() + `
   <div class="pad hgrid">
     <div class="b-greet">
-    ${loginNudge()}
-    ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div></button><button class="x-close" aria-label="앱 추가 안내 닫기" onclick="G.installHidden=true;save();home()">✕</button>` : ''}</div>
+    ${topNudge()}</div>
     <div class="b-hero"><div class="hero">
       ${heroArt(seen / Q.length)}
       <button class="set" onclick="examSheet()">${S.exam ? '변경' : '시험일 설정'}</button>
@@ -92,9 +91,13 @@ function todayWrong() { return S.tw && S.tw.d === dkey() ? S.tw.ids.filter(id =>
 function twCard() { const t = todayWrong(); if (!t.length) return ''; return `<button class="twc" onclick="startQuiz(todayWrong().map(id => Object.assign({ id }, Q[id])), '오늘 틀린 문제', 'explain')"><span class="twi">${IC.note()}</span><div class="grow"><div class="t">오늘 틀린 ${t.length}문제, 잊기 전에 한 번 더</div><div class="d">지금 다시 풀면 기억이 훨씬 오래가요 · 무료</div></div><span class="twb">다시 풀기</span></button>`; }
 
 /* 로그인 안 한 사람에게 홈 맨 위에 로그인 안내 (닫으면 7일 동안 숨김) */
-function loginNudge() {
-  if (typeof authCfgOn !== 'function' || !authCfgOn() || (AU && AU.user)) return '';
-  let hid = 0; try { hid = +localStorage.getItem('op_lgx') || 0; } catch (e) {}
-  if (Date.now() - hid < 7 * 864e5) return '';
-  return `<div class="lg-nudge"><button class="grow" onclick="loginPage()"><span class="t">로그인하고 기록 이어 보기</span><span class="d">카카오·Google로 3초 만에 시작해요</span></button><button class="x" aria-label="닫기" onclick="try{localStorage.setItem('op_lgx',Date.now())}catch(e){};this.parentNode.remove()">✕</button></div>`;
+/* 홈 위쪽 안내는 한 번에 하나만: 로그인 → (로그인했거나 닫으면) 홈 화면에 추가 */
+function topNudge() {
+  const card = (ico, t, d, go, x) => `<div class="tnudge"><button class="tn-go" onclick="${go}">${ico}<span class="tn-tx"><b>${t}</b><small>${d}</small></span><span class="tn-r">›</span></button><button class="tn-x" aria-label="닫기" onclick="${x}">✕</button></div>`;
+  let lgHid = 0; try { lgHid = +localStorage.getItem('op_lgx') || 0; } catch (e) {}
+  if (typeof authCfgOn === 'function' && authCfgOn() && !(AU && AU.user) && Date.now() - lgHid > 7 * 864e5)
+    return card('<span class="tn-ico kakao"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#191919" d="M12 4C6.9 4 3 7.1 3 11c0 2.5 1.7 4.7 4.2 6l-.9 3.3c-.1.3.3.6.6.4l3.9-2.6c.4 0 .8.1 1.2.1 5.1 0 9-3.1 9-7s-3.9-7.2-9-7.2z"/></svg></span>', '로그인하고 기록 이어 보기', '카카오·Google로 3초면 끝', 'loginPage()', "try{localStorage.setItem('op_lgx',Date.now())}catch(e){};home()");
+  if (typeof showInstall === 'function' && showInstall())
+    return card('<img class="tn-ico" src="icon-192.png" alt="" onerror="this.remove()">', '홈 화면에 앱 추가하기', '아이콘 한 번으로 바로 열기', 'installGuide()', 'G.installHidden=true;save();home()');
+  return '';
 }
