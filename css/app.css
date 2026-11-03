@@ -1010,3 +1010,23 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 .hero .hero-cta{margin-top:12px;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700}
 .cm-guide{padding:14px 16px;margin-bottom:12px}.cm-guide .cm-gd{font-size:13px;color:var(--sub);line-height:1.65;margin-top:6px}
 .ka-btn{width:100%;margin:14px 0 4px;background:#FEE500;color:#191919}
+/* ===== 홈 화면에 추가: 안드로이드 설치 띠 · 아이폰 화살표 안내 ===== */
+.instbar{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:25;max-width:456px;margin:0 auto;display:flex;align-items:center;gap:12px;background:#191F28;color:#fff;border-radius:18px;padding:12px 12px 12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.25);animation:ibUp .3s cubic-bezier(.2,.8,.2,1)}
+.instbar img{width:40px;height:40px;border-radius:10px;flex-shrink:0}
+.instbar .grow{flex:1;min-width:0}.instbar b{display:block;font-size:15px}.instbar span{display:block;font-size:12.5px;opacity:.75;margin-top:2px}
+.instbar .ib-go{background:var(--blue);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:15px;font-weight:700}
+.instbar .ib-x{background:none;border:0;color:#fff;opacity:.6;font-size:16px;padding:6px}
+@keyframes ibUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.ioscoach{position:fixed;inset:0;z-index:40;background:rgba(11,18,32,.62);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 18px calc(20px + env(safe-area-inset-bottom))}
+.ioscoach.top{justify-content:flex-start;padding-top:calc(70px + env(safe-area-inset-top));flex-direction:column-reverse}
+.ioscoach .ic-card{background:#fff;border-radius:22px;padding:20px;max-width:360px;width:100%;text-align:center;box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.ioscoach .ic-card img{width:56px;height:56px;border-radius:14px;margin-bottom:8px}
+.ioscoach .ic-t{font-size:18px;font-weight:800;color:var(--text)}
+.ioscoach .ic-d{font-size:15px;line-height:1.6;color:var(--sub);margin-top:8px}
+.ioscoach .ic-s{font-size:13px;color:var(--gray);margin-top:8px}
+.ioscoach .ic-x{margin-top:14px;background:var(--bg);border:0;border-radius:12px;padding:10px 22px;font-size:15px;font-weight:700;color:var(--sub)}
+.ioscoach .ic-arrow{font-size:46px;line-height:1;color:#fff;font-weight:800;margin:10px 0 0;animation:icB 1s ease-in-out infinite;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.ioscoach.top .ic-arrow{margin:0 0 10px;align-self:flex-end;margin-right:18px;animation-name:icT}
+.ioscoach.br .ic-arrow{align-self:flex-end;margin-right:14px}
+@keyframes icB{50%{transform:translateY(10px)}}@keyframes icT{50%{transform:translateY(-10px)}}
+@media (min-width:900px){.instbar{left:auto;right:24px;bottom:24px;max-width:380px}}
