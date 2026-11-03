@@ -6,7 +6,7 @@ function home() {
   const mini = (fn, ic, t, d, lock) => `<button class="mini ${lock ? 'locked' : ''}" onclick="${fn}">${lock ? `<span class="lk">${IC.lock()}</span>` : ''}<span class="mi">${ic}</span><span class="mt">${t}</span><span class="md">${d}</span></button>`;
   $app.innerHTML = brandBar() + `
   <div class="pad hgrid">
-    <div class="b-greet"><div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 합격까지<br>오늘도 한 계단 <em>더 오를</em> 차례!</div>
+    <div class="b-greet">
     ${loginNudge()}
     ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div></button><button class="x-close" aria-label="앱 추가 안내 닫기" onclick="G.installHidden=true;save();home()">✕</button>` : ''}</div>
     <div class="b-hero"><div class="hero">
@@ -15,7 +15,7 @@ function home() {
       <div class="k">${esc(C.name)} 시험까지</div>
       <div class="dd">${dd === null ? 'D-day' : dd > 0 ? 'D-' + dd : dd === 0 ? 'D-DAY' : '시험 끝!'}</div>
       <div class="m">${dd === null ? '시험일을 정하면 하루 목표를 계산해 드려요' : dd > 0 ? (remain > 0 ? `하루 ${Math.max(1, Math.ceil(remain / dd))}문제씩이면 1회독 완료` : '1회독 완료! 이제 오답 복습할 차례') : dd === 0 ? '지금까지 푼 문제를 믿어요!' : '수고 많으셨어요'}</div>
-      <div class="bank"><div class="tr"><i style="width:${seen / Q.length * 100}%"></i></div><div class="tx">문제은행 ${seen} / ${Q.length} 풀었어요</div></div>
+      <div class="bank"><div class="tr"><i style="width:${seen / Q.length * 100}%"></i></div><div class="tx"><span class="bk-l">문제은행 </span>${seen} / ${Q.length} 풀었어요</div></div>
     </div></div>
     <div class="b-plan">${planCard()}</div>
     ${todayWrong().length ? `<div class="b-tw">${twCard()}</div>` : ''}

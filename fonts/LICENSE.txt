@@ -1,0 +1,14 @@
+차이 활짝체 (Chai Hwaljjak) 사용 안내
+
+이 앱에는 차이커뮤니케이션에서 제공한 차이 활짝체가 적용되어 있습니다.
+Copyright © 2025 CHAI. All rights reserved.
+
+- 차이 서체의 지식 재산권은 차이커뮤니케이션이 보유합니다.
+- 차이에서 배포하는 서체는 개인 및 기업 사용자를 포함한 모든 사용자에게 무료로 제공됩니다.
+- 이 폴더의 글꼴 파일(ChaiHwaljjak-Regular.ttf, ChaiHwaljjak-Bold.ttf)은 공식 배포본을
+  수정·개작·변환하지 않고 원본 그대로 포함했습니다.
+- 글꼴 파일 자체를 판매하거나 다른 사람에게 배포하지 않습니다.
+- 회사명·브랜드명·상품명·로고·마크·슬로건(BI/CI)에는 이 서체를 쓰지 않습니다.
+
+라이선스 원문과 공식 배포처: https://www.artistchai.co.kr/#/pride/identity_font
+문의: insight_culture@artistchai.co.kr

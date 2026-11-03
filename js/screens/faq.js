@@ -16,6 +16,6 @@ function faqPage() { markNav();
     ${F.map(([q, a], i) => `<div class="faq ${i === 0 ? 'open' : ''}" role="button" tabindex="0" onclick="this.classList.toggle('open')"><div class="fq"><span class="qm">Q</span><span class="grow">${q}</span><span class="ar">⌄</span></div><div class="fa">${a}</div></div>`).join('')}
     <div class="foot">${policyLinks()}</div></div>`; tabbar();
 }
-function policyLinks() { return `<div class="pol"><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">이용약관</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">개인정보처리방침</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">환불 규정</a><a role="button" tabindex="0" onclick="faqPage()">이용 안내</a></div>`; }
+function policyLinks() { return `<div class="pol"><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">이용약관</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">개인정보처리방침</a><a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">환불 규정</a><a role="button" tabindex="0" onclick="faqPage()">이용 안내</a></div><div class="font-note">이 앱에는 차이에서 제공한 <a href="https://www.artistchai.co.kr/#/pride/identity_font" target="_blank" rel="noopener" style="text-decoration:underline">차이 활짝체</a>가 적용되어 있어요.</div>`; }
 
 

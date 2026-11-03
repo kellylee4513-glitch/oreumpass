@@ -6,16 +6,29 @@ const shopLive = p => !!(p && !p.soon && /^https:\/\//.test(p.url || ''));
 const shopInfo = () => SHOPS().find(p => p.cert === (C && C.id) && !p.soon) || null;
 const shopOn = () => shopLive(shopInfo());
 function shopCover(p) {
-  return `<div class="sp-cv" style="--tint:${p.tint || '#3182F6'}"><span class="vt">${esc(p.cv || p.short)}</span><span class="bk">요약<br>노트</span><span class="pdf">PDF</span></div>`;
+  const nm = esc(String(p.cv || p.short).replace(/\|/g, ''));
+  return `<div class="sp-cv" style="--tint:${p.tint || '#3182F6'}"><span class="sp-vt">${nm}</span><svg class="sp-sun" viewBox="0 0 40 40" aria-hidden="true"><g stroke="#FFC21A" stroke-width="3" stroke-linecap="round"><path d="M20 3v4M20 33v4M3 20h4M33 20h4M8 8l2.8 2.8M29.2 29.2L32 32M8 32l2.8-2.8M29.2 10.8L32 8"/></g><circle cx="20" cy="20" r="10" fill="#FFD43B"/><circle cx="16.5" cy="19" r="1.3" fill="#7A4B00"/><circle cx="23.5" cy="19" r="1.3" fill="#7A4B00"/><path d="M17 22.5q3 2.6 6 0" stroke="#7A4B00" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="14.2" cy="22.3" r="1.5" fill="#FF9F80" opacity=".7"/><circle cx="25.8" cy="22.3" r="1.5" fill="#FF9F80" opacity=".7"/></svg>
+    <svg class="sp-mt" viewBox="0 0 74 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L0 30 L16 20 L26 26 L44 8 L56 16 L74 4 L74 40 Z" fill="var(--tint)" opacity=".28"/><path d="M0 40 L0 34 L20 26 L34 31 L52 18 L74 24 L74 40 Z" fill="var(--tint)" opacity=".75"/></svg>
+    ${p.pages ? `<span class="sp-pg">${p.pages}P</span>` : ''}<span class="sp-pdf">PDF</span></div>`;
 }
 function pdfShop(asTab) {
   if (!asTab) { go('shop'); return; }
   window.scrollTo(0, 0); $app.classList.remove('wide');
-  const cats = (window.SHOP_CATS || []).filter(c => SHOPS().some(p => p.cat === c.id));
-  const card = p => `<button class="sp-card${p.soon ? ' soon' : ''}" onclick="${p.soon ? `toast('${esc(p.short)} 요약노트는 준비 중이에요')` : `shopDetail('${p.id}')`}">${shopCover(p)}<div class="grow"><div class="t">${esc(p.title)}</div><div class="d">${p.soon ? '준비 중' : shopLive(p) ? (p.price ? won(p.price) : '판매 중') : '판매 준비 중'}</div></div></button>`;
+  const cats = (window.SHOP_CATS || []).filter(c => SHOPS().some(p => p.cat === c.id && !p.featured));
+  const feat = SHOPS().filter(p => p.featured && !p.soon);
+  const priceTxt = p => shopLive(p) ? (p.price ? `${p.list > p.price ? `<s>${won(p.list)}</s> ` : ''}<b>${won(p.price)}</b>` : '<b>판매 중</b>') : '<b class="wait">판매 준비 중</b>';
+  const big = p => `<button class="sp-feat" onclick="shopDetail('${p.id}')">
+      <div class="sp-fcv">${shopCover(p)}</div>
+      <div class="grow"><div class="sp-tags">${(p.tags || []).map(t => `<span>${esc(t)}</span>`).join('')}</div>
+        <div class="t">${esc(p.title)}</div>
+        <ul class="sp-pts">${(p.points || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+        <div class="sp-row"><span class="sp-price">${priceTxt(p)}</span><span class="sp-go">자세히 보기 ›</span></div></div></button>`;
+  const card = p => `<button class="sp-card${p.soon ? ' soon' : ''}" onclick="${p.soon ? `toast('${esc(p.short)} 요약노트는 준비 중이에요')` : `shopDetail('${p.id}')`}">${shopCover(p)}<div class="grow"><div class="t">${esc(p.title)}</div><div class="d">${p.soon ? '준비 중 · 곧 만나요' : shopLive(p) ? (p.price ? won(p.price) : '판매 중') : '판매 준비 중'}</div></div></button>`;
   $app.innerHTML = `<div class="top"><div class="ttl">요약노트</div></div><div class="pad upage">
-    <div class="lead">합격자가 직접 정리한 자격증 요약노트 PDF예요. 출력해서 회독하고, 앱 문제로 확인해 보세요.</div>
-    ${cats.map(c => `<div class="sp-sec"><div class="sp-h"><i style="background:${c.dot}"></i>${esc(c.name)}</div><div class="sp-grid">${SHOPS().filter(p => p.cat === c.id).map(card).join('')}</div></div>`).join('')}
+    <div class="sp-hero"><div class="k">시험 전 마지막 정리</div><div class="t">두꺼운 기본서 대신<br><em>24쪽</em>으로 끝내는 요약노트</div>
+      <div class="sp-hl"><span>3과목 전 범위</span><span>빈출 빈칸 145곳</span><span>A4 출력용</span></div></div>
+    ${feat.map(big).join('')}
+    ${cats.map(c => { const it = SHOPS().filter(p => p.cat === c.id && !p.featured); return it.length ? `<div class="sp-sec"><div class="sp-h"><i style="background:${c.dot}"></i>${esc(c.name)}</div><div class="sp-grid">${it.map(card).join('')}</div></div>` : ''; }).join('')}
     <div class="foot">${policyLinks()}</div></div>`; tabbar();
 }
 function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab = 'shop';
