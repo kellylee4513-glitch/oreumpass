@@ -42,7 +42,7 @@ function loginPage(why) {
     </div>
     <div class="lp-btns">${buttons}</div>
     <button class="lp-skip" onclick="go('${from === 'my' ? 'home' : from}')">로그인 없이 둘러보기</button>
-    <div class="lg-note">처음 로그인하면 자동으로 가입돼요. 가입하면 <a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">이용약관</a>과 <a role="button" tabindex="0" onclick="toast('정식 출시 전에 공개돼요')">개인정보처리방침</a>에 동의한 것으로 봐요. 이메일이나 비밀번호는 저장하지 않아요.</div>
+    <div class="lg-note">처음 로그인하면 자동으로 가입돼요. 가입하면 <a role="button" tabindex="0" onclick="legalPage('terms')">이용약관</a>과 <a role="button" tabindex="0" onclick="legalPage('privacy')">개인정보처리방침</a>에 동의한 것으로 봐요. 비밀번호는 받지 않고, 카카오·구글에서 받은 이메일과 닉네임만 회원 확인에 써요.</div>
   </div>`; tabbar();
 }
 async function authLogin(provider, from) {
@@ -56,6 +56,8 @@ async function afterLogin() {
   if (!AU.sb || !AU.user) return;
   try { const { data } = await AU.sb.from('profiles').select('nickname').eq('id', AU.user.id).maybeSingle(); AU.nick = data ? data.nickname : ''; } catch (e) {}
   await syncPull();
+  try { if (typeof syncPurchases === 'function') await syncPurchases(); } catch (e) {}
+  try { if (typeof payResume === 'function') payResume(); } catch (e) {}
   let back = ''; try { back = sessionStorage.getItem('op_after') || ''; sessionStorage.removeItem('op_after'); } catch (e) {}
   if (back && !run) { toast((AU.nick || '회원') + '님, 로그인했어요'); go(back); } else authRefreshUI();
 }

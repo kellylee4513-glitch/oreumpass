@@ -1,7 +1,7 @@
 /* [user/shop.js] 요약노트 PDF 탭: 상품 목록(카드) + 상세 페이지. 결제는 외부 판매 링크로 이동 */
 const SHOPS = () => window.SHOP || [];
 const shopById = id => SHOPS().find(p => p.id === id);
-const shopLive = p => !!(p && !p.soon && /^https:\/\//.test(p.url || ''));
+const shopLive = p => !!(p && !p.soon && (/^https:\/\//.test(p.url || '') || (typeof PAY_LIVE !== 'undefined' && PAY_LIVE && p.cert)));
 /* 현재 자격증의 요약노트(해설 화면 링크용) */
 const shopInfo = () => SHOPS().find(p => p.cert === (C && C.id) && !p.soon) || null;
 const shopOn = () => shopLive(shopInfo());
@@ -27,7 +27,7 @@ function pdfShop(asTab) {
   const rest = SHOPS().filter(p => !(p.featured && !p.soon));
   $app.innerHTML = `<div class="top"><div class="ttl">요약노트</div></div><div class="pad upage lux lux-dark">
     <div class="sp-wrap">${feat.map(stage).join('')}
-    <div class="sp-sec"><div class="sp-h"><i></i>곧 나와요</div><div class="sp-shelf">${rest.map(book).join('')}${ask}</div></div></div>
+    ${SHOW_SOON ? `<div class="sp-sec"><div class="sp-h"><i></i>곧 나와요</div><div class="sp-shelf">${rest.map(book).join('')}${ask}</div></div>` : ''}</div>
     <div class="foot">${policyLinks()}</div></div>`; tabbar();
 }
 function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab = 'shop';
@@ -39,7 +39,11 @@ function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab 
     ? `<div class="sh-pv">${n.previews.map(src => `<a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="요약노트 미리보기" loading="lazy"></a>`).join('')}</div>`
     : `<div class="sh-pv empty">미리보기 페이지를 준비하고 있어요</div>`;
   const price = n.price ? `<div class="sh-price">${off ? `<span class="off">${off}%</span><s>${won(n.list)}</s>` : ''}<b>${won(n.price)}</b></div>` : '';
-  const buy = shopLive(n)
+  const buy = PAY_LIVE && n.cert
+    ? (noteOwned(n.cert)
+      ? `<button class="sh-buy" onclick="noteDownload('${n.cert}')">PDF 내려받기</button><div class="sh-note">구매한 요약노트예요. 언제든 다시 내려받을 수 있어요.</div>`
+      : `<button class="sh-buy" onclick="payStart('note','${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.</div>`)
+    : shopLive(n)
     ? `<a class="sh-buy" href="${esc(n.url)}" target="_blank" rel="noopener">구매하러 가기</a><div class="sh-note">구매 버튼을 누르면 판매 페이지로 이동해 결제해요.</div>`
     : `<button class="sh-buy off" onclick="toast('판매 준비 중이에요. 조금만 기다려 주세요')">판매 준비 중</button>`;
   $app.innerHTML = topBar('요약노트', '', "go('shop')") + `<div class="pad upage">

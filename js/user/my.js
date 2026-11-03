@@ -14,14 +14,29 @@ function myTab() {
 
     </div>
     <div class="card list" style="padding:4px 20px">
+      ${AU.user ? `<button class="li" onclick="ordersPage()"><span class="ico">${IC.note()}</span>구매 내역<span class="r">${(PAY.orders || []).filter(o => o.status !== 'ready').length}건 ›</span></button>` : ''}
       <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>
       <button class="li" onclick="kakaoAsk()"><span class="ico">${IC.faq()}</span>카카오톡으로 문의하기<span class="r">›</span></button>
       <button class="li" onclick="syncSheet()"><span class="ico">${IC.phone()}</span>기기 간 기록 옮기기<span class="r">아이폰·안드로이드·PC ›</span></button>
       <button class="li" onclick="installGuide()"><span class="ico">${IC.phone()}</span>홈 화면에 추가<span class="r">›</span></button>
       <button class="li danger" onclick="resetAll()"><span class="ico"></span>${esc(C.short)} 학습 기록 초기화</button>
     </div>
-    <div class="foot">${policyLinks()}문제는 기출 원문이 아니라 출제 포인트를 바탕으로 직접 만든 문항입니다.<br>학습 기록은 이 브라우저에 자격증별로 저장돼요.</div>
+    <div class="foot">${policyLinks()}문제는 기출 원문이 아니라 출제 포인트를 바탕으로 직접 만든 문항입니다.<br>${AU.user ? '학습 기록과 구매 내역은 계정에 저장돼요.' : '로그인하지 않으면 학습 기록은 이 브라우저에 저장돼요.'}</div>
   </div>`; tabbar(); }
 let resetArm = false;
 function resetAll() { if (!resetArm) { resetArm = true; toast('한 번 더 누르면 ' + C.short + ' 기록이 초기화돼요'); setTimeout(() => resetArm = false, 2500); return; } G.data[C.id] = blankCert(); useCert(C.id); save(); resetArm = false; toast('기록을 초기화했어요'); go('home'); }
 
+
+/* ===== 구매 내역 ===== */
+async function ordersPage() { markNav(); window.scrollTo(0, 0);
+  try { await syncPurchases(); } catch (e) {}
+  const st = { paid: ['결제 완료', 'ok'], canceled: ['환불 완료', ''], failed: ['결제 실패', 'no'] };
+  const L = (PAY.orders || []).filter(o => o.status !== 'ready');
+  const d = t => t ? new Date(t).toLocaleDateString('ko-KR') : '';
+  $app.innerHTML = topBar('구매 내역', '', "go('my')") + `<div class="pad upage">
+    ${L.length ? `<div class="card list" style="padding:4px 20px">${L.map(o => `<div class="li" style="display:block;padding:14px 0"><div style="display:flex;justify-content:space-between;gap:10px"><b style="font-size:15px">${esc(o.order_name)}</b><span class="bst ${(st[o.status] || ['', ''])[1]}">${(st[o.status] || [o.status])[0]}</span></div><div style="font-size:13px;color:var(--gray);margin-top:4px">${won(o.amount)} · ${d(o.approved_at || o.created_at)} · 주문번호 ${esc(o.id)}</div>${o.status === 'paid' && (o.item === 'note' || o.item === 'bundle') ? `<button class="btn ghost" style="margin-top:10px;width:100%" onclick="noteDownload('${o.cert}')">요약노트 PDF 내려받기</button>` : ''}</div>`).join('')}</div>`
+      : `<div class="empty">아직 구매 내역이 없어요</div>`}
+    <div class="card" style="font-size:13px;color:var(--sub);line-height:1.6">환불은 결제 후 7일 이내에 카카오톡 채널이나 고객센터로 주문번호와 함께 요청해 주세요. <a role="button" tabindex="0" onclick="legalPage('refund')" style="text-decoration:underline">환불 규정 보기</a></div>
+    <button class="btn ka-btn" onclick="kakaoAsk()">카카오톡으로 환불·결제 문의</button>
+  </div>`; tabbar();
+}

@@ -1,3 +1,5 @@
+/* 준비 중(상품이 없는) 자격증·요약노트는 결제 심사 기간 동안 숨김 */
+const SHOW_SOON = false;
 /* [screens/picker.js] 첫 화면: 자격증 선택 */
 /* ===== 자격증 선택 (첫 화면) ===== */
 function certPicker(first) {
@@ -20,9 +22,9 @@ function certPicker(first) {
     <section class="flist">
       <h1 class="pk-h">공부할 자격증을 골라 주세요</h1>
       ${READY.map(big).join('')}
-      ${SOON.length ? `<div class="fl-h sm">곧 열려요 <span>${SOON.length}개</span></div><div class="sgrid2">${SOON.map(tile).join('')}</div>` : ''}
+      ${SHOW_SOON && SOON.length ? `<div class="fl-h sm">곧 열려요 <span>${SOON.length}개</span></div><div class="sgrid2">${SOON.map(tile).join('')}</div>` : ''}
       
-      <div class="foot">문제는 출제 논점을 바탕으로 더오를이 직접 만든 문항이에요.</div>
+      <div class="foot">문제는 출제 논점을 바탕으로 더오를이 직접 만든 문항이에요.${typeof policyLinks === 'function' ? policyLinks() : ''}</div>
     </section>
   </div>`;
   bottom('');
