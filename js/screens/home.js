@@ -7,6 +7,7 @@ function home() {
   $app.innerHTML = brandBar() + `
   <div class="pad hgrid">
     <div class="b-greet"><div class="h1">${G.name ? esc(G.name) + '님, ' : ''}${esc(C.short)} 합격까지<br>오늘도 한 계단 <em>더 오를</em> 차례!</div>
+    ${loginNudge()}
     ${showInstall() ? `<button class="menu install" onclick="installGuide()"><img src="icon-192.png" alt="" onerror="this.remove()"><div class="grow"><div class="t">홈 화면에 앱 추가하기</div><div class="d">아이콘 한 번이면 바로 문제 풀기</div></div></button><button class="x-close" aria-label="앱 추가 안내 닫기" onclick="G.installHidden=true;save();home()">✕</button>` : ''}</div>
     <div class="b-hero"><div class="hero">
       ${heroArt(seen / Q.length)}
@@ -89,3 +90,11 @@ function doxAns(v) { const idx = doxIdx(), x = OX[idx]; S.dox = { d: dkey(), v }
 
 function todayWrong() { return S.tw && S.tw.d === dkey() ? S.tw.ids.filter(id => Q[id] && S.wrong.includes(id)) : []; }
 function twCard() { const t = todayWrong(); if (!t.length) return ''; return `<button class="twc" onclick="startQuiz(todayWrong().map(id => Object.assign({ id }, Q[id])), '오늘 틀린 문제', 'explain')"><span class="twi">${IC.note()}</span><div class="grow"><div class="t">오늘 틀린 ${t.length}문제, 잊기 전에 한 번 더</div><div class="d">지금 다시 풀면 기억이 훨씬 오래가요 · 무료</div></div><span class="twb">다시 풀기</span></button>`; }
+
+/* 로그인 안 한 사람에게 홈 맨 위에 로그인 안내 (닫으면 7일 동안 숨김) */
+function loginNudge() {
+  if (typeof authCfgOn !== 'function' || !authCfgOn() || (AU && AU.user)) return '';
+  let hid = 0; try { hid = +localStorage.getItem('op_lgx') || 0; } catch (e) {}
+  if (Date.now() - hid < 7 * 864e5) return '';
+  return `<div class="lg-nudge"><button class="grow" onclick="loginPage()"><span class="t">로그인하고 기록 이어 보기</span><span class="d">카카오·Google로 3초 만에 시작해요</span></button><button class="x" aria-label="닫기" onclick="try{localStorage.setItem('op_lgx',Date.now())}catch(e){};this.parentNode.remove()">✕</button></div>`;
+}

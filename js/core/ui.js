@@ -36,7 +36,7 @@ function topNav() { const t = $app.querySelector('.top'); if (!t || t.querySelec
 function topBar(title, right, backFn) { return `<div class="top"><button class="back" onclick="${backFn || 'go(tab)'}" aria-label="뒤로"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#191F28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="ttl">${title}</div><div class="right" id="tr">${right || ''}</div></div>`; }
 function go(t) { closeSheet(); stopTimer(); run = null; $app.classList.remove('wide'); if (t === 'note' && !isPro()) { paywall('wrong'); return; } tab = t; window.scrollTo(0, 0); ({ home, certs: () => certPicker(false), study: studyTab, note: wrongNote, shop: () => pdfShop(true), comm: commTab, my: myTab })[t](); }
 const lockTag = () => `<span class="tag pro">${IC.lock()} PRO</span>`;
-function brandBar() { return `<div class="top"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()">${WORDMARK}</div><button class="switch" onclick="go('certs')">${badge(C, 22)}<span>${esc(C.short)}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`; }
+function brandBar() { return `<div class="top"><div class="logo"><img src="icon-192.png" alt="" onerror="this.remove()">${WORDMARK}</div></div>`; }
 
 
 /* 키보드: 버튼 역할을 하는 카드도 Enter·Space로 누를 수 있게 */

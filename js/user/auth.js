@@ -2,6 +2,7 @@
 const AU = { sb: null, user: null, nick: '', ready: false, err: '', syncT: null, lastSync: '' };
 const authCfg = () => window.OP_CFG || {};
 const authSandbox = () => /claude|anthropic/.test(location.hostname) || location.protocol === 'file:' && !window.__allowFileAuth;
+const authCfgOn = () => !!(authCfg().sbUrl && authCfg().sbKey);
 const authOn = () => !!(authCfg().sbUrl && authCfg().sbKey) && !authSandbox();
 function loadSbLib() {
   if (window.supabase && window.supabase.createClient) return Promise.resolve();
