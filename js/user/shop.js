@@ -42,9 +42,7 @@ function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab 
   const buy = PAY_KEY && n.cert
     ? (noteOwned(n.cert)
       ? `<button class="sh-buy" onclick="noteDownload('${n.cert}')">PDF 내려받기</button><div class="sh-note">구매한 요약노트예요. 언제든 다시 내려받을 수 있어요.</div>`
-      : payOn()
-      ? `<button class="sh-buy" onclick="payStart('note','${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.</div>`
-      : `<button class="sh-buy off" onclick="toast('결제 오픈 준비 중이에요. 곧 열려요')">곧 판매 시작</button><div class="sh-note">결제 오픈 준비 중이에요. 아래 무료 샘플로 먼저 살펴보세요.</div>`)
+      : `<button class="sh-buy" onclick="payStart('note','${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">${payPrep() ? PREP_NOTE + ' 아래 무료 샘플로 먼저 살펴보세요.' : '결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.'}</div>`)
     : shopLive(n)
     ? `<a class="sh-buy" href="${esc(n.url)}" target="_blank" rel="noopener">구매하러 가기</a><div class="sh-note">구매 버튼을 누르면 판매 페이지로 이동해 결제해요.</div>`
     : `<button class="sh-buy off" onclick="toast('판매 준비 중이에요. 조금만 기다려 주세요')">판매 준비 중</button>`;

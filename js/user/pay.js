@@ -3,7 +3,10 @@
 const PAY_KEY = (window.OP_CFG || {}).tossClientKey || '';
 const PAY_REAL = /^live_/.test(PAY_KEY);
 const OP_ADMINS = ['a06d0a06-48a7-4f07-ae65-f1264f4df8aa', 'a12aaa8a-c3d5-4d97-bcea-e57f7fc3a90a'];
-const payOn = () => !!PAY_KEY && (PAY_REAL || !!(typeof AU !== 'undefined' && AU.user && OP_ADMINS.includes(AU.user.id)));
+const payAdmin = () => !!(typeof AU !== 'undefined' && AU.user && OP_ADMINS.includes(AU.user.id));
+const payOn = () => !!PAY_KEY;                 /* 결제창은 누구나 열 수 있음 (토스 심사 때 결제 흐름을 확인함) */
+const payPrep = () => !PAY_REAL && !payAdmin(); /* 오픈 준비 기간: 시험 결제창이라 청구·지급 없음 */
+const PREP_NOTE = '결제 오픈 준비 중이에요. 지금 결제창은 시험용이라 실제로 청구되지 않고, 상품도 지급되지 않아요.';
 const PRO_PLAN = { price: 4900, days: 30 };
 const BUNDLE = { price: 9900 };
 let payPick = 'pro';
@@ -21,10 +24,14 @@ function drawPay() {
     ${opt('pro', `${esc(C.short)} PRO 30일 <span class="pp-off">오픈 기념가</span>`, '결제한 날부터 30일 · 자동 결제 없음', PRO_PLAN.price, 0)}
     ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + 6500)}`, BUNDLE.price, PRO_PLAN.price + 6500) : ''}
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : '오픈 기념 무료로 30일 열기'}</button>
-    <div class="note">${payOn() ? '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : '결제 오픈 준비 중이에요. 지금은 무료로 30일 동안 열어 드려요.'}</div>`);
+    ${payOn() && payPrep() ? `<button class="btn ghost" style="width:100%;margin-top:8px" onclick="freeOpen()">오픈 전 무료 체험 30일 열기</button>` : ''}
+    <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : '결제 오픈 준비 중이에요. 지금은 무료로 30일 동안 열어 드려요.'}</div>`);
 }
 function buy() {
   if (payOn()) { payStart(payPick === 'bundle' ? 'bundle' : 'pro'); return; }
+  freeOpen();
+}
+function freeOpen() {
   G.passExp = G.passExp || {}; if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id);
   G.passExp[C.id] = Date.now() + PRO_PLAN.days * 864e5; save(); closeSheet(); toast(C.short + ' PRO가 30일 동안 열렸어요 🎉');
   setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'custom') startCustom(); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'mock') startMock(true); else go(tab); }, 300);
@@ -74,6 +81,7 @@ async function payReturn() {
     await authInit(); for (let i = 0; i < 20 && !AU.user; i++) await new Promise(r => setTimeout(r, 300));
     const r = await payFn({ action: 'confirm', paymentKey, orderId, amount: Number(amount) });
     await syncPurchases(); closeSheet();
+    if (r && r.order && r.order.test && !payAdmin()) { openSheet(`<h3>시험 결제가 끝났어요</h3><div class="p">${PREP_NOTE}<br><br>정식 오픈하면 같은 방법으로 바로 구매할 수 있어요.</div><button class="btn" style="width:100%" onclick="closeSheet();go('home')">확인</button>`); return; }
     const it = r && r.order && r.order.item;
     toast(it === 'note' ? '결제 완료! 요약노트를 내려받을 수 있어요' : '결제 완료! PRO가 30일 동안 열렸어요 🎉');
     if (it === 'note' || it === 'bundle') { if (typeof shopDetail === 'function') setTimeout(() => shopDetail(r.order.cert), 300); } else go('home');
@@ -85,7 +93,7 @@ async function payReturn() {
 async function syncPurchases() {
   if (!AU.sb || !AU.user) return;
   const { data } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at,test').order('created_at', { ascending: false }).limit(100);
-  PAY.orders = (data || []).filter(o => !(PAY_REAL && o.test)); PAY.owned = {}; /* 정식 오픈 뒤에는 테스트 결제를 무시 */
+  PAY.orders = (data || []).filter(o => !o.test || (!PAY_REAL && payAdmin())); PAY.owned = {}; /* 시험 결제는 운영자 확인용(오픈 준비 중)만 반영 */
   const paid = PAY.orders.filter(o => o.status === 'paid').sort((a, b) => new Date(a.approved_at) - new Date(b.approved_at));
   const exp = {};
   paid.forEach(o => {
