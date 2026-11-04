@@ -23,13 +23,12 @@ function drawPay() {
     <div style="height:10px"></div>
     ${opt('pro', `${esc(C.short)} PRO 30일 <span class="pp-off">오픈 기념가</span>`, '결제한 날부터 30일 · 자동 결제 없음', PRO_PLAN.price, 0)}
     ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + 6500)}`, BUNDLE.price, PRO_PLAN.price + 6500) : ''}
-    <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : '오픈 기념 무료로 30일 열기'}</button>
-    ${payOn() && payPrep() ? `<button class="btn ghost" style="width:100%;margin-top:8px" onclick="freeOpen()">오픈 전 무료 체험 30일 열기</button>` : ''}
-    <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : '결제 오픈 준비 중이에요. 지금은 무료로 30일 동안 열어 드려요.'}</div>`);
+    <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
+    <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`);
 }
 function buy() {
   if (payOn()) { payStart(payPick === 'bundle' ? 'bundle' : 'pro'); return; }
-  freeOpen();
+  toast('PRO는 오픈 준비 중이에요. 열리면 바로 알려드릴게요');
 }
 function freeOpen() {
   G.passExp = G.passExp || {}; if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id);
