@@ -14,3 +14,4 @@ try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || loc
 /* ===== 로그인 세션 복원 (설정돼 있을 때만) ===== */
 try { if (authOn()) authInit(); } catch (e) {}
 try { if (/[?&]pay=/.test(location.search)) payReturn(); } catch (e) {}
+try { if (!/[?&]pay=/.test(location.search) && typeof gOrders === 'function' && gOrders().length) syncPurchases(); } catch (e) {}

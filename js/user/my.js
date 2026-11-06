@@ -14,7 +14,7 @@ function myTab() {
 
     </div>
     <div class="card list" style="padding:4px 20px">
-      ${AU.user ? `<button class="li" onclick="ordersPage()"><span class="ico">${IC.note()}</span>구매 내역<span class="r">${(PAY.orders || []).filter(o => o.status !== 'ready').length}건 ›</span></button>` : ''}
+      ${AU.user || gOrders().length ? `<button class="li" onclick="ordersPage()"><span class="ico">${IC.note()}</span>구매 내역<span class="r">${(PAY.orders || []).filter(o => o.status !== 'ready').length}건 ›</span></button>` : ''}
       <button class="li" onclick="faqPage()"><span class="ico">${IC.faq()}</span>이용 안내 · FAQ<span class="r">›</span></button>
       <button class="li" onclick="kakaoAsk()"><span class="ico">${IC.faq()}</span>카카오톡으로 문의하기<span class="r">›</span></button>
       <button class="li" onclick="syncSheet()"><span class="ico">${IC.phone()}</span>기기 간 기록 옮기기<span class="r">아이폰·안드로이드·PC ›</span></button>
@@ -37,6 +37,7 @@ async function ordersPage() { markNav(); window.scrollTo(0, 0);
     ${L.length ? `<div class="card list" style="padding:4px 20px">${L.map(o => `<div class="li" style="display:block;padding:14px 0"><div style="display:flex;justify-content:space-between;gap:10px"><b style="font-size:15px">${esc(o.order_name)}</b><span class="bst ${(st[o.status] || ['', ''])[1]}">${(st[o.status] || [o.status])[0]}</span></div><div style="font-size:13px;color:var(--gray);margin-top:4px">${won(o.amount)} · ${d(o.approved_at || o.created_at)} · 주문번호 ${esc(o.id)}</div>${o.status === 'paid' && (o.item === 'note' || o.item === 'bundle') ? `<button class="btn ghost" style="margin-top:10px;width:100%" onclick="noteDownload('${o.cert}')">요약노트 PDF 내려받기</button>` : ''}</div>`).join('')}</div>`
       : `<div class="empty">아직 구매 내역이 없어요</div>`}
     <div class="card" style="font-size:13px;color:var(--sub);line-height:1.6">환불은 결제 후 7일 이내에 카카오톡 채널이나 고객센터로 주문번호와 함께 요청해 주세요. <a role="button" tabindex="0" onclick="legalPage('refund')" style="text-decoration:underline">환불 규정 보기</a></div>
+    <button class="btn ghost" style="width:100%;margin-bottom:10px" onclick="lookupSheet()">비회원 주문 불러오기</button>
     <button class="btn ka-btn" onclick="kakaoAsk()">카카오톡으로 환불·결제 문의</button>
   </div>`; tabbar();
 }
