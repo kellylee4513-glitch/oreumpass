@@ -8,8 +8,7 @@ const payOn = () => !!PAY_KEY;                 /* 결제창은 누구나 열 수
 const payPrep = () => !PAY_REAL && !payAdmin(); /* 오픈 준비 기간: 시험 결제창이라 청구·지급 없음 */
 const PREP_NOTE = '결제 오픈 준비 중이에요. 지금 결제창은 시험용이라 실제로 청구되지 않고, 상품도 지급되지 않아요.';
 const PRO_PLAN = { price: 4900, days: 30 };
-const BUNDLE = { price: 12900 };
-const NOTE_PRICE = 9900;
+const BUNDLE = { price: 9900 };
 let payPick = 'pro';
 const proLeft = id => { const e = (G.passExp || {})[id]; return e ? Math.ceil((e - Date.now()) / 864e5) : null; };
 function paywall(kind) { afterPay = kind; payPick = 'pro'; if (isPro()) { closeSheet(); return; } drawPay(); }
@@ -23,7 +22,7 @@ function drawPay() {
     <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈 · 잊을 때쯤 복습<small>선지를 쪼개 개념을 확실하게, 1·3·7·15·30일 뒤 다시 출제</small></span></div>
     <div style="height:10px"></div>
     ${opt('pro', `${esc(C.short)} PRO 30일 <span class="pp-off">오픈 기념가</span>`, '결제한 날부터 30일 · 자동 결제 없음', PRO_PLAN.price, 0)}
-    ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + NOTE_PRICE)}`, BUNDLE.price, PRO_PLAN.price + NOTE_PRICE) : ''}
+    ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + 6500)}`, BUNDLE.price, PRO_PLAN.price + 6500) : ''}
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
     <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`);
 }
@@ -58,7 +57,7 @@ const gFind = (cert, items) => gOrders().find(o => o.cert === cert && o.status =
 const EMAIL_OK = e => /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24}$/.test(e);
 function loginBuy(item, cert) { closeSheet(); try { sessionStorage.setItem('op_buy', JSON.stringify({ item, cert })); } catch (e) {} loginSheet('로그인하고 결제하면\n어느 기기에서든 이용할 수 있어요'); }
 function guestSheet(item, cert) {
-  const p = item === 'note' ? NOTE_PRICE : item === 'bundle' ? BUNDLE.price : PRO_PLAN.price;
+  const p = item === 'note' ? 6500 : item === 'bundle' ? BUNDLE.price : PRO_PLAN.price;
   openSheet(`<h3>결제 방법을 골라 주세요</h3><div class="p">회원가입 없이 비회원으로도 바로 결제할 수 있어요.</div>
     <div class="card" style="padding:16px;margin:4px 0 12px">
       <div style="font-weight:700;margin-bottom:8px">비회원 결제</div>
