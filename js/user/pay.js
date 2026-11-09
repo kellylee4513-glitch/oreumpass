@@ -8,7 +8,8 @@ const payOn = () => !!PAY_KEY;                 /* 결제창은 누구나 열 수
 const payPrep = () => !PAY_REAL && !payAdmin(); /* 오픈 준비 기간: 시험 결제창이라 청구·지급 없음 */
 const PREP_NOTE = '결제 오픈 준비 중이에요. 지금 결제창은 시험용이라 실제로 청구되지 않고, 상품도 지급되지 않아요.';
 const PRO_PLAN = { price: 4900, days: 30 };
-const BUNDLE = { price: 9900 };
+const BUNDLE = { price: 12900 };
+const NOTE_PRICE = 9900;
 let payPick = 'pro';
 const proLeft = id => { const e = (G.passExp || {})[id]; return e ? Math.ceil((e - Date.now()) / 864e5) : null; };
 function paywall(kind) { afterPay = kind; payPick = 'pro'; if (isPro()) { closeSheet(); return; } drawPay(); }
@@ -22,7 +23,7 @@ function drawPay() {
     <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈 · 잊을 때쯤 복습<small>선지를 쪼개 개념을 확실하게, 1·3·7·15·30일 뒤 다시 출제</small></span></div>
     <div style="height:10px"></div>
     ${opt('pro', `${esc(C.short)} PRO 30일 <span class="pp-off">오픈 기념가</span>`, '결제한 날부터 30일 · 자동 결제 없음', PRO_PLAN.price, 0)}
-    ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + 6500)}`, BUNDLE.price, PRO_PLAN.price + 6500) : ''}
+    ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + NOTE_PRICE)}`, BUNDLE.price, PRO_PLAN.price + NOTE_PRICE) : ''}
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
     <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`);
 }
@@ -48,6 +49,25 @@ async function payFn(body) {
   if (error) { let d = null; try { d = await error.context.json(); } catch (e) {} const er = new Error((d && d.error) || 'fn'); er.info = d; throw er; }
   return data;
 }
+/* 토스 결제위젯: 결제수단·약관을 시트 안에 그리고, 손님이 고른 수단으로 결제창을 연다 (계약 상점 = 결제위젯 연동 키) */
+async function payWidget(o, customerKey, email, successUrl, failUrl) {
+  await loadTossSdk();
+  const tp = window.TossPayments((window.OP_CFG || {}).tossClientKey);
+  const w = tp.widgets({ customerKey: customerKey === '@@ANONYMOUS' ? window.TossPayments.ANONYMOUS : customerKey });
+  openSheet(`<h3>결제수단을 골라 주세요</h3><div class="p">${esc(o.orderName)} · <b>${won(o.amount)}</b></div>
+    <div id="pw-methods" style="margin:0 -8px"></div><div id="pw-agree" style="margin:0 -8px"></div>
+    <button class="btn" id="pw-go" style="width:100%;margin-top:8px" disabled>${won(o.amount)} 결제하기</button>
+    ${payPrep() ? `<div class="note">${PREP_NOTE}</div>` : ''}`);
+  await w.setAmount({ currency: 'KRW', value: o.amount });
+  await Promise.all([w.renderPaymentMethods({ selector: '#pw-methods', variantKey: 'DEFAULT' }), w.renderAgreement({ selector: '#pw-agree', variantKey: 'AGREEMENT' })]);
+  const b = document.getElementById('pw-go'); if (!b) return;
+  b.disabled = false;
+  b.onclick = async () => {
+    if (b.dataset.busy) return; b.dataset.busy = '1';
+    try { await w.requestPayment({ orderId: o.orderId, orderName: o.orderName, successUrl, failUrl, customerEmail: email || undefined }); }
+    catch (e) { delete b.dataset.busy; if (e && (e.code === 'USER_CANCEL' || /취소/.test(e.message || ''))) toast('결제를 취소했어요'); else toast(e && e.message ? e.message : '결제를 진행하지 못했어요'); }
+  };
+}
 /* ===== 비회원 결제: 로그인 없이 이메일만으로 결제, 이 기기에 저장 + 주문번호·이메일로 다른 기기에서 불러오기 ===== */
 const GKEY = 'op_guest_orders', GPEND = 'op_guest_pending';
 const gOrders = () => { try { return JSON.parse(localStorage.getItem(GKEY) || '[]'); } catch (e) { return []; } };
@@ -57,7 +77,7 @@ const gFind = (cert, items) => gOrders().find(o => o.cert === cert && o.status =
 const EMAIL_OK = e => /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24}$/.test(e);
 function loginBuy(item, cert) { closeSheet(); try { sessionStorage.setItem('op_buy', JSON.stringify({ item, cert })); } catch (e) {} loginSheet('로그인하고 결제하면\n어느 기기에서든 이용할 수 있어요'); }
 function guestSheet(item, cert) {
-  const p = item === 'note' ? 6500 : item === 'bundle' ? BUNDLE.price : PRO_PLAN.price;
+  const p = item === 'note' ? NOTE_PRICE : item === 'bundle' ? BUNDLE.price : PRO_PLAN.price;
   openSheet(`<h3>결제 방법을 골라 주세요</h3><div class="p">회원가입 없이 비회원으로도 바로 결제할 수 있어요.</div>
     <div class="card" style="padding:16px;margin:4px 0 12px">
       <div style="font-weight:700;margin-bottom:8px">비회원 결제</div>
@@ -78,14 +98,8 @@ async function guestPay(item, cert) {
   try {
     const o = await payFn({ action: 'order', cert, item, email });
     try { localStorage.setItem(GPEND, JSON.stringify({ orderId: o.orderId, token: o.guestToken, email })); } catch (e) {}
-    await loadTossSdk();
-    const tp = window.TossPayments((window.OP_CFG || {}).tossClientKey);
     const base = (window.OP_CFG || {}).webUrl || (location.origin + location.pathname);
-    await tp.payment({ customerKey: window.TossPayments.ANONYMOUS }).requestPayment({
-      method: 'CARD', amount: { currency: 'KRW', value: o.amount }, orderId: o.orderId, orderName: o.orderName,
-      successUrl: base + '?pay=ok&g=1&c=' + encodeURIComponent(cert), failUrl: base + '?pay=fail&c=' + encodeURIComponent(cert),
-      customerEmail: email, card: { useEscrow: false, flowMode: 'DEFAULT', useCardPoint: false, useAppCardOnly: false }
-    });
+    await payWidget(o, '@@ANONYMOUS', email, base + '?pay=ok&g=1&c=' + encodeURIComponent(cert), base + '?pay=fail&c=' + encodeURIComponent(cert));
   } catch (e) {
     if (e && (e.code === 'USER_CANCEL' || /취소/.test(e.message || ''))) toast('결제를 취소했어요');
     else toast(e && e.message === 'email' ? '이메일을 다시 확인해 주세요' : '결제창을 열지 못했어요. 잠시 뒤 다시 해 주세요');
@@ -114,14 +128,8 @@ async function payStart(item, cert) {
   PAY.busy = true; toast('결제창을 여는 중이에요');
   try {
     const o = await payFn({ action: 'order', cert, item });
-    await loadTossSdk();
-    const tp = window.TossPayments((window.OP_CFG || {}).tossClientKey);
     const base = (window.OP_CFG || {}).webUrl || (location.origin + location.pathname);
-    await tp.payment({ customerKey: o.customerKey }).requestPayment({
-      method: 'CARD', amount: { currency: 'KRW', value: o.amount }, orderId: o.orderId, orderName: o.orderName,
-      successUrl: base + '?pay=ok&c=' + encodeURIComponent(cert), failUrl: base + '?pay=fail&c=' + encodeURIComponent(cert),
-      customerEmail: o.email || undefined, card: { useEscrow: false, flowMode: 'DEFAULT', useCardPoint: false, useAppCardOnly: false }
-    });
+    await payWidget(o, o.customerKey, o.email, base + '?pay=ok&c=' + encodeURIComponent(cert), base + '?pay=fail&c=' + encodeURIComponent(cert));
   } catch (e) {
     if (e && (e.code === 'USER_CANCEL' || /취소/.test(e.message || ''))) toast('결제를 취소했어요');
     else toast('결제창을 열지 못했어요. 잠시 뒤 다시 해 주세요');
