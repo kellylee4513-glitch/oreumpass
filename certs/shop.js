@@ -8,7 +8,7 @@ window.SHOP_CATS = [
 ];
 window.SHOP = [
   { id: 'tuunsa', cert: 'tuunsa', cat: 'fin', short: '투자자산운용사', cv: '투자자산|운용사', title: '투자자산운용사 요약노트 PDF', tint: '#1B64DA',
-    url: '', price: 6500, list: 0, featured: true,
+    url: '', price: 9900, list: 12900, featured: true,
     tags: ['50쪽 합격 세트', '확인문제 70', '빈칸 학습지'],
     points: ['16개 편 전 범위 핵심 정리본 + 보강 노트', '헷갈리는 개념 비교표 · 편별 확인문제 70', '빈칸 학습지로 외우고 정리본으로 바로 채점'],
     sub: '정리본에 보강 노트, 비교표, 확인문제, 빈칸 학습지까지 한 권에 담은 50쪽 PDF예요.',
