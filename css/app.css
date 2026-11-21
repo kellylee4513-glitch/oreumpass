@@ -317,12 +317,14 @@ nav.tabbar .side-logo .wm{height:23px}
 .bank .sbox{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:16px;padding:0 16px;height:52px;color:var(--gray);margin-bottom:12px;border:1.5px solid transparent}
 .bank .sbox:focus-within{border-color:var(--blue)}
 .bank .sbox input{flex:1;border:none;outline:none;font-size:16px;background:none;color:var(--text);font-family:inherit}
-.bank .chips{margin-bottom:10px;flex-wrap:wrap}
+.bank .chips{margin-bottom:10px;flex-wrap:nowrap}
+.bank .chip b{font-weight:800;margin-right:2px}.bank .chip b.i3,.bm .imp.i3{color:#E5484D}.bank .chip b.i2,.bm .imp.i2{color:#F2A516}.bank .chip.on b{color:inherit}
+.bm .imp{display:block;line-height:18px;font-size:12px;font-weight:800;letter-spacing:-1px}.bm .bsec{display:block;line-height:18px;font-size:12px;font-weight:600;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
 .blist{display:grid;gap:8px;margin-top:6px}
 .bq{display:block;width:100%;text-align:left;background:var(--card);border-radius:18px;padding:14px 16px;transition:transform .12s}
 .bq:hover{box-shadow:0 6px 20px rgba(20,40,80,.06)}
-.bm{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.bm .no{font-size:12px;font-weight:800;color:var(--gray);font-family:Inter,sans-serif}
+.bm{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.bm .no{display:block;line-height:18px;font-size:12px;font-weight:800;color:var(--gray);font-family:Inter,sans-serif}
 .bm .stx{font-size:12px}
 .bst{margin-left:auto;font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;background:#F2F4F6;color:var(--gray)}
 .bst.ok{background:#E3F8EE;color:#087A48}.bst.no{background:#FFEBEE;color:var(--red)}
