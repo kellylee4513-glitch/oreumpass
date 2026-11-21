@@ -1,6 +1,15 @@
 /* [quiz/mock.js] 문제 풀이: 실전 모의고사(타이머·OMR) */
 /* ===== 실전 모의고사 ===== */
-/* 실전과 같은 구성: 과목별 문항 수(dist)를 맞추고, 과목 안에서는 단원 비중대로 뽑기 */
+/* 실전과 같은 구성: 과목별 문항 수(dist)를 맞추고, 과목 안에서는 단원 비중대로 뽑기
+   단원 안에서는 중요한 문제로만 구성: ★★★(필수) 약 60% + ★★(빈출) 나머지. 모자라면 ★★★ → ★ 순으로 채움 */
+function pickImportant(list, need) {
+  const g = l => shuffle(list.filter(q => (q.star || 1) === l)), s3 = g(3), s2 = g(2), s1 = g(1);
+  const take3 = Math.min(s3.length, Math.ceil(need * 0.6)), out = s3.slice(0, take3);
+  out.push(...s2.slice(0, need - out.length));
+  if (out.length < need) out.push(...s3.slice(take3, take3 + need - out.length));
+  if (out.length < need) out.push(...s1.slice(0, need - out.length));
+  return shuffle(out);
+}
 function mockSet() {
   const all = pool(0), total = C.info.count || 100; if (all.length <= total) return shuffle(all);
   const dist = C.dist || Object.fromEntries(SK.map(s => [s, Math.round(total / SK.length)])), out = [];
@@ -10,7 +19,7 @@ function mockSet() {
     const keys = Object.keys(by), raw = keys.map(k => by[k].length * need / qs.length), n = raw.map(Math.floor);
     let left = need - n.reduce((a, b) => a + b, 0);
     keys.map((k, i) => [raw[i] - n[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { n[i]++; left--; } });
-    keys.forEach((k, i) => out.push(...shuffle(by[k]).slice(0, n[i])));
+    keys.forEach((k, i) => out.push(...pickImportant(by[k], n[i])));
   });
   return out;
 }
