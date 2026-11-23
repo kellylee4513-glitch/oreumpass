@@ -1,5 +1,5 @@
-/* [user/pay.js] 결제: 자격증별 PRO 30일권 (+ 요약노트 묶음) */
-/* 결제 모드: 라이브 키(live_)면 모두 실결제. 테스트 키(test_)면 운영자 계정만 테스트 결제, 나머지는 오픈 준비 기간 무료 30일 */
+/* [user/pay.js] 결제: 자격증별 PRO 시험 이용권 — 결제하면 다음 공식 시험일까지 (+ 요약노트 묶음) */
+/* 결제 모드: 라이브 키(live_)면 모두 실결제. 테스트 키(test_)면 운영자 계정만 테스트 결제, 나머지는 오픈 준비 기간 무료 이용 */
 const PAY_KEY = (window.OP_CFG || {}).tossClientKey || '';
 const PAY_REAL = /^live_/.test(PAY_KEY);
 const OP_ADMINS = ['a06d0a06-48a7-4f07-ae65-f1264f4df8aa', 'a12aaa8a-c3d5-4d97-bcea-e57f7fc3a90a'];
@@ -7,7 +7,18 @@ const payAdmin = () => !!(typeof AU !== 'undefined' && AU.user && OP_ADMINS.incl
 const payOn = () => !!PAY_KEY;                 /* 결제창은 누구나 열 수 있음 (토스 심사 때 결제 흐름을 확인함) */
 const payPrep = () => !PAY_REAL && !payAdmin(); /* 오픈 준비 기간: 시험 결제창이라 청구·지급 없음 */
 const PREP_NOTE = '결제 오픈 준비 중이에요. 지금 결제창은 시험용이라 실제로 청구되지 않고, 상품도 지급되지 않아요.';
-const PRO_PLAN = { price: 4900, days: 30 };
+const PRO_PLAN = { price: 4900, days: 30 }; /* days: 예전 30일권 주문, 그리고 등록된 시험일이 없을 때 쓰는 기간 */
+/* 자격증별 공식 시험일(한국 시간). 협회가 새 일정을 발표하면 여기에 날짜를 추가해요. */
+const EXAM_DATES = { tuunsa: ['2027-01-17'] };
+/* 아직 협회가 공고하지 않은 예상 시험일. 공식 일정이 나오면 EXAM_DATES를 고치고 여기서 빼요. */
+const EXAM_TENTATIVE = { tuunsa: ['2027-01-17'] };
+const EXAM_GAP = 7; /* 시험이 7일 안 남았을 때 결제하면 그다음 시험일까지 */
+const PRO_EXAM_FROM = new Date('2026-11-24T00:00:00+09:00').getTime(); /* 이 시각 전 주문은 예전 30일권 */
+const examEnds = c => (EXAM_DATES[c] || []).map(d => new Date(d + 'T23:59:59+09:00').getTime()).sort((a, b) => a - b);
+/* from 시점에 결제(또는 이어서 결제)하면 PRO가 끝나는 시각 */
+function proEnd(cert, from) { const e = examEnds(cert).find(t => t - from >= EXAM_GAP * 864e5); return e || from + PRO_PLAN.days * 864e5; }
+function proEndLabel(cert, from) { const base = Math.max((G.passExp || {})[cert] || 0, from || Date.now()); const e = examEnds(cert).find(t => t - base >= EXAM_GAP * 864e5); if (!e) return null; const d = new Date(e + 9 * 36e5), iso = d.toISOString().slice(0, 10); return `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일${(EXAM_TENTATIVE[cert] || []).includes(iso) ? '(예상)' : ''}`; }
+const legacyPro = o => /30일/.test(o.order_name || '') || (!o.order_name && new Date(o.approved_at).getTime() < PRO_EXAM_FROM);
 const BUNDLE = { price: 12900 };
 const NOTE_PRICE = 9900;
 let payPick = 'pro';
@@ -22,8 +33,8 @@ function drawPay() {
     <div class="feat"><span class="fi">${IC.target()}</span><span>약점 집중 · 맞춤 학습<small>정답률 낮은 단원부터 자동으로</small></span></div>
     <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈 · 잊을 때쯤 복습<small>선지를 쪼개 개념을 확실하게, 1·3·7·15·30일 뒤 다시 출제</small></span></div>
     <div style="height:10px"></div>
-    ${opt('pro', `${esc(C.short)} PRO 30일 <span class="pp-off">오픈 기념가</span>`, '결제한 날부터 30일 · 자동 결제 없음', PRO_PLAN.price, 0)}
-    ${note ? opt('bundle', 'PRO 30일 + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + NOTE_PRICE)}`, BUNDLE.price, PRO_PLAN.price + NOTE_PRICE) : ''}
+    ${opt('pro', `${esc(C.short)} PRO <span class="pp-off">오픈 기념가</span>`, (proEndLabel(C.id) ? proEndLabel(C.id) + ' 시험까지' : '결제한 날부터 ' + PRO_PLAN.days + '일') + ' · 자동 결제 없음', PRO_PLAN.price, 0)}
+    ${note ? opt('bundle', 'PRO + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + NOTE_PRICE)}`, BUNDLE.price, PRO_PLAN.price + NOTE_PRICE) : ''}
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
     <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`);
 }
@@ -33,7 +44,7 @@ function buy() {
 }
 function freeOpen() {
   G.passExp = G.passExp || {}; if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id);
-  G.passExp[C.id] = Date.now() + PRO_PLAN.days * 864e5; save(); closeSheet(); toast(C.short + ' PRO가 30일 동안 열렸어요 🎉');
+  G.passExp[C.id] = proEnd(C.id, Date.now()); save(); closeSheet(); toast(C.short + ' PRO가 열렸어요 🎉');
   setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'custom') startCustom(); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'mock') startMock(true); else go(tab); }, 300);
 }
 
@@ -152,8 +163,8 @@ async function payReturn() {
     await syncPurchases(); closeSheet();
     if (r && r.order && r.order.test && !payAdmin()) { openSheet(`<h3>시험 결제가 끝났어요</h3><div class="p">${PREP_NOTE}<br><br>정식 오픈하면 같은 방법으로 바로 구매할 수 있어요.</div><button class="btn" style="width:100%" onclick="closeSheet();go('home')">확인</button>`); return; }
     const it = r && r.order && r.order.item;
-    if (guest) { openSheet(`<h3>결제가 끝났어요 🎉</h3><div class="p">${it === 'note' ? '요약노트를 바로 내려받을 수 있어요.' : 'PRO가 30일 동안 열렸어요.'}<br><br>다른 기기에서 불러올 때 필요하니 아래 주문번호를 꼭 저장해 두세요.</div><div class="card" style="padding:14px;font-size:15px"><b>주문번호</b> ${esc(orderId)}<br><b>이메일</b> ${esc(pend.email)}</div><button class="btn" style="width:100%" onclick="closeSheet();${it === 'note' || it === 'bundle' ? `shopDetail('${r.order.cert}')` : `go('home')`}">확인</button>`); return; }
-    toast(it === 'note' ? '결제 완료! 요약노트를 내려받을 수 있어요' : '결제 완료! PRO가 30일 동안 열렸어요 🎉');
+    if (guest) { openSheet(`<h3>결제가 끝났어요 🎉</h3><div class="p">${it === 'note' ? '요약노트를 바로 내려받을 수 있어요.' : 'PRO가 열렸어요. 남은 기간은 내 정보에서 볼 수 있어요.'}<br><br>다른 기기에서 불러올 때 필요하니 아래 주문번호를 꼭 저장해 두세요.</div><div class="card" style="padding:14px;font-size:15px"><b>주문번호</b> ${esc(orderId)}<br><b>이메일</b> ${esc(pend.email)}</div><button class="btn" style="width:100%" onclick="closeSheet();${it === 'note' || it === 'bundle' ? `shopDetail('${r.order.cert}')` : `go('home')`}">확인</button>`); return; }
+    toast(it === 'note' ? '결제 완료! 요약노트를 내려받을 수 있어요' : '결제 완료! PRO가 열렸어요 🎉');
     if (it === 'note' || it === 'bundle') { if (typeof shopDetail === 'function') setTimeout(() => shopDetail(r.order.cert), 300); } else go('home');
   } catch (e) {
     closeSheet(); openSheet(`<h3>결제를 확인하지 못했어요</h3><div class="p">돈이 빠져나갔는데 이용권이 안 열렸다면 주문번호와 함께 문의해 주세요. 확인 후 바로 처리해 드려요.<br><br>주문번호 ${esc(orderId)}</div><button class="btn" style="width:100%" onclick="closeSheet();kakaoAsk()">카카오톡으로 문의하기</button>`);
@@ -171,7 +182,7 @@ async function syncPurchases() {
   const paid = PAY.orders.filter(o => o.status === 'paid').sort((a, b) => new Date(a.approved_at) - new Date(b.approved_at));
   const exp = {};
   paid.forEach(o => {
-    if (o.item === 'pro' || o.item === 'bundle') { const t = new Date(o.approved_at).getTime(); exp[o.cert] = Math.max(exp[o.cert] || 0, t) + PRO_PLAN.days * 864e5; }
+    if (o.item === 'pro' || o.item === 'bundle') { const t = new Date(o.approved_at).getTime(), base = Math.max(exp[o.cert] || 0, t); exp[o.cert] = legacyPro(o) ? base + PRO_PLAN.days * 864e5 : proEnd(o.cert, base); }
     if (o.item === 'note' || o.item === 'bundle') PAY.owned[o.cert] = true;
   });
   G.passExp = G.passExp || {};
