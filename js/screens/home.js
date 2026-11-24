@@ -1,24 +1,11 @@
 /* [screens/home.js] 홈 화면 · 합격 예측 카드 · 오늘의 OX */
 /* ===== 홈 ===== */
-function home() {
+function playPage() {
   const dd = dday(), seen = S.seen.length, remain = Q.length - seen, pro = isPro(), wn = S.wrong.length + S.wrongOx.length;
   const tile = (fn, ic, t, d, tag) => `<button class="tile" onclick="${fn}">${tag || ''}<div class="ico">${ic}</div><div class="t">${t}</div><div class="d">${d}</div></button>`;
   const mini = (fn, ic, t, d, lock) => `<button class="mini ${lock ? 'locked' : ''}" onclick="${fn}">${lock ? `<span class="lk">${IC.lock()}</span>` : ''}<span class="mi">${ic}</span><span class="mt">${t}</span><span class="md">${d}</span></button>`;
   $app.innerHTML = brandBar() + `
-  <div class="pad hgrid">
-    <div class="b-greet">
-    ${topNudge()}</div>
-    <div class="b-hero"><div class="hero">
-      ${heroArt(seen / Q.length)}
-      <button class="set" onclick="examSheet()">${S.exam ? '변경' : '시험일 설정'}</button>
-      <div class="k">${esc(C.name)} 시험까지</div>
-      <div class="dd">${dd === null ? 'D-day' : dd > 0 ? 'D-' + dd : dd === 0 ? 'D-DAY' : '시험 끝!'}</div>
-      <div class="m">${dd === null ? '시험일을 정하면 하루 목표를 계산해 드려요<br><button class="hero-cta" onclick="examSheet()">시험일 정하기 ›</button>' : dd > 0 ? (remain > 0 ? `하루 ${Math.max(1, Math.ceil(remain / dd))}문제씩이면 1회독 완료` : '1회독 완료! 이제 오답 복습할 차례') : dd === 0 ? '지금까지 푼 문제를 믿어요!' : '수고 많으셨어요'}</div>
-      <div class="bank"><div class="tr"><i style="width:${seen / Q.length * 100}%"></i></div><div class="tx"><span class="bk-l">문제은행 </span>${seen} / ${Q.length} 풀었어요</div></div>
-    </div></div>
-    <div class="b-plan">${planCard()}</div>
-    ${todayWrong().length ? `<div class="b-tw">${twCard()}</div>` : ''}
-
+  <div class="pad hgrid pgrid">
     <div class="b-play"><div class="sec">문제 풀기</div>
       <div class="grid4">
         ${tile('startMock()', IC.exam(), '실전 모의고사' + (isPro() ? '' : ' <span class="pp-off" style="color:#1B4FB8;background:var(--blue-soft)">PRO</span>'), `${Math.min(C.info.count, pool(0).length)}문항 · ${C.info.minutes}분 · 실전 비율`, '')}
@@ -55,7 +42,7 @@ function home() {
     </div>
     <div class="foot b-foot">${policyLinks()}</div>
   </div>`;
-  $app.classList.add('wide'); tabbar(); checkBadges(); setTimeout(reviewPopup, 900);
+  $app.classList.add('wide'); tabbar();
 }
 function examInfoSheet() { openSheet(`<div class="eh" style="display:flex;gap:12px;align-items:center;margin-bottom:14px">${badge(C, 48)}<div><h3 style="margin:0">${esc(C.name)}</h3><div class="p" style="margin:2px 0 0">${esc(C.info.org)} 주관 · ${esc(C.info.eligibility)}</div></div></div>
   <div class="card examinfo" style="background:var(--bg);box-shadow:none"><div class="eg"><div><b>${C.info.count}</b>문항</div><div><b>${C.info.minutes}</b>분</div><div><b>${esc(C.info.format.replace(/[^0-9]/g, '') || C.info.format)}</b>${C.info.format.replace(/[0-9]/g, '')}</div></div>
