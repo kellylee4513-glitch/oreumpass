@@ -4,7 +4,7 @@
 window.OP_CFG = {
   sbUrl: 'https://bqnqbdntwgjdxbsdfzls.supabase.co',
   sbKey: 'sb_publishable_iSRIY5V5EFvDtFs-U7Q5sw_njb7Qcxn',
-  webUrl: 'https://theoreumpass.com/',
+  webUrl: 'https://theoreulpass.com/',
   sbLib: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9/dist/umd/supabase.js',
   kakaoChannel: 'https://pf.kakao.com/_ByRxeX',
   /* 토스페이먼츠 클라이언트 키(공개용). 결제위젯 연동 키. 테스트: test_gck_… / 실결제: live_gck_… — 시크릿 키는 절대 여기에 넣지 않아요 */
