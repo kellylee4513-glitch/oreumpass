@@ -40,23 +40,42 @@ async function switchSync() {
   } catch (e) {}
 }
 function paywall(kind) { afterPay = kind; payPick = 'pro'; if (isPro()) { closeSheet(); return; } funnel('paywall', { kind }); drawPay(); }
+/* 결제 안내창 (시안3 간결형, 2026-11-25 운영자 결정): 한 화면에서 카카오 로그인 결제 또는 이메일 결제까지 */
 function drawPay() {
-  const opt = (k, t, d, pr, s) => `<button class="plan ${payPick === k ? 'on' : ''}" onclick="payPick='${k}';drawPay()"><span class="rd"></span><div class="grow"><div class="t">${t}</div><div class="d">${d}</div></div><div class="pr">${s ? `<s>${won(s)}</s>` : ''}${won(pr)}</div></button>`;
-  const sel = PRO_PLAN.price;
   const exOn = explainLimitOn(), L = launched();
   const endT = proEnd(C.id, Date.now()), days = Math.max(1, Math.ceil((endT - Date.now()) / 864e5)), perDay = Math.round(PRO_PLAN.price / days / 10) * 10;
-  openSheet(`<h3>${esc(C.short)} PRO${L ? `<br>시험까지 ${won(PRO_PLAN.price)}` : '로<br>합격선까지 빠르게'}</h3><div class="p">${exOn ? '문제 풀이·정답·오답노트는 계속 무료예요.<br>PRO는 해설 무제한과 실전 준비를 더해요.' : '문제·해설·오답노트는 무료, PRO는 실전 감각과 약점 관리까지'}</div>
-    ${exOn ? `<div class="feat"><span class="fi">${IC.note()}</span><span>모든 보기 해설 무제한<small>정답뿐 아니라 오답 보기가 왜 틀렸는지까지</small></span></div>` : ''}
-    <div class="feat"><span class="fi">${IC.exam()}</span><span>실전 모의고사<small>시험과 같은 과목 비율·시간으로</small></span></div>
-    <div class="feat"><span class="fi">${IC.target()}</span><span>약점 집중 · 맞춤 학습<small>정답률 낮은 단원부터 자동으로</small></span></div>
-    <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈 · 잊을 때쯤 복습<small>선지를 쪼개 개념을 확실하게, 1·3·7·15·30일 뒤 다시 출제</small></span></div>
-    <div style="height:10px"></div>
-    ${opt('pro', L ? `${esc(C.short)} PRO 시험 이용권` : `${esc(C.short)} PRO <span class="pp-off">오픈 기념가</span>`, (proEndLabel(C.id) ? proEndLabel(C.id) + ' 시험까지' : '결제한 날부터 ' + PRO_PLAN.days + '일') + (L ? ` · 하루 약 ${perDay}원` : ' · 자동 결제 없음'), PRO_PLAN.price, 0)}
-    ${L ? `<div class="pp-safe">✓ <b>자동 결제 없어요</b> · 한 번만 결제<br>✓ 결제하면 <b>보관함</b>에 들어가고, 원할 때 사용 시작<br>✓ 사용 시작 전이면 <b>7일 안에 전액 환불</b></div>
-    <label class="pp-agree"><input type="checkbox" id="payAgree"><span>디지털 이용권이라 <b>사용 시작 후 1시간이 지나면 환불되지 않는다</b>는 점과 <a role="button" onclick="legalPage('refund')">환불 규정</a>을 확인했어요.</span></label>` : ''}
-    <button class="btn${L ? ' sm' : ''}" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
-    ${L ? '' : `<div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`}`);
+  const endL = proEndLabel(C.id), price = won(PRO_PLAN.price);
+  const feats = [...(exOn ? ['모든 보기 해설 무제한'] : []), '실전 모의고사 (100문항 · 120분 · 과락 판정)', '약점 맞춤 학습', 'OX 선지 퀴즈 · 잊을 때쯤 복습'];
+  const chips = L ? ['자동 결제 없음', '보관함에서 원할 때 시작', '사용 전 7일 전액 환불'] : ['자동 결제 없음', '바로 열림', '안 쓰면 7일 전액 환불'];
+  const agree = L ? `<label class="pp-agree"><input type="checkbox" id="payAgree"><span>디지털 이용권이라 <b>사용 시작 후 1시간이 지나면 환불되지 않는다</b>는 점과 <a role="button" onclick="legalPage('refund')">환불 규정</a>을 확인했어요.</span></label>` : '';
+  const pay = !payOn() ? `<button class="btn sm" style="width:100%" onclick="buy()">PRO 오픈 준비 중</button>`
+    : AU.user ? `<button class="btn sm" style="width:100%" onclick="buy()">${price} 결제하기</button>`
+    : `${authOn() ? `<button class="pw-kk" onclick="payKakao()">${IC_KAKAO}카카오로 로그인하고 결제</button>` : ''}
+      <a role="button" class="pw-lnk" id="pwEmailLink" onclick="payEmailOpen()">이메일로 결제하기 (회원가입 없이)</a>
+      <div id="pwEmail" class="pw-email" hidden>
+        <input id="gEmail" type="email" inputmode="email" autocomplete="email" placeholder="이메일 (주문 확인·환불 안내용)">
+        <label class="pp-agree"><input id="gAgree" type="checkbox"><span>주문 확인과 환불 안내를 위해 이메일을 수집하는 데 동의하고, 상품·가격·<a role="button" onclick="legalPage('refund')">환불 규정</a>을 확인했어요.</span></label>
+        <button class="btn sm" style="width:100%" onclick="payEmailGo()">${price} 결제하기</button>
+        <div class="pw-fine" style="margin-top:6px">구매한 상품은 이 기기에 바로 열려요. 다른 기기에서는 주문번호와 이메일로 불러와요. <a role="button" onclick="lookupSheet()">주문 불러오기</a></div>
+      </div>`;
+  openSheet(`<h3>실전 모의고사로<br>합격선 미리 확인하기</h3><div class="p">${esc(C.short)} PRO · ${endL ? endL + ' 시험까지' : '결제한 날부터 ' + PRO_PLAN.days + '일'}</div>
+    <ul class="pw-mini">${feats.map(f => `<li><i>✓</i>${f}</li>`).join('')}</ul>
+    <div class="pw-prow"><span>${perDay <= 200 ? '시험까지 하루 약 ' + perDay + '원' : ''}</span><b>${price}</b></div>
+    <div class="pw-chips">${chips.map(c => `<span>✓ ${c}</span>`).join('')}</div>
+    <div class="pw-pm">카드 · 간편결제</div>
+    ${payPrep() ? `<div class="note" style="margin-bottom:8px">${PREP_NOTE}</div>` : ''}
+    ${agree}${pay}
+    <div class="pw-fine">결제 전 <a role="button" onclick="legalPage('refund')">환불 규정</a> · <a role="button" onclick="legalPage('terms')">이용약관</a>을 확인해 주세요</div>`);
 }
+/* 카카오로 로그인하고 결제: 로그인 후 돌아오면 payResume이 결제를 이어 가요 */
+function payKakao() {
+  if (!agreeOk('payAgree')) return;
+  funnel('login_click', { item: 'pro' });
+  try { sessionStorage.setItem('op_buy', JSON.stringify({ item: 'pro', cert: C.id, agree: PAY.agree === true })); } catch (e) {}
+  authLogin('kakao', typeof tab !== 'undefined' && tab ? tab : 'home');
+}
+function payEmailOpen() { const b = document.getElementById('pwEmail'), l = document.getElementById('pwEmailLink'); if (!b) return; b.hidden = false; if (l) l.hidden = true; funnel('choose', { item: 'pro' }); const i = document.getElementById('gEmail'); if (i) i.focus(); }
+function payEmailGo() { if (!agreeOk('payAgree')) return; guestPay('pro', C.id); }
 function buy() {
   if (payOn()) { if (!agreeOk('payAgree')) return; funnel('buy_click', { item: 'pro' }); payStart('pro'); return; }
   toast('PRO는 오픈 준비 중이에요. 열리면 바로 알려드릴게요');
@@ -264,7 +283,7 @@ async function noteDownload(cert) {
   catch (e) { toast(e && e.message === 'not_paid' ? '구매 내역을 찾지 못했어요' : '파일을 준비하지 못했어요. 잠시 뒤 다시 해 주세요'); }
 }
 /* 로그인하고 돌아왔을 때 결제 이어 하기 */
-function payResume() { let b = null; try { b = JSON.parse(sessionStorage.getItem('op_buy') || 'null'); sessionStorage.removeItem('op_buy'); } catch (e) {} if (b && AU.user && payOn()) setTimeout(() => payStart(b.item, b.cert), 500); }
+function payResume() { let b = null; try { b = JSON.parse(sessionStorage.getItem('op_buy') || 'null'); sessionStorage.removeItem('op_buy'); } catch (e) {} if (b && AU.user && payOn()) { if (b.agree) PAY.agree = true; setTimeout(() => payStart(b.item, b.cert), 500); } }
 
 /* ===== 결제 전 동의 (새 환불 방식이 켜졌을 때만) ===== */
 function agreeOk(id) {
