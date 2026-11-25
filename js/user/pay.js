@@ -62,7 +62,7 @@ function drawPay() {
     <ul class="pw-mini">${feats.map(f => `<li><i>✓</i>${f}</li>`).join('')}</ul>
     <div class="pw-prow"><span>${perDay <= 200 ? '시험까지 하루 약 ' + perDay + '원' : ''}</span><b>${price}</b></div>
     <div class="pw-chips">${chips.map(c => `<span>✓ ${c}</span>`).join('')}</div>
-    <div class="pw-pm">카드 · 간편결제</div>
+    <div class="pw-pm">카드 · 네이버페이 · 카카오페이</div>
     ${payPrep() ? `<div class="note" style="margin-bottom:8px">${PREP_NOTE}</div>` : ''}
     ${agree}${pay}
     <div class="pw-fine">결제 전 <a role="button" onclick="legalPage('refund')">환불 규정</a> · <a role="button" onclick="legalPage('terms')">이용약관</a>을 확인해 주세요</div>`);
