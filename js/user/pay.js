@@ -42,14 +42,15 @@ function buy() {
   if (payOn()) { payStart(payPick === 'bundle' ? 'bundle' : 'pro'); return; }
   toast('PRO는 오픈 준비 중이에요. 열리면 바로 알려드릴게요');
 }
-function freeOpen() {
-  G.passExp = G.passExp || {}; if (!G.passCerts.includes(C.id)) G.passCerts.push(C.id);
-  G.passExp[C.id] = proEnd(C.id, Date.now()); save(); closeSheet(); toast(C.short + ' PRO가 열렸어요 🎉');
-  setTimeout(() => { if (afterPay === 'ox') startOx(0); else if (afterPay === 'custom') startCustom(); else if (afterPay === 'weak') startWeak(); else if (afterPay === 'mock') startMock(true); else go(tab); }, 300);
-}
+/* (예전 오픈 준비 기간의 "무료로 열기"는 쓰지 않아 지웠어요: 콘솔에서 불러 PRO를 열 수 있었음) */
 
 /* ===== 토스페이먼츠 결제 (실결제) ===== */
 const PAY = { busy: false, owned: {}, orders: [] };
+/* 결제 후 돌아올 주소: 반드시 '지금 결제를 시작한 그 주소'로 돌아와야 해요.
+   로그인 세션과 비회원 주문 토큰이 주소(도메인)별로 따로 저장되기 때문에, 다른 주소로 돌아가면 결제 확인을 못 해요.
+   (주소 이전 기간에 옛 주소·새 주소 어느 쪽에서 결제해도 안전하게) */
+const payBase = () => location.origin + location.pathname;
+const PRETRY = 'op_pay_retry'; /* 결제 확인이 실패했을 때 다시 확인하려고 잠깐 보관 (같은 결제를 두 번 청구하지 않음) */
 function loadTossSdk() {
   if (window.TossPayments) return Promise.resolve();
   return new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://js.tosspayments.com/v2/standard'; s.onload = ok; s.onerror = () => no(new Error('sdk')); document.head.appendChild(s); });
@@ -109,7 +110,7 @@ async function guestPay(item, cert) {
   try {
     const o = await payFn({ action: 'order', cert, item, email });
     try { localStorage.setItem(GPEND, JSON.stringify({ orderId: o.orderId, token: o.guestToken, email })); } catch (e) {}
-    const base = (window.OP_CFG || {}).webUrl || (location.origin + location.pathname);
+    const base = payBase();
     await payWidget(o, '@@ANONYMOUS', email, base + '?pay=ok&g=1&c=' + encodeURIComponent(cert), base + '?pay=fail&c=' + encodeURIComponent(cert));
   } catch (e) {
     if (e && (e.code === 'USER_CANCEL' || /취소/.test(e.message || ''))) toast('결제를 취소했어요');
@@ -139,7 +140,7 @@ async function payStart(item, cert) {
   PAY.busy = true; toast('결제창을 여는 중이에요');
   try {
     const o = await payFn({ action: 'order', cert, item });
-    const base = (window.OP_CFG || {}).webUrl || (location.origin + location.pathname);
+    const base = payBase();
     await payWidget(o, o.customerKey, o.email, base + '?pay=ok&c=' + encodeURIComponent(cert), base + '?pay=fail&c=' + encodeURIComponent(cert));
   } catch (e) {
     if (e && (e.code === 'USER_CANCEL' || /취소/.test(e.message || ''))) toast('결제를 취소했어요');
@@ -147,12 +148,17 @@ async function payStart(item, cert) {
   } finally { PAY.busy = false; }
 }
 /* 결제 후 돌아왔을 때: 서버에서 승인 → 이용권 반영 */
-async function payReturn() {
-  const q = new URLSearchParams(location.search); const st = q.get('pay'); if (!st) return;
-  const clean = () => { try { history.replaceState(null, '', location.pathname); } catch (e) {} };
-  if (st === 'fail') { clean(); toast(q.get('code') === 'PAY_PROCESS_CANCELED' ? '결제를 취소했어요' : '결제가 완료되지 않았어요'); return; }
-  const paymentKey = q.get('paymentKey'), orderId = q.get('orderId'), amount = q.get('amount'); clean();
+async function payReturn(again) {
+  let paymentKey, orderId, amount;
+  if (again && again.paymentKey) ({ paymentKey, orderId, amount } = again);
+  else {
+    const q = new URLSearchParams(location.search); const st = q.get('pay'); if (!st) return;
+    const clean = () => { try { history.replaceState(null, '', location.pathname); } catch (e) {} };
+    if (st === 'fail') { clean(); toast(q.get('code') === 'PAY_PROCESS_CANCELED' ? '결제를 취소했어요' : '결제가 완료되지 않았어요'); return; }
+    paymentKey = q.get('paymentKey'); orderId = q.get('orderId'); amount = q.get('amount'); clean();
+  }
   if (!paymentKey || !orderId) return;
+  try { sessionStorage.setItem(PRETRY, JSON.stringify({ paymentKey, orderId, amount })); } catch (e) {}
   openSheet('<h3>결제를 확인하고 있어요</h3><div class="p">잠시만 기다려 주세요. 창을 닫지 마세요.</div>');
   let pend = null; try { pend = JSON.parse(localStorage.getItem(GPEND) || 'null'); } catch (e) {}
   const guest = !!(pend && pend.orderId === orderId);
@@ -160,6 +166,7 @@ async function payReturn() {
     await authInit(); if (!guest) for (let i = 0; i < 20 && !AU.user; i++) await new Promise(r => setTimeout(r, 300));
     const r = await payFn(guest ? { action: 'confirm', paymentKey, orderId, amount: Number(amount), guestToken: pend.token } : { action: 'confirm', paymentKey, orderId, amount: Number(amount) });
     if (guest) { gAdd(r.order, pend.token, pend.email); try { localStorage.removeItem(GPEND); } catch (e) {} }
+    try { sessionStorage.removeItem(PRETRY); } catch (e) {}
     await syncPurchases(); closeSheet();
     if (r && r.order && r.order.test && !payAdmin()) { openSheet(`<h3>시험 결제가 끝났어요</h3><div class="p">${PREP_NOTE}<br><br>정식 오픈하면 같은 방법으로 바로 구매할 수 있어요.</div><button class="btn" style="width:100%" onclick="closeSheet();go('home')">확인</button>`); return; }
     const it = r && r.order && r.order.item;
@@ -167,16 +174,36 @@ async function payReturn() {
     toast(it === 'note' ? '결제 완료! 요약노트를 내려받을 수 있어요' : '결제 완료! PRO가 열렸어요 🎉');
     if (it === 'note' || it === 'bundle') { if (typeof shopDetail === 'function') setTimeout(() => shopDetail(r.order.cert), 300); } else go('home');
   } catch (e) {
-    closeSheet(); openSheet(`<h3>결제를 확인하지 못했어요</h3><div class="p">돈이 빠져나갔는데 이용권이 안 열렸다면 주문번호와 함께 문의해 주세요. 확인 후 바로 처리해 드려요.<br><br>주문번호 ${esc(orderId)}</div><button class="btn" style="width:100%" onclick="closeSheet();kakaoAsk()">카카오톡으로 문의하기</button>`);
+    /* 카드 거절처럼 토스가 결제를 실패로 판단한 경우는 다시 확인해도 소용없어요. 그 외(인터넷 끊김 등)는 다시 확인하기를 보여 줘요 */
+    const tossFail = e && e.message === 'toss';
+    if (tossFail) { try { sessionStorage.removeItem(PRETRY); } catch (x) {} }
+    closeSheet(); openSheet(tossFail
+      ? `<h3>결제가 완료되지 않았어요</h3><div class="p">${esc((e.info && e.info.message) || '결제사에서 결제를 승인하지 않았어요.')}<br><br>다른 결제수단으로 다시 시도해 주세요. 주문번호 ${esc(orderId)}</div><button class="btn" style="width:100%" onclick="closeSheet()">확인</button>`
+      : `<h3>결제를 확인하지 못했어요</h3><div class="p">인터넷 연결이 불안정했을 수 있어요. 아래 버튼으로 한 번 더 확인해 주세요. 같은 결제가 두 번 청구되지는 않아요.<br><br>계속 안 되면 주문번호와 함께 문의해 주세요. 확인 후 바로 처리해 드려요.<br><br>주문번호 ${esc(orderId)}</div><button class="btn" style="width:100%" onclick="payRetry()">다시 확인하기</button><button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeSheet();kakaoAsk()">카카오톡으로 문의하기</button>`);
   }
 }
+function payRetry() { let p = null; try { p = JSON.parse(sessionStorage.getItem(PRETRY) || 'null'); } catch (e) {} closeSheet(); if (!p) { toast('확인할 결제가 없어요. 내 정보에서 결제 내역을 확인해 주세요'); return; } payReturn(p); }
 /* 서버의 결제 내역 → 이용권·요약노트 보유 상태 */
-async function syncPurchases() {
-  let server = [];
-  if (AU.sb && AU.user) {
-    const { data } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at,test').order('created_at', { ascending: false }).limit(100);
-    server = (data || []).filter(o => !o.test || (!PAY_REAL && payAdmin())); /* 시험 결제는 운영자 확인용(오픈 준비 중)만 반영 */
+/* 비회원 주문을 서버에 다시 확인: 환불됐거나 서버에 없는 주문(직접 만든 가짜 등)은 '취소'로 바꿔요.
+   인터넷 문제로 확인을 못 하면 그대로 둬요(정상 구매자가 갑자기 잠기지 않게) */
+async function guestRecheck() {
+  const list = gOrders(); if (!list.length || !authOn()) return;
+  let changed = false;
+  for (const o of list) {
+    if (o.status !== 'paid' || o.test || !o.email) continue;
+    try { const r = await payFn({ action: 'lookup', orderId: o.id, email: o.email }); if (r && r.order && r.order.status !== o.status) { Object.assign(o, r.order); changed = true; } }
+    catch (e) { if (e && e.message === 'not_found') { o.status = 'canceled'; changed = true; } }
   }
+  if (changed) gSave(list);
+}
+async function syncPurchases() {
+  let server = [], fresh = false;
+  if (AU.sb && AU.user) {
+    const { data, error } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at,test').order('created_at', { ascending: false }).limit(100);
+    server = (data || []).filter(o => !o.test || (!PAY_REAL && payAdmin())); /* 시험 결제는 운영자 확인용(오픈 준비 중)만 반영 */
+    fresh = !error && Array.isArray(data);
+  }
+  try { await guestRecheck(); } catch (e) {}
   const guest = gOrders().filter(o => !o.test); /* 비회원 시험 결제는 아무것도 지급하지 않음 */
   PAY.orders = server.concat(guest.filter(g => !server.some(o => o.id === g.id))).sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); PAY.owned = {};
   const paid = PAY.orders.filter(o => o.status === 'paid').sort((a, b) => new Date(a.approved_at) - new Date(b.approved_at));
@@ -187,6 +214,13 @@ async function syncPurchases() {
   });
   G.passExp = G.passExp || {};
   Object.keys(exp).forEach(c => { G.passExp[c] = Math.max(G.passExp[c] || 0, exp[c]); if (!G.passCerts.includes(c)) G.passCerts.push(c); });
+  /* 환불(취소)된 주문이 있는 자격증은, 남은 정상 결제 기준으로 만료일을 다시 계산해요(늘리기만 하던 문제 수정).
+     취소 주문이 없는 자격증은 건드리지 않아요 */
+  const canceled = PAY.orders.filter(o => o.status === 'canceled' && (fresh || o.guest));
+  [...new Set(canceled.map(o => o.cert))].forEach(c => {
+    if (exp[c] && exp[c] > Date.now()) { G.passExp[c] = exp[c]; return; }
+    delete G.passExp[c]; G.passCerts = G.passCerts.filter(x => x !== c);
+  });
   save();
 }
 const noteOwned = cert => !!PAY.owned[cert];

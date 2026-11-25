@@ -11,7 +11,10 @@ const URL = process.argv[2] || 'http://localhost:8765/index.html';
 const DEV = [['폴드접힘', 344, 882], ['아이폰SE', 375, 667], ['갤럭시S', 360, 780], ['아이폰15', 393, 852], ['프로맥스', 430, 932], ['아이패드', 768, 1024], ['노트북', 1366, 768], ['PC', 1440, 900]];
 const OUT = path.join(__dirname, 'shots'); fs.mkdirSync(OUT, { recursive: true });
 (async () => {
-  const exe = ['/usr/bin/google-chrome', '/usr/bin/chromium'].find(f => fs.existsSync(f));
+  /* 리눅스 크롬 → 윈도우 엣지·크롬 순서로, 이미 설치된 브라우저가 있으면 그걸 써요 */
+  const exe = ['/usr/bin/google-chrome', '/usr/bin/chromium',
+    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe', 'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'].find(f => fs.existsSync(f));
   const b = await chromium.launch(exe ? { executablePath: exe } : {});
   const fails = [];
   for (const [n, w, h] of DEV) {

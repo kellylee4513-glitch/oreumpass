@@ -3,7 +3,9 @@
 function result() { markNav(); stopTimer(); $app.classList.remove('wide'); const r = run; window.scrollTo(0, 0); const T = PASS.total, M = PASS.sub;
   const pct = Math.round(r.score / r.items.length * 100), pass = pct >= T, wn = r.wrongIds.length, ms = Date.now() - r.start;
   S.hist.unshift({ d: dkey(), l: r.label, s: r.score, t: r.items.length, ms }); S.hist = S.hist.slice(0, 30); if (r.daily) S.dq = { d: dkey(), s: r.score }; checkBadges(); if (r.setNo && r.items.length >= r.setTotal) { S.setBest = S.setBest || {}; S.setBest[r.setNo] = Math.max(S.setBest[r.setNo] || 0, pct); } save();
-  const by = {}; r.items.forEach(q => { by[q.s] = by[q.s] || { t: 0, c: 0 }; by[q.s].t++; if (!r.wrongIds.includes(q.id)) by[q.s].c++; });
+  /* 과목별 정답 수: 모의고사는 '고른 답이 정답인 문제'만 셈 (안 푼 문제를 맞은 것으로 세면 과락이 안 떠요) */
+  const right = q => r.mock ? r.ans[q.id] === q.a : !r.wrongIds.includes(q.id);
+  const by = {}; r.items.forEach(q => { by[q.s] = by[q.s] || { t: 0, c: 0 }; by[q.s].t++; if (right(q)) by[q.s].c++; });
   const cut = Object.keys(by).some(k => by[k].c / by[k].t * 100 < M);
   $app.innerHTML = `<div class="top"><div class="ttl" style="text-align:center">결과</div></div><div class="pad">
     <div class="card score"><div class="emo">${pass && !cut ? IC.trophy() : pass ? IC.medal() : IC.climb()}</div><div class="big">${pct}<small>점</small></div>

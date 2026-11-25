@@ -2,6 +2,7 @@
    1) 이 파일을 복사해서 certs/영문이름.js 로 저장 (예: certs/fund.js)
    2) 아래 내용을 채우기
    3) index.html의 "새 자격증은 여기에 한 줄 추가" 아래에 <script src="certs/fund.js"></script> 추가
+   ※ 문제는 맨 뒤에만 추가하세요. 문제 번호 = 목록 순서라서, 중간에 넣거나 빼면 사용자 오답노트가 꼬여요 (CLAUDE.md 참고)
    4) catalog.js의 "준비 중" 목록에 같은 id가 있으면 자동으로 "준비 중"에서 빠져요
 */
 window.CERTS = window.CERTS || [];

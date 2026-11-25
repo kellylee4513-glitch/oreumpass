@@ -182,4 +182,47 @@ revoke all on public.profiles, public.progress, public.posts, public.comments, p
 alter default privileges for role postgres in schema public revoke all on tables from anon, authenticated;
 alter default privileges for role postgres in schema public revoke all on functions from anon, authenticated, public;
 alter default privileges for role postgres in schema public revoke all on sequences from anon, authenticated;
--- (이후 위 GRANT 문을 다시 적용)
+
+-- 위에서 걷어낸 권한을 필요한 것만 다시 부여 (2026-11-25 실제 DB와 맞춤. 이 부분이 없으면 앱이 멈춰요)
+grant select on public.profiles to anon, authenticated;
+grant update (nickname) on public.profiles to authenticated;
+grant select on public.progress to authenticated;
+grant insert (user_id, data, updated_at), update (user_id, data, updated_at) on public.progress to authenticated;
+grant select on public.posts to anon, authenticated;
+grant insert (board, cert, title, body), update (board, cert, title, body) on public.posts to authenticated;
+grant delete on public.posts to authenticated;
+grant select on public.comments to anon, authenticated;
+grant insert (post_id, body) on public.comments to authenticated;
+grant delete on public.comments to authenticated;
+grant select, delete on public.likes to authenticated;
+grant insert (post_id) on public.likes to authenticated;
+grant insert (target, target_id, reason) on public.reports to authenticated;
+
+-- ===== 결제 주문 (2026-11-25 실제 DB에서 옮겨 적음) =====
+-- 쓰기(주문 생성·승인·환불 반영)는 서버 함수(backend/functions/pay, service role)만 해요. 앱은 본인 주문 읽기만.
+create table public.orders (
+  id text primary key,
+  user_id uuid references auth.users(id) on delete set null,   -- 비회원 주문은 null. 탈퇴해도 결제 기록은 5년 보관
+  guest_email text,
+  guest_token text,
+  cert text not null,
+  item text not null check (item in ('pro', 'note', 'bundle')),
+  order_name text not null,
+  amount integer not null check (amount > 0),
+  status text not null default 'ready' check (status in ('ready', 'paid', 'canceled', 'failed')),
+  payment_key text,
+  method text,
+  approved_at timestamptz,
+  canceled_at timestamptz,
+  downloaded_at timestamptz,
+  test boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index orders_user_idx on public.orders (user_id, created_at desc);
+create index orders_guest_email_idx on public.orders (lower(guest_email)) where guest_email is not null;
+alter table public.orders enable row level security;
+grant select on public.orders to authenticated;
+create policy "orders_select_own" on public.orders for select to authenticated using ((select auth.uid()) = user_id);
+
+-- 요약노트 PDF 저장 공간: 비공개(서버 함수가 5분짜리 다운로드 주소를 만들어 줌)
+-- insert into storage.buckets (id, name, public) values ('notes', 'notes', false);
