@@ -23,21 +23,42 @@ const legacyPro = o => /30일/.test(o.order_name || '') || (!o.order_name && new
 const NOTE_PRICE = 9900;
 let payPick = 'pro';
 const proLeft = id => { const e = (G.passExp || {})[id]; return e ? Math.ceil((e - Date.now()) / 864e5) : null; };
+/* ===== 스위치 (결제 서버의 app_settings에서 받아 이 기기에 기억) =====
+   explain_limit_at: 상세 해설 하루 20개 제한 시작일 / launch_at: 새 환불 방식(PRO 보관함·사용 시작·앱 환불·결제 전 동의) 시작일
+   날짜(한국 시간 0시)부터 켜지고, 비어 있으면 꺼짐. 서버 값만 바꾸면 앱 업데이트 없이 켜고 끌 수 있어요 */
+const SW = (() => { try { return JSON.parse(localStorage.getItem('op_switch') || '{}'); } catch (e) { return {}; } })();
+const swOn = v => !!v && /^\d{4}-\d{2}-\d{2}$/.test(v) && Date.now() >= Date.parse(v + 'T00:00:00+09:00');
+const explainLimitOn = () => swOn((window.OP_CFG || {}).explainAt || SW.explainAt);
+const launched = () => swOn((window.OP_CFG || {}).launchAt || SW.launchAt);
+async function switchSync() {
+  try {
+    const c = window.OP_CFG || {}; if (!c.sbUrl || (typeof authSandbox === 'function' && authSandbox())) return;
+    const r = await fetch(c.sbUrl + '/functions/v1/pay', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: c.sbKey }, body: '{"action":"status"}' });
+    const d = await r.json(); if (!d || typeof d !== 'object') return;
+    const n = { explainAt: d.explainAt || '', launchAt: d.launchAt || '' };
+    if (n.explainAt !== (SW.explainAt || '') || n.launchAt !== (SW.launchAt || '')) { Object.assign(SW, n); try { localStorage.setItem('op_switch', JSON.stringify(SW)); } catch (e) {} if (!run && typeof tab !== 'undefined' && tab) go(tab); }
+  } catch (e) {}
+}
 function paywall(kind) { afterPay = kind; payPick = 'pro'; if (isPro()) { closeSheet(); return; } funnel('paywall', { kind }); drawPay(); }
 function drawPay() {
   const opt = (k, t, d, pr, s) => `<button class="plan ${payPick === k ? 'on' : ''}" onclick="payPick='${k}';drawPay()"><span class="rd"></span><div class="grow"><div class="t">${t}</div><div class="d">${d}</div></div><div class="pr">${s ? `<s>${won(s)}</s>` : ''}${won(pr)}</div></button>`;
   const sel = PRO_PLAN.price;
-  openSheet(`<h3>${esc(C.short)} PRO로<br>합격선까지 빠르게</h3><div class="p">문제·해설·오답노트는 무료, PRO는 실전 감각과 약점 관리까지</div>
+  const exOn = explainLimitOn(), L = launched();
+  const endT = proEnd(C.id, Date.now()), days = Math.max(1, Math.ceil((endT - Date.now()) / 864e5)), perDay = Math.round(PRO_PLAN.price / days / 10) * 10;
+  openSheet(`<h3>${esc(C.short)} PRO${L ? `<br>시험까지 ${won(PRO_PLAN.price)}` : '로<br>합격선까지 빠르게'}</h3><div class="p">${exOn ? '문제 풀이·정답·오답노트는 계속 무료예요.<br>PRO는 해설 무제한과 실전 준비를 더해요.' : '문제·해설·오답노트는 무료, PRO는 실전 감각과 약점 관리까지'}</div>
+    ${exOn ? `<div class="feat"><span class="fi">${IC.note()}</span><span>모든 보기 해설 무제한<small>정답뿐 아니라 오답 보기가 왜 틀렸는지까지</small></span></div>` : ''}
     <div class="feat"><span class="fi">${IC.exam()}</span><span>실전 모의고사<small>시험과 같은 과목 비율·시간으로</small></span></div>
     <div class="feat"><span class="fi">${IC.target()}</span><span>약점 집중 · 맞춤 학습<small>정답률 낮은 단원부터 자동으로</small></span></div>
     <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈 · 잊을 때쯤 복습<small>선지를 쪼개 개념을 확실하게, 1·3·7·15·30일 뒤 다시 출제</small></span></div>
     <div style="height:10px"></div>
-    ${opt('pro', `${esc(C.short)} PRO <span class="pp-off">오픈 기념가</span>`, (proEndLabel(C.id) ? proEndLabel(C.id) + ' 시험까지' : '결제한 날부터 ' + PRO_PLAN.days + '일') + ' · 자동 결제 없음', PRO_PLAN.price, 0)}
-    <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
-    <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`);
+    ${opt('pro', L ? `${esc(C.short)} PRO 시험 이용권` : `${esc(C.short)} PRO <span class="pp-off">오픈 기념가</span>`, (proEndLabel(C.id) ? proEndLabel(C.id) + ' 시험까지' : '결제한 날부터 ' + PRO_PLAN.days + '일') + (L ? ` · 하루 약 ${perDay}원` : ' · 자동 결제 없음'), PRO_PLAN.price, 0)}
+    ${L ? `<div class="pp-safe">✓ <b>자동 결제 없어요</b> · 한 번만 결제<br>✓ 결제하면 <b>보관함</b>에 들어가고, 원할 때 사용 시작<br>✓ 사용 시작 전이면 <b>7일 안에 전액 환불</b></div>
+    <label class="pp-agree"><input type="checkbox" id="payAgree"><span>디지털 이용권이라 <b>사용 시작 후 1시간이 지나면 환불되지 않는다</b>는 점과 <a role="button" onclick="legalPage('refund')">환불 규정</a>을 확인했어요.</span></label>` : ''}
+    <button class="btn${L ? ' sm' : ''}" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
+    ${L ? '' : `<div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`}`);
 }
 function buy() {
-  if (payOn()) { funnel('buy_click', { item: 'pro' }); payStart('pro'); return; }
+  if (payOn()) { if (!agreeOk('payAgree')) return; funnel('buy_click', { item: 'pro' }); payStart('pro'); return; }
   toast('PRO는 오픈 준비 중이에요. 열리면 바로 알려드릴게요');
 }
 /* (예전 오픈 준비 기간의 "무료로 열기"는 쓰지 않아 지웠어요: 콘솔에서 불러 PRO를 열 수 있었음) */
@@ -119,7 +140,7 @@ async function guestPay(item, cert) {
   if (!(document.getElementById('gAgree') || {}).checked) { toast('동의에 체크해 주세요'); return; }
   if (PAY.busy) return; PAY.busy = true; toast('결제창을 여는 중이에요'); funnel('guest_submit', { item });
   try {
-    const o = await payFn({ action: 'order', cert, item, email });
+    const o = await payFn({ action: 'order', cert, item, email, agree: launched() ? PAY.agree === true : undefined });
     try { localStorage.setItem(GPEND, JSON.stringify({ orderId: o.orderId, token: o.guestToken, email })); } catch (e) {}
     const base = payBase();
     await payWidget(o, '@@ANONYMOUS', email, base + '?pay=ok&g=1&c=' + encodeURIComponent(cert), base + '?pay=fail&c=' + encodeURIComponent(cert));
@@ -150,7 +171,7 @@ async function payStart(item, cert) {
   if (!AU.user) { guestSheet(item, cert); return; }
   PAY.busy = true; toast('결제창을 여는 중이에요');
   try {
-    const o = await payFn({ action: 'order', cert, item });
+    const o = await payFn({ action: 'order', cert, item, agree: launched() ? PAY.agree === true : undefined });
     const base = payBase();
     await payWidget(o, o.customerKey, o.email, base + '?pay=ok&c=' + encodeURIComponent(cert), base + '?pay=fail&c=' + encodeURIComponent(cert));
   } catch (e) {
@@ -182,6 +203,7 @@ async function payReturn(again) {
     await syncPurchases(); closeSheet();
     if (r && r.order && r.order.test && !payAdmin()) { openSheet(`<h3>시험 결제가 끝났어요</h3><div class="p">${PREP_NOTE}<br><br>정식 오픈하면 같은 방법으로 바로 구매할 수 있어요.</div><button class="btn" style="width:100%" onclick="closeSheet();go('home')">확인</button>`); return; }
     const it = r && r.order && r.order.item;
+    if (r && r.order && r.order.boxed && !r.order.started_at) { boxedDone(r.order, guest ? pend : null); return; }
     if (guest) { openSheet(`<h3>결제가 끝났어요 🎉</h3><div class="p">${it === 'note' ? '요약노트를 바로 내려받을 수 있어요.' : 'PRO가 열렸어요. 남은 기간은 내 정보에서 볼 수 있어요.'}<br><br>다른 기기에서 불러올 때 필요하니 아래 주문번호를 꼭 저장해 두세요.</div><div class="card" style="padding:14px;font-size:15px"><b>주문번호</b> ${esc(orderId)}<br><b>이메일</b> ${esc(pend.email)}</div><button class="btn" style="width:100%" onclick="closeSheet();${it === 'note' || it === 'bundle' ? `shopDetail('${r.order.cert}')` : `go('home')`}">확인</button>`); return; }
     toast(it === 'note' ? '결제 완료! 요약노트를 내려받을 수 있어요' : '결제 완료! PRO가 열렸어요 🎉');
     if (it === 'note' || it === 'bundle') { if (typeof shopDetail === 'function') setTimeout(() => shopDetail(r.order.cert), 300); } else go('home');
@@ -211,7 +233,7 @@ async function guestRecheck() {
 async function syncPurchases() {
   let server = [], fresh = false;
   if (AU.sb && AU.user) {
-    const { data, error } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at,test').order('created_at', { ascending: false }).limit(100);
+    const { data, error } = await AU.sb.from('orders').select('id,cert,item,order_name,amount,status,approved_at,canceled_at,downloaded_at,created_at,test,boxed,started_at,refund_kind').order('created_at', { ascending: false }).limit(100);
     server = (data || []).filter(o => !o.test || (!PAY_REAL && payAdmin())); /* 시험 결제는 운영자 확인용(오픈 준비 중)만 반영 */
     fresh = !error && Array.isArray(data);
   }
@@ -221,7 +243,7 @@ async function syncPurchases() {
   const paid = PAY.orders.filter(o => o.status === 'paid').sort((a, b) => new Date(a.approved_at) - new Date(b.approved_at));
   const exp = {};
   paid.forEach(o => {
-    if (o.item === 'pro' || o.item === 'bundle') { const t = new Date(o.approved_at).getTime(), base = Math.max(exp[o.cert] || 0, t); exp[o.cert] = legacyPro(o) ? base + PRO_PLAN.days * 864e5 : proEnd(o.cert, base); }
+    if ((o.item === 'pro' || o.item === 'bundle') && !(o.boxed && !o.started_at)) { const t = new Date(o.started_at || o.approved_at).getTime(), base = Math.max(exp[o.cert] || 0, t); exp[o.cert] = legacyPro(o) ? base + PRO_PLAN.days * 864e5 : proEnd(o.cert, base); }
     if (o.item === 'note' || o.item === 'bundle') PAY.owned[o.cert] = true;
   });
   G.passExp = G.passExp || {};
@@ -243,3 +265,81 @@ async function noteDownload(cert) {
 }
 /* 로그인하고 돌아왔을 때 결제 이어 하기 */
 function payResume() { let b = null; try { b = JSON.parse(sessionStorage.getItem('op_buy') || 'null'); sessionStorage.removeItem('op_buy'); } catch (e) {} if (b && AU.user && payOn()) setTimeout(() => payStart(b.item, b.cert), 500); }
+
+/* ===== 결제 전 동의 (새 환불 방식이 켜졌을 때만) ===== */
+function agreeOk(id) {
+  if (!launched()) { PAY.agree = undefined; return true; }
+  const c = document.getElementById(id); if (!c || !c.checked) { toast('환불 규정을 확인하고 체크해 주세요'); return false; }
+  PAY.agree = true; return true;
+}
+function noteBuy(cert) { if (!agreeOk('noteAgree')) return; payStart('note', cert); }
+
+/* ===== PRO 보관함: 사용 시작 · 앱 환불 (새 환불 방식) ===== */
+const fmtD = t => { const d = new Date(t); return `${d.getMonth() + 1}월 ${d.getDate()}일`; };
+const fmtT = t => { const d = new Date(t); const h = d.getHours(); return `${fmtD(t)} ${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${pad2(d.getMinutes())}`; };
+const ordArg = o => o.guest ? { orderId: o.id, guestToken: o.token } : { orderId: o.id };
+/* 앱에서 바로 환불할 수 있는지: { kind, until } 또는 null (서버가 한 번 더 확인해요) */
+function refundInfo(o) {
+  if (!o || o.status !== 'paid' || o.test) return null;
+  const now = Date.now(), paid = new Date(o.approved_at || o.created_at).getTime();
+  if (o.item === 'note' && !o.downloaded_at && now - paid <= 7 * 864e5) return { kind: 'unused', until: paid + 7 * 864e5 };
+  if (o.item === 'pro' && o.boxed) {
+    if (!o.started_at) return now - paid <= 7 * 864e5 ? { kind: 'unused', until: paid + 7 * 864e5 } : null;
+    const st = new Date(o.started_at).getTime(); if (now - st <= 36e5) return { kind: 'quick', until: st + 36e5 };
+  }
+  return null;
+}
+function boxCards() {
+  const L = (PAY.orders || []).filter(o => o.item === 'pro' && o.boxed && o.status === 'paid' && READY.some(c => c.id === o.cert));
+  if (!L.length) return '';
+  return `<div class="sec" style="margin-top:6px">PRO 보관함</div>` + L.map(o => {
+    const c = READY.find(x => x.id === o.cert), rf = refundInfo(o), endL = proEndLabel(o.cert, o.started_at ? new Date(o.started_at).getTime() : Date.now());
+    if (!o.started_at) return `<div class="card box"><span class="tag pro">사용 전</span><div class="bx-t">${esc(c.short)} PRO 시험 이용권</div><div class="bx-d">${fmtD(o.approved_at)} 결제 · ${won(o.amount)}</div>
+      <div class="bx-p">사용을 시작하면 <b>${endL ? endL + ' 시험까지' : '30일 동안'}</b> 열려요.</div>
+      <button class="btn sm" style="width:100%" onclick="proStart('${o.id}')">사용 시작하기</button>
+      <div class="bx-f">${rf ? `사용 전 · ${fmtD(rf.until)}까지 전액 환불 가능 · <a role="button" onclick="proRefund('${o.id}')">환불 신청</a>` : '환불 기간이 지났어요'}</div></div>`;
+    const endT = proEnd(o.cert, new Date(o.started_at).getTime()), dd = Math.ceil((endT - Date.now()) / 864e5);
+    return `<div class="card box"><span class="tag on">${dd > 0 ? '사용 중' : '기간 끝남'}</span><div class="bx-t">${esc(c.short)} PRO 시험 이용권</div><div class="bx-d">${fmtT(o.started_at)} 사용 시작</div>
+      ${dd > 0 ? `<div class="bx-dd">D-${dd} <span>${endL ? endL.replace('(예상)', '') + ' 시험까지' : ''}</span></div>` : ''}
+      ${rf && rf.kind === 'quick' ? `<div class="bx-q">실수로 시작했나요? <b>${Math.max(1, Math.ceil((rf.until - Date.now()) / 6e4))}분 안에</b> 한 번 전액 환불할 수 있어요. <a role="button" onclick="proRefund('${o.id}')">환불 신청</a></div>` : ''}</div>`;
+  }).join('');
+}
+function boxedDone(o, pend) {
+  openSheet(`<div class="hi">${IC.trophy()}</div><h3>결제가 끝났어요</h3><div class="p">PRO 이용권이 <b>보관함</b>에 들어갔어요.<br>공부를 시작할 때 '사용 시작'을 눌러 주세요.<br>사용 전이면 ${fmtD(new Date(o.approved_at || Date.now()).getTime() + 7 * 864e5)}까지 전액 환불돼요.</div>
+    ${pend ? `<div class="card" style="padding:14px;font-size:14px;margin:6px 0 10px"><b>주문번호</b> ${esc(o.id)}<br><b>이메일</b> ${esc(pend.email)}<br><span style="color:var(--gray)">다른 기기에서 불러올 때 필요하니 꼭 저장해 두세요.</span></div>` : ''}
+    <button class="btn sm" style="width:100%" onclick="proStart('${o.id}')">지금 사용 시작하기</button>
+    <button class="btn sm ghost" style="width:100%;margin-top:8px" onclick="closeSheet();go('my')">나중에 할게요</button>`);
+}
+function proStart(id) {
+  const o = (PAY.orders || []).find(x => x.id === id); if (!o) { toast('주문을 찾지 못했어요'); return; }
+  const endL = proEndLabel(o.cert, Date.now());
+  openSheet(`<div class="hi">${IC.calendar()}</div><h3>지금 사용을 시작할까요?</h3>
+    <div class="feat"><span class="ck">1</span><span>누르는 즉시 PRO가 열려요<small>모의고사 · 해설 무제한 · 약점 학습</small></span></div>
+    <div class="feat"><span class="ck">2</span><span>${endL ? endL + ' 시험까지' : '30일 동안'} 쓸 수 있어요</span></div>
+    <div class="feat"><span class="ck">3</span><span>실수로 눌렀다면 1시간 안에 한 번 전액 환불<small>계정당 1회 · 1시간이 지나면 환불되지 않아요</small></span></div>
+    <button class="btn sm" style="width:100%;margin-top:8px" onclick="proStartGo('${id}')">사용 시작</button>
+    <button class="btn sm ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">아직 안 할래요</button>`);
+}
+async function proStartGo(id) {
+  const o = (PAY.orders || []).find(x => x.id === id); if (!o || PAY.busy) return; PAY.busy = true;
+  try { const r = await payFn(Object.assign({ action: 'start' }, ordArg(o))); if (o.guest && r.order) gAdd(r.order, o.token, o.email); await syncPurchases(); closeSheet(); toast('PRO가 열렸어요 🎉'); go('my'); }
+  catch (e) { toast('사용을 시작하지 못했어요. 잠시 뒤 다시 해 주세요'); }
+  finally { PAY.busy = false; }
+}
+function proRefund(id) {
+  const o = (PAY.orders || []).find(x => x.id === id), rf = refundInfo(o); if (!o || !rf) { toast('앱에서 환불할 수 있는 기간이 지났어요. 카카오톡으로 문의해 주세요'); return; }
+  openSheet(`<h3>${won(o.amount)} 전액 환불할까요?</h3><div class="p">${esc(o.order_name)}<br>${rf.kind === 'quick' ? '사용 시작 후 1시간 이내 환불은 <b>계정당 한 번만</b> 할 수 있어요.<br>' : ''}환불하면 ${o.item === 'note' ? '요약노트를 내려받을 수 없게' : 'PRO가 바로 닫히게'} 되고, 되돌릴 수 없어요.<br>카드 결제는 카드사 사정에 따라 취소가 보이기까지 며칠 걸릴 수 있어요.</div>
+    <button class="btn sm" style="width:100%" onclick="proRefundGo('${id}')">환불하기</button>
+    <button class="btn sm ghost" style="width:100%;margin-top:8px" onclick="closeSheet()">취소</button>`);
+}
+async function proRefundGo(id) {
+  const o = (PAY.orders || []).find(x => x.id === id); if (!o || PAY.busy) return; PAY.busy = true; toast('환불을 요청하고 있어요');
+  try {
+    const r = await payFn(Object.assign({ action: 'refund' }, ordArg(o)));
+    if (o.guest && r.order) gAdd(r.order, o.token, o.email);
+    await syncPurchases(); closeSheet(); toast('환불했어요. 결제한 수단으로 돌려드려요'); go('my');
+  } catch (e) {
+    const m = { quick_used: '사용 후 환불은 계정당 한 번만 할 수 있어요', not_refundable: '앱에서 환불할 수 있는 기간이 지났어요. 카카오톡으로 문의해 주세요' }[e && e.message];
+    closeSheet(); toast(m || '환불하지 못했어요. 카카오톡으로 문의해 주세요');
+  } finally { PAY.busy = false; }
+}

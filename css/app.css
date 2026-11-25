@@ -1149,3 +1149,25 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 }
 .hm-nn{white-space:normal;word-break:keep-all;overflow:visible}.hm-nn span{font-size:11px;font-weight:800;color:#A9741A;background:#FCEFCB;border-radius:5px;padding:1px 5px;vertical-align:2px}
 .hm-nk span{font-size:10px;font-weight:800;color:#A9741A;background:#FCEFCB;border-radius:5px;padding:1px 5px;margin-left:2px}
+
+/* 작은 버튼(새 화면용) · 해설 잠금 · PRO 보관함 · 결제창 안심 문구 */
+.btn.sm{height:46px;font-size:15px;border-radius:13px}
+.btn.sm small{font-size:12px;font-weight:600;opacity:.85;margin-left:6px}
+.exl{text-align:center;padding:18px 4px 6px}
+.exl-ic{width:44px;height:44px;margin:0 auto 8px;display:grid;place-items:center;border-radius:14px;background:var(--gold-soft);color:var(--gold)}
+.exl-t{font-size:17px;font-weight:800}
+.exl-d{font-size:14px;color:var(--gray);margin:6px 0 14px;line-height:1.6}
+.exl-f{font-size:12px;color:var(--gray);margin-top:10px}
+.card.box{position:relative}
+.card.box .tag{position:absolute;top:18px;right:18px}
+.bx-t{font-size:17px;font-weight:800;padding-right:70px}
+.bx-d{font-size:14px;color:var(--gray);margin-top:4px}
+.bx-p{font-size:14px;margin:12px 0 14px;line-height:1.6}
+.bx-f{font-size:13px;color:var(--gray);text-align:center;margin-top:10px}
+.bx-f a,.bx-q a,.pp-agree a{text-decoration:underline;cursor:pointer}
+.bx-dd{font-size:22px;font-weight:800;margin:12px 0 2px}
+.bx-dd span{font-size:14px;color:var(--gray);font-weight:600}
+.bx-q{background:var(--blue-soft);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:13px;line-height:1.6}
+.pp-safe{background:var(--green-soft);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:14px;line-height:1.7}
+.pp-agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--gray);line-height:1.5;margin:6px 2px 10px}
+.pp-agree input{margin-top:3px;flex-shrink:0}

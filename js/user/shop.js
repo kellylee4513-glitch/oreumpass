@@ -42,7 +42,7 @@ function shopDetail(id) { markNav(); closeSheet(); stopTimer(); run = null; tab 
   const buy = PAY_KEY && n.cert
     ? (noteOwned(n.cert)
       ? `<button class="sh-buy" onclick="noteDownload('${n.cert}')">PDF 내려받기</button><div class="sh-note">구매한 요약노트예요. 언제든 다시 내려받을 수 있어요.</div>`
-      : `<button class="sh-buy" onclick="payStart('note','${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">${payPrep() ? PREP_NOTE + ' 아래 무료 샘플로 먼저 살펴보세요.' : '결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.'}</div>`)
+      : `${launched() ? `<label class="pp-agree"><input type="checkbox" id="noteAgree"><span>PDF를 <b>한 번이라도 내려받으면 환불되지 않는다</b>는 점과 <a role="button" onclick="legalPage('refund')">환불 규정</a>을 확인했어요.</span></label>` : ''}<button class="sh-buy" onclick="noteBuy('${n.cert}')">${won(n.price)} 구매하기</button><div class="sh-note">${payPrep() ? PREP_NOTE + ' 아래 무료 샘플로 먼저 살펴보세요.' : '결제가 끝나면 이 화면에서 바로 PDF를 내려받아요. 로그인이 필요해요.'}</div>`)
     : shopLive(n)
     ? `<a class="sh-buy" href="${esc(n.url)}" target="_blank" rel="noopener">구매하러 가기</a><div class="sh-note">구매 버튼을 누르면 판매 페이지로 이동해 결제해요.</div>`
     : `<button class="sh-buy off" onclick="toast('판매 준비 중이에요. 조금만 기다려 주세요')">판매 준비 중</button>`;

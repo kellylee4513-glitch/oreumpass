@@ -67,6 +67,7 @@ function cleanCert(d) {
   o.setBest = mapObj(d.setBest, idKey, v => Number.isFinite(+v) ? Math.max(0, Math.min(100, Math.round(+v))) : undefined);
   o.memo = mapObj(d.memo, idKey, v => typeof v === 'string' ? v.slice(0, 2000) : undefined);
   o.bv = typeof d.bv === 'string' ? d.bv.slice(0, 30) : '';
+  o.exv = d.exv && isDate(d.exv.d) ? { d: d.exv.d, ids: isIds(d.exv.ids).slice(0, 300) } : null; /* 오늘 무료로 본 해설(하루 20개 제한) */
   return o;
 }
 function cleanG(v, keepPay) {

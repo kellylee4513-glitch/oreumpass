@@ -14,13 +14,14 @@ function startQuiz(items, label, mode, at) { closeSheet(); if (!items.length) { 
 function starBtn(id) { return `<button class="sb" onclick="toggleStar(${id})" aria-label="별표">${IC.starLine(S.star.includes(id))}</button>`; }
 function toggleStar(id) { const on = S.star.includes(id); S.star = on ? S.star.filter(x => x !== id) : S.star.concat(id); save(); toast(on ? '북마크를 뺐어요' : '북마크에 담았어요 ⭐'); run && run.mock ? drawMock() : drawQ(); }
 const NUM = '①②③④';
-function explainHTML(q, pick) {
+function explainHTML(q, pick, auto) {
   const answered = pick !== null && pick !== undefined, ok = pick === q.a, qs = (S.qstat || {})[q.id];
   const st = !answered ? 'neutral' : ok ? 'ok' : 'no';
-  let h = `<div class="ex">
+  let h = `<div class="ex" data-exq="${q.id}" data-pick="${pick === null || pick === undefined ? '' : pick}">
     <div class="ex-head ${st}"><div class="ex-st"><i></i>${!answered ? '정답 확인' : ok ? '정답이에요' : '아쉽게 틀렸어요'}</div>
       <div class="ex-ans"><span class="ex-n">${NUM[q.a]}</span><span>${esc(q.o[q.a])}</span></div>
       ${answered && !ok ? `<div class="ex-my">내가 고른 답 <b>${NUM[pick]}</b> ${esc(q.o[pick])}</div>` : ''}</div>`;
+  if (exLocked(q, auto)) return h + exLockHTML() + '</div>'; /* 정답은 항상 무료, 상세 해설만 하루 20개 */
   if (q.k) h += `<div class="ex-easy"><div class="ex-lb">쉽게 말하면</div><p>${esc(q.k)}</p></div>`;
   if (q.m) h += `<div class="ex-tip"><div class="ex-lb">10초 암기</div><p>${esc(q.m)}</p></div>`;
   if (q.c) h += `<section class="ex-sec"><h4>핵심 개념${q.t ? `<span>${esc(q.t)}</span>` : ''}</h4><p>${hl(q.c)}</p>${q.f ? `<div class="ex-f"><span>공식</span><div class="fx">${hl(q.f)}</div></div>` : ''}</section>`;
@@ -48,7 +49,7 @@ function drawQ() { markNav();
       ${q.o.map((o, k) => `<button class="opt ${cls(k)}" ${(M === 'explain' && st.done) || M === 'open' ? 'disabled' : ''} onclick="answer(${k})"><span class="num">${k + 1}</span><span>${esc(o)}</span></button>`).join('')}
       ${M === 'explain' && st.done ? `<button class="retry" onclick="retryQ()">↺ 이 문제 다시 풀기</button>` : ''}
     </div>
-    <div class="xcard ${st.done || M === 'open' ? 'open' : ''}">${M === 'open' ? explainHTML(q, null) : M === 'exam' ? `<div class="xp-wait">${IC.exam()}<p>시험 모드예요<br>다 풀고 <b>채점하기</b>를 누르면<br>해설이 한꺼번에 열려요</p></div>` : st.done ? explainHTML(q, st.pick) + (st.pick !== q.a ? whyHTML(q.id) : '') : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
+    <div class="xcard ${st.done || M === 'open' ? 'open' : ''}">${M === 'open' ? explainHTML(q, null, true) : M === 'exam' ? `<div class="xp-wait">${IC.exam()}<p>시험 모드예요<br>다 풀고 <b>채점하기</b>를 누르면<br>해설이 한꺼번에 열려요</p></div>` : st.done ? explainHTML(q, st.pick, true) + (st.pick !== q.a ? whyHTML(q.id) : '') : `<div class="xp-wait">${IC.medal()}<p>답을 고르면<br>더오를 해설이 펼쳐져요</p></div>`}</div>
   </div></div>`;
   const last = r.i + 1 >= n, nextFn = last ? 'finishQuiz()' : `goQ(${r.i + 1})`, ready = M !== 'explain' || st.done;
   const nextLbl = last ? (M === 'exam' ? '채점하기' : M === 'open' ? '끝내기' : '결과 보기') : (ready ? '다음 문제' : '건너뛰기');
@@ -75,3 +76,29 @@ function copyReport(id, ka) { const t = `[더오를패스 문제 제보] ${C.nam
 let quitArm = false;
 function quitQuiz() { if (run && (run.st ? run.st.some(x => x.done || x.pick !== null) : true) && !quitArm && run.mode !== 'open') { quitArm = true; toast('한 번 더 누르면 나가요'); setTimeout(() => quitArm = false, 2000); return; } quitArm = false; $app.classList.remove('wide'); go(tab); }
 
+
+/* ===== 상세 해설 하루 20개 무료 (스위치: 서버 설정 explain_limit_at) =====
+   문제 풀이·정답·채점·오답노트는 무제한 무료. 모든 보기 해설·쉬운 말·10초 암기·핵심 개념만 하루 20문제까지 무료, 그 이상은 PRO.
+   문제를 풀면서 해설이 열리면 1개로 세고, 목록(결과·오답노트)에서는 '해설 보기'를 눌러야 셉니다. 같은 문제는 그날 다시 봐도 안 셈 */
+const EX_FREE = 20;
+function exvToday() { if (!S.exv || S.exv.d !== dkey()) S.exv = { d: dkey(), ids: [] }; return S.exv; }
+function exLocked(q, auto) {
+  if (typeof explainLimitOn !== 'function' || !explainLimitOn() || isPro() || q.id === undefined) return false;
+  const v = exvToday(); if (v.ids.includes(q.id)) return false;
+  if (auto && v.ids.length < EX_FREE) { v.ids.push(q.id); save(); return false; }
+  return true;
+}
+function exLockHTML() {
+  const left = EX_FREE - exvToday().ids.length;
+  if (left > 0) return `<div class="exl"><button class="btn sm" onclick="exOpen(this)">상세 해설 보기 <small>오늘 남은 무료 ${left}개</small></button></div>`;
+  return `<div class="exl"><div class="exl-ic">${IC.lock()}</div><div class="exl-t">오늘 무료 해설 ${EX_FREE}개를 다 봤어요</div>
+    <div class="exl-d">정답 확인과 오답노트는 계속 무료예요.<br>내일 다시 ${EX_FREE}개가 열려요.</div>
+    <button class="btn sm" onclick="paywall('explain')">PRO로 해설 무제한 보기</button>
+    <div class="exl-f">문제 풀이 · 정답 · 오답노트 무료 / 상세 해설 매일 ${EX_FREE}개 무료</div></div>`;
+}
+function exOpen(btn) {
+  const ex = btn.closest('.ex'); if (!ex) return; const id = +ex.dataset.exq, pick = ex.dataset.pick === '' ? null : +ex.dataset.pick;
+  const v = exvToday();
+  if (!v.ids.includes(id)) { if (v.ids.length >= EX_FREE) { paywall('explain'); return; } v.ids.push(id); save(); }
+  ex.outerHTML = explainHTML(Object.assign({ id }, Q[id]), pick);
+}

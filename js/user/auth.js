@@ -136,6 +136,7 @@ function mergeCert3(z, a, b) {
   o.hist = histJoin(set3(hk(z.hist), hk(a.hist), hk(b.hist)).map(k => hm.get(k)));
   o.spd = J(a.spd) !== J(z.spd) && J(b.spd) !== J(z.spd) ? tsum(a.spd, b.spd, z.spd, ['n', 'ms']) : J(a.spd) !== J(z.spd) ? a.spd : b.spd;
   ['goal', 'exam', 'goalDone', 'popDay', 'dq', 'dox', 'tw', 'bv'].forEach(k => o[k] = J(a[k]) !== J(z[k]) ? a[k] : b[k]);
+  o.exv = a.exv && b.exv && a.exv.d === b.exv.d ? { d: a.exv.d, ids: [...new Set([...a.exv.ids, ...b.exv.ids])] } : (a.exv && (!b.exv || a.exv.d >= b.exv.d) ? a.exv : b.exv);
   return cleanCert(o);
 }
 /* 지난번에 서버와 맞춰 둔 기록: 계정마다 따로 보관 */

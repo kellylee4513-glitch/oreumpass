@@ -87,6 +87,57 @@ const TESTS = {
     const ok = steps === 'paywall,buy_click,start,choose' && keys === 'action,admin,item,kind,login,sid,step';
     return ok ? true : J({ steps, keys });
   },
+  '해설 제한 꺼짐: 해설이 제한 없이 보여요': () => {
+    window.OP_CFG.explainAt = ''; SW.explainAt = ''; S.exv = null;
+    const html = Array.from({ length: 25 }, (_, i) => explainHTML(Object.assign({ id: i }, Q[i]), Q[i].a, true)).join('');
+    return !/class="exl"/.test(html) ? true : '꺼져 있는데 잠금이 보여요';
+  },
+  '해설 제한 켜짐: 문제 풀면서 20개까지 보이고 21번째부터 잠겨요 (정답은 계속 보임)': () => {
+    window.OP_CFG.explainAt = '2026-01-01'; G.passCerts = []; G.passExp = {}; S.exv = null;
+    const shown = []; for (let i = 0; i < 21; i++) shown.push(explainHTML(Object.assign({ id: i }, Q[i]), Q[i].a, true));
+    const ok20 = shown.slice(0, 20).every(h => !/class="exl"/.test(h) && /ex-sec/.test(h)), lock21 = /PRO로 해설 무제한/.test(shown[20]) && /ex-ans/.test(shown[20]) && !/ex-sec/.test(shown[20]);
+    const again = !/class="exl"/.test(explainHTML(Object.assign({ id: 3 }, Q[3]), Q[3].a, true)); /* 오늘 본 문제는 다시 봐도 안 잠김 */
+    window.OP_CFG.explainAt = ''; return ok20 && lock21 && again ? true : J({ ok20, lock21, again });
+  },
+  '해설 제한 켜짐: 목록(결과·오답노트)에서는 눌러야 세고, PRO는 무제한': () => {
+    window.OP_CFG.explainAt = '2026-01-01'; G.passCerts = []; G.passExp = {}; S.exv = null;
+    const list = explainHTML(Object.assign({ id: 5 }, Q[5]), null); const notCounted = exvToday().ids.length === 0 && /상세 해설 보기/.test(list);
+    G.passCerts = [C.id]; G.passExp = { [C.id]: Date.now() + 864e5 }; S.exv = { d: dkey(), ids: Array.from({ length: 20 }, (_, i) => 100 + i) };
+    const pro = !/class="exl"/.test(explainHTML(Object.assign({ id: 7 }, Q[7]), null, true));
+    window.OP_CFG.explainAt = ''; G.passCerts = []; G.passExp = {}; return notCounted && pro ? true : J({ notCounted, pro });
+  },
+  '새 환불 꺼짐: 결제창은 예전 그대로, 동의 체크 없이 결제 진행': () => {
+    window.OP_CFG.launchAt = ''; SW.launchAt = ''; G.passCerts = []; G.passExp = {}; paywall('mock');
+    const noBox = !document.getElementById('payAgree'); let started = false; window.payStart = () => { started = true; }; buy();
+    return noBox && started ? true : J({ noBox, started });
+  },
+  '새 환불 켜짐: 동의 체크 안 하면 결제 안 되고, 체크하면 진행': () => {
+    window.OP_CFG.launchAt = '2026-01-01'; G.passCerts = []; G.passExp = {}; paywall('mock');
+    let started = 0; window.payStart = () => { started++; }; buy(); const blocked = started === 0;
+    document.getElementById('payAgree').checked = true; buy();
+    window.OP_CFG.launchAt = ''; return blocked && started === 1 && PAY.agree === true ? true : J({ blocked, started });
+  },
+  '새 환불 켜짐: 보관함 PRO는 사용 시작 전엔 안 열리고, 시작하면 열려요': async () => {
+    window.OP_CFG.launchAt = '2026-01-01'; G.passCerts = []; G.passExp = {};
+    const o = { id: 'b1', cert: C.id, item: 'pro', status: 'paid', boxed: true, started_at: null, approved_at: new Date().toISOString(), created_at: new Date().toISOString(), amount: 4900, order_name: 'PRO' };
+    AU.user = { id: 'u1' }; AU.sb = { from: () => ({ select: () => ({ order: () => ({ limit: async () => ({ data: [o], error: null }) }) }) }) };
+    localStorage.removeItem('op_guest_orders'); await syncPurchases(); const closed = !isPro();
+    go('my'); const card = /사용 시작하기/.test(document.getElementById('app').innerText) && /전액 환불 가능/.test(document.getElementById('app').innerText);
+    o.started_at = new Date().toISOString(); window.payFn = async b => ({ ok: true, order: o }); await proStartGo('b1'); const open = isPro();
+    go('my'); const quick = /한 번 전액 환불/.test(document.getElementById('app').innerText);
+    AU.user = null; AU.sb = null; window.OP_CFG.launchAt = ''; return closed && card && open && quick ? true : J({ closed, card, open, quick });
+  },
+  '새 환불: 앱 환불 가능 기간 계산 (미사용 7일, 사용 후 1시간)': () => {
+    const now = Date.now(), iso = t => new Date(t).toISOString();
+    const a = refundInfo({ status: 'paid', item: 'pro', boxed: true, approved_at: iso(now - 3 * 864e5) });
+    const b = refundInfo({ status: 'paid', item: 'pro', boxed: true, approved_at: iso(now - 8 * 864e5) });
+    const c = refundInfo({ status: 'paid', item: 'pro', boxed: true, approved_at: iso(now - 864e5), started_at: iso(now - 30 * 6e4) });
+    const d = refundInfo({ status: 'paid', item: 'pro', boxed: true, approved_at: iso(now - 864e5), started_at: iso(now - 2 * 36e5) });
+    const e = refundInfo({ status: 'paid', item: 'note', approved_at: iso(now - 864e5), downloaded_at: iso(now) });
+    const f = refundInfo({ status: 'paid', item: 'pro', boxed: false, approved_at: iso(now - 864e5) });
+    const ok = a && a.kind === 'unused' && !b && c && c.kind === 'quick' && !d && !e && !f;
+    return ok ? true : J({ a, b, c, d, e, f });
+  },
   '결제 복귀: 결제를 시작한 주소로 돌아와요': () => payBase() === location.origin + location.pathname ? true : payBase(),
   '결제 확인 실패 → 다시 확인하기로 완료돼요': async () => {
     let n = 0; window.authInit = async () => {}; AU.user = { id: 'u1' }; window.syncPurchases = async () => {};
