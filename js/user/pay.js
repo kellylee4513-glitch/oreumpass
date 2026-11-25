@@ -282,7 +282,7 @@ const ordArg = o => o.guest ? { orderId: o.id, guestToken: o.token } : { orderId
 function refundInfo(o) {
   if (!o || o.status !== 'paid' || o.test) return null;
   const now = Date.now(), paid = new Date(o.approved_at || o.created_at).getTime();
-  if (o.item === 'note' && !o.downloaded_at && now - paid <= 7 * 864e5) return { kind: 'unused', until: paid + 7 * 864e5 };
+  if (o.item === 'note' && launched() && !o.downloaded_at && now - paid <= 7 * 864e5) return { kind: 'unused', until: paid + 7 * 864e5 }; /* 새 환불 방식이 꺼져 있으면 앱 환불 버튼 없음 */
   if (o.item === 'pro' && o.boxed) {
     if (!o.started_at) return now - paid <= 7 * 864e5 ? { kind: 'unused', until: paid + 7 * 864e5 } : null;
     const st = new Date(o.started_at).getTime(); if (now - st <= 36e5) return { kind: 'quick', until: st + 36e5 };

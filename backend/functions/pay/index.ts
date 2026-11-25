@@ -192,7 +192,8 @@ Deno.serve(async (req) => {
     if (!o || o.status !== 'paid' || !o.payment_key) return json({ error: 'order' }, 404);
     const nowT = Date.now(), paidT = Date.parse(o.approved_at || o.created_at);
     let kind: string | null = null;
-    if (o.item === 'note' && !o.downloaded_at && nowT - paidT <= 7 * DAY) kind = 'unused';
+    /* 요약노트 앱 환불은 새 환불 방식이 켜졌을 때만 (꺼져 있으면 지금처럼 문의로 처리) */
+    if (o.item === 'note' && !o.downloaded_at && nowT - paidT <= 7 * DAY && launchedAt(await getLaunch())) kind = 'unused';
     if (o.item === 'pro' && o.boxed) {
       if (!o.started_at && nowT - paidT <= 7 * DAY) kind = 'unused';
       else if (o.started_at && nowT - Date.parse(o.started_at) <= HOUR) {
