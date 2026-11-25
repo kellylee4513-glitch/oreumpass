@@ -79,6 +79,14 @@ const TESTS = {
     logoutWipe(); const wiped = !(G.data[id] && G.data[id].wrong.length); AU.sb = null;
     return closed && asked && wiped ? true : J({ closed, asked, wiped });
   },
+  '결제 단계 기록: 개인 정보 없이 단계만 보내요': async () => {
+    const sent = []; window.fetch = async (u, o) => { sent.push(JSON.parse(o.body)); return { ok: true }; };
+    window.authSandbox = () => false; G.passCerts = []; G.passExp = {}; AU.user = null;
+    paywall('mock'); buy(); await new Promise(r => setTimeout(r, 100));
+    const steps = sent.map(b => b.step).join(','), keys = [...new Set(sent.flatMap(b => Object.keys(b)))].sort().join(',');
+    const ok = steps === 'paywall,buy_click,start,choose' && keys === 'action,admin,item,kind,login,sid,step';
+    return ok ? true : J({ steps, keys });
+  },
   '결제 복귀: 결제를 시작한 주소로 돌아와요': () => payBase() === location.origin + location.pathname ? true : payBase(),
   '결제 확인 실패 → 다시 확인하기로 완료돼요': async () => {
     let n = 0; window.authInit = async () => {}; AU.user = { id: 'u1' }; window.syncPurchases = async () => {};

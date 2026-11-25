@@ -7,7 +7,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  // x-region: 앱이 결제 요청을 서울 서버로 고정할 때 보내는 표시. 허용 목록에 없으면 브라우저가 요청을 막아 결제창이 안 열려요
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-region',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 // 운영자 계정: 테스트 키일 때 시험 결제로 상품까지 받아 볼 수 있음 (그 외 사용자의 시험 결제는 아무것도 지급하지 않음)
@@ -57,6 +58,16 @@ Deno.serve(async (req) => {
       const { error } = await admin.from('orders').update({ status: 'canceled', canceled_at: last || new Date().toISOString() }).eq('id', t.orderId).eq('payment_key', pk);
       console.log('webhook_cancel', t.orderId, t.status, error ? error.message : 'ok');
     }
+    return json({ ok: true });
+  }
+
+  // 결제 단계 기록(이탈 위치 확인용): 개인 정보 없이 단계 이름과 탭별 임의 번호만 저장
+  if (act === 'track') {
+    const STEPS = ['paywall', 'buy_click', 'start', 'choose', 'login_click', 'guest_submit', 'widget', 'pay_click', 'cancel', 'pay_error', 'return_fail', 'paid', 'declined', 'confirm_fail'];
+    const step = String(body.step || ''), sid = String(body.sid || '');
+    if (!STEPS.includes(step) || !/^[a-z0-9]{1,12}$/.test(sid)) return json({ ok: false }, 400);
+    const short = (v: unknown) => (typeof v === 'string' && /^[a-z_]{1,20}$/.test(v) ? v : null);
+    await admin.from('pay_funnel').insert({ sid, step, item: short(body.item), kind: short(body.kind), login: !!body.login, admin: !!body.admin });
     return json({ ok: true });
   }
 

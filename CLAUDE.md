@@ -21,3 +21,7 @@
 ## 결제 서버
 - 결제 서버 함수 원본은 `backend/functions/pay/index.ts`. 고치면 Supabase에 다시 배포해야 반영돼요(운영자 확인 후).
 - DB 구조는 `backend/schema.sql`(실제 DB와 맞춰 둠). DB를 바꾸는 파일은 `backend/migrations/`에 날짜별로.
+
+## 결제 서버와 앱을 함께 바꿀 때 올리는 순서
+- 앱의 결제 요청은 서울 서버로 고정(x-region 표시)돼 있어요. 결제 서버의 CORS 허용 목록에 x-region이 있어야 해요.
+- **결제 서버(backend/functions/pay)를 먼저 배포하고, 그다음 앱을 올린다.** 반대로 하면 결제창이 안 열려요.
