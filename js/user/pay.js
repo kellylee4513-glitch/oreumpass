@@ -1,4 +1,4 @@
-/* [user/pay.js] 결제: 자격증별 PRO 시험 이용권 — 결제하면 다음 공식 시험일까지 (+ 요약노트 묶음) */
+/* [user/pay.js] 결제: 자격증별 PRO 시험 이용권 — 결제하면 다음 공식 시험일까지 (요약노트는 요약노트 탭에서 따로. 예전 묶음(bundle) 주문은 계속 인정) */
 /* 결제 모드: 라이브 키(live_)면 모두 실결제. 테스트 키(test_)면 운영자 계정만 테스트 결제, 나머지는 오픈 준비 기간 무료 이용 */
 const PAY_KEY = (window.OP_CFG || {}).tossClientKey || '';
 const PAY_REAL = /^live_/.test(PAY_KEY);
@@ -19,27 +19,25 @@ const examEnds = c => (EXAM_DATES[c] || []).map(d => new Date(d + 'T23:59:59+09:
 function proEnd(cert, from) { const e = examEnds(cert).find(t => t - from >= EXAM_GAP * 864e5); return e || from + PRO_PLAN.days * 864e5; }
 function proEndLabel(cert, from) { const base = Math.max((G.passExp || {})[cert] || 0, from || Date.now()); const e = examEnds(cert).find(t => t - base >= EXAM_GAP * 864e5); if (!e) return null; const d = new Date(e + 9 * 36e5), iso = d.toISOString().slice(0, 10); return `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일${(EXAM_TENTATIVE[cert] || []).includes(iso) ? '(예상)' : ''}`; }
 const legacyPro = o => /30일/.test(o.order_name || '') || (!o.order_name && new Date(o.approved_at).getTime() < PRO_EXAM_FROM);
-const BUNDLE = { price: 12900 };
+/* 묶음(PRO + 요약노트) 판매는 2026-11-25에 중단. 판매된 적 없음. 예전 주문 처리 코드(item 'bundle')는 남겨 둠 */
 const NOTE_PRICE = 9900;
 let payPick = 'pro';
 const proLeft = id => { const e = (G.passExp || {})[id]; return e ? Math.ceil((e - Date.now()) / 864e5) : null; };
 function paywall(kind) { afterPay = kind; payPick = 'pro'; if (isPro()) { closeSheet(); return; } drawPay(); }
 function drawPay() {
-  const note = typeof SHOPS === 'function' ? SHOPS().find(p => p.cert === C.id && !p.soon) : null;
   const opt = (k, t, d, pr, s) => `<button class="plan ${payPick === k ? 'on' : ''}" onclick="payPick='${k}';drawPay()"><span class="rd"></span><div class="grow"><div class="t">${t}</div><div class="d">${d}</div></div><div class="pr">${s ? `<s>${won(s)}</s>` : ''}${won(pr)}</div></button>`;
-  const sel = payPick === 'bundle' && note ? BUNDLE.price : PRO_PLAN.price;
+  const sel = PRO_PLAN.price;
   openSheet(`<h3>${esc(C.short)} PRO로<br>합격선까지 빠르게</h3><div class="p">문제·해설·오답노트는 무료, PRO는 실전 감각과 약점 관리까지</div>
     <div class="feat"><span class="fi">${IC.exam()}</span><span>실전 모의고사<small>시험과 같은 과목 비율·시간으로</small></span></div>
     <div class="feat"><span class="fi">${IC.target()}</span><span>약점 집중 · 맞춤 학습<small>정답률 낮은 단원부터 자동으로</small></span></div>
     <div class="feat"><span class="fi">${IC.ox()}</span><span>OX 선지 퀴즈 · 잊을 때쯤 복습<small>선지를 쪼개 개념을 확실하게, 1·3·7·15·30일 뒤 다시 출제</small></span></div>
     <div style="height:10px"></div>
     ${opt('pro', `${esc(C.short)} PRO <span class="pp-off">오픈 기념가</span>`, (proEndLabel(C.id) ? proEndLabel(C.id) + ' 시험까지' : '결제한 날부터 ' + PRO_PLAN.days + '일') + ' · 자동 결제 없음', PRO_PLAN.price, 0)}
-    ${note ? opt('bundle', 'PRO + 요약노트 PDF', `따로 사면 ${won(PRO_PLAN.price + NOTE_PRICE)}`, BUNDLE.price, PRO_PLAN.price + NOTE_PRICE) : ''}
     <button class="btn" style="width:100%;margin-top:6px" onclick="buy()">${payOn() ? won(sel) + ' 결제하기' : 'PRO 오픈 준비 중'}</button>
     <div class="note">${payOn() ? (payPrep() ? PREP_NOTE + '<br>' : '') + '결제 후 7일 이내 미사용 시 전액 환불 · <a onclick="legalPage(\'refund\')" style="text-decoration:underline">환불 규정</a>' : 'PRO는 오픈 준비 중이에요. 문제 풀이·해설·오답노트는 지금도 무료예요.'}</div>`);
 }
 function buy() {
-  if (payOn()) { payStart(payPick === 'bundle' ? 'bundle' : 'pro'); return; }
+  if (payOn()) { payStart('pro'); return; }
   toast('PRO는 오픈 준비 중이에요. 열리면 바로 알려드릴게요');
 }
 /* (예전 오픈 준비 기간의 "무료로 열기"는 쓰지 않아 지웠어요: 콘솔에서 불러 PRO를 열 수 있었음) */
@@ -89,7 +87,7 @@ const gFind = (cert, items) => gOrders().find(o => o.cert === cert && o.status =
 const EMAIL_OK = e => /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24}$/.test(e);
 function loginBuy(item, cert) { closeSheet(); try { sessionStorage.setItem('op_buy', JSON.stringify({ item, cert })); } catch (e) {} loginSheet('로그인하고 결제하면\n어느 기기에서든 이용할 수 있어요'); }
 function guestSheet(item, cert) {
-  const p = item === 'note' ? NOTE_PRICE : item === 'bundle' ? BUNDLE.price : PRO_PLAN.price;
+  const p = item === 'note' ? NOTE_PRICE : PRO_PLAN.price;
   openSheet(`<h3>결제 방법을 골라 주세요</h3><div class="p">회원가입 없이 비회원으로도 바로 결제할 수 있어요.</div>
     <div class="card" style="padding:16px;margin:4px 0 12px">
       <div style="font-weight:700;margin-bottom:8px">비회원 결제</div>

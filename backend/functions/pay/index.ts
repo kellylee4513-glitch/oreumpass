@@ -18,7 +18,7 @@ const PRICES: Record<string, Record<string, { amount: number; name: string }>> =
   tuunsa: {
     pro: { amount: 4900, name: '투자자산운용사 PRO 시험 이용권' },
     note: { amount: 9900, name: '투자자산운용사 요약노트 PDF' },
-    bundle: { amount: 12900, name: '투자자산운용사 PRO 시험 이용권 + 요약노트 PDF' },
+    // bundle(PRO + 요약노트 12,900원)은 2026-11-25 판매 중단. 예전 주문 확인·다운로드는 아래 코드가 계속 처리
   },
 };
 const NOTE_FILES: Record<string, string> = { tuunsa: 'tuunsa.pdf' };
