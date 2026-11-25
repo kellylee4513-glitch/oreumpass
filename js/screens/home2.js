@@ -100,9 +100,27 @@ function hmPlay() {
     <button class="hm-all" onclick="go('play')"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="6.5" height="6.5" rx="2"/><rect x="11.5" y="2" width="6.5" height="6.5" rx="2" opacity=".55"/><rect x="2" y="11.5" width="6.5" height="6.5" rx="2" opacity=".55"/><rect x="11.5" y="11.5" width="6.5" height="6.5" rx="2" opacity=".3"/></svg>풀이 방법 전체 보기<span class="hm-allsub">문제은행 · 개념 카드 · OX</span><span class="hm-chev" aria-hidden="true">›</span></button>`;
 }
 
+
+/* 요약노트 PDF 판매 카드 (휴대폰: 로그인 안내 바로 아래, PC: 오른쪽 칸 아래) */
+function hmNote() {
+  const n = (window.SHOP || []).find(x => x.cert === C.id && !x.soon);
+  if (!n) return '';
+  const own = n.cert && typeof noteOwned === 'function' && noteOwned(n.cert);
+  const off = n.list && n.price && n.list > n.price ? Math.round((1 - n.price / n.list) * 100) : 0;
+  const thumb = n.previews && n.previews[0] ? `<img src="${esc(n.previews[0])}" alt="" loading="lazy">` : '';
+  if (own) return `<button class="hm-note own" onclick="noteDownload('${n.cert}')"><span class="hm-nt">${thumb}</span>
+    <span class="grow"><span class="hm-nk">구매한 요약노트</span><b class="hm-nn">${esc(n.title)}</b><span class="hm-ns">언제든 다시 내려받을 수 있어요</span></span>
+    <span class="hm-nb">PDF 받기</span></button>`;
+  return `<button class="hm-note" onclick="shopDetail('${n.id}')"><span class="hm-nt">${thumb}</span>
+    <span class="grow"><span class="hm-nk">더오를 요약노트 <span>PDF</span></span><b class="hm-nn">${esc(n.short || n.title)} 요약노트</b><span class="hm-ns">${(n.tags || []).slice(0, 3).map(esc).join(' · ')}</span>
+    <span class="hm-np">${off ? `<em>${off}%</em><s>${won(n.list)}</s>` : ''}<b>${won(n.price)}</b></span></span>
+    <span class="hm-nb">보기 ›</span></button>`;
+}
+
 function home() {
   $app.innerHTML = brandBar() + `<div class="pad hm">
     ${topNudge() ? `<div class="hm-nudge">${topNudge()}</div>` : ''}
+    ${hmNote() ? `<div class="hm-nw">${hmNote()}</div>` : ''}
     <div class="hm-l">${hmHero()}${hmToday()}</div>
     <div class="hm-r">${hmPass()}${hmPlay()}</div>
     <div class="foot hm-foot">${policyLinks()}</div>

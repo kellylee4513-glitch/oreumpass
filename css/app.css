@@ -1126,3 +1126,26 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 @media(max-width:374px){.hm-more{display:none}.hm-pk{font-size:12px}.hm-dd b{font-size:32px;line-height:40px}}
 .hm-pass.hm-empty{display:flex;align-items:center;gap:14px}
 .pgrid>.b-play>.sec:first-child{margin-top:8px}
+
+/* 홈 요약노트 카드 */
+.hm-nw{margin-bottom:12px}
+.hm-note{width:100%;display:flex;align-items:center;gap:13px;text-align:left;background:linear-gradient(115deg,#FFF9EC,#fff 60%);border:1.5px solid #F1DFAE;border-radius:20px;padding:12px 14px 12px 12px;min-height:84px}
+.hm-nt{flex:none;width:54px;height:70px;border-radius:8px;overflow:hidden;background:#14204A;box-shadow:0 4px 10px rgba(20,32,74,.18);transform:rotate(-3deg)}
+.hm-nt img{width:100%;height:100%;object-fit:cover;object-position:top}
+.hm-note .grow{display:flex;flex-direction:column;gap:1px;min-width:0}
+.hm-nk{font-size:11.5px;font-weight:800;color:#A9741A}
+.hm-nn{font-size:15px;font-weight:800;line-height:20px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-ns{font-size:11.5px;color:var(--gray);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-np{display:flex;align-items:baseline;gap:5px;margin-top:3px}
+.hm-np em{font-style:normal;font-size:12px;font-weight:800;color:var(--red)}.hm-np s{font-size:11.5px;color:#8B95A1}.hm-np b{font-size:16px;font-weight:800;color:var(--text)}
+.hm-nb{flex:none;font-size:13px;font-weight:800;color:#14204A;background:#FFD54F;border-radius:12px;padding:9px 12px;white-space:nowrap}
+.hm-note.own{background:#fff;border-color:var(--line)}.hm-note.own .hm-nb{background:var(--blue);color:#fff}
+@media(max-width:374px){.hm-nb{padding:8px 9px;font-size:12px}.hm-nt{width:46px;height:60px}}
+@media(min-width:900px){
+ .hm{grid-template-areas:"nu nu" "l r" "l nw" "ft ft"}
+ .hm-nudge{grid-area:nu}.hm-l{grid-area:l}.hm-r{grid-area:r}.hm-nw{grid-area:nw;margin:12px 0 0}.hm-foot{grid-area:ft}
+ .hm-note:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,32,74,.08)}
+ .hm-note{transition:transform .15s,box-shadow .15s}
+}
+.hm-nn{white-space:normal;word-break:keep-all;overflow:visible}.hm-nn span{font-size:11px;font-weight:800;color:#A9741A;background:#FCEFCB;border-radius:5px;padding:1px 5px;vertical-align:2px}
+.hm-nk span{font-size:10px;font-weight:800;color:#A9741A;background:#FCEFCB;border-radius:5px;padding:1px 5px;margin-left:2px}
