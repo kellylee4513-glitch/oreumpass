@@ -1171,3 +1171,4 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 .pp-safe{background:var(--green-soft);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:14px;line-height:1.7}
 .pp-agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--gray);line-height:1.5;margin:6px 2px 10px}
 .pp-agree input{margin-top:3px;flex-shrink:0}
+.exl .btn{width:100%;padding:0 16px}
