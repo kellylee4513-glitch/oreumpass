@@ -25,3 +25,12 @@
 ## 결제 서버와 앱을 함께 바꿀 때 올리는 순서
 - 앱의 결제 요청은 서울 서버로 고정(x-region 표시)돼 있어요. 결제 서버의 CORS 허용 목록에 x-region이 있어야 해요.
 - **결제 서버(backend/functions/pay)를 먼저 배포하고, 그다음 앱을 올린다.** 반대로 하면 결제창이 안 열려요.
+
+## 새 주소 theoreulpass.com 같이 올리기 (2026-11-26~)
+- 옛 주소 https://kellylee4513-glitch.github.io/oreumpass/ = 이 저장소 main (GitHub Pages, 브랜치 배포)
+- 새 주소 https://theoreulpass.com = 별도 저장소 `kellylee4513-glitch/theoreulpass-site` 가 이 저장소 main을 **가져와서** 배포(GitHub Actions). 코드 사본은 거기 없음.
+- **이 저장소에는 절대 CNAME 파일을 넣지 않는다.** 넣으면 옛 주소가 새 주소로 넘어가 버려요 (공식 이전 전까지 금지).
+- main을 push한 직후 반드시 `bash tools/sync-site.sh` 실행 → 1~2분 뒤 https://theoreulpass.com/deployed.txt 가 방금 커밋 번호인지 확인.
+  - 잊어도 theoreulpass-site 의 Action이 매시간 확인해서 따라잡아요(최대 1시간 늦음).
+- 새 주소 사이트의 canonical·sitemap·og:url 은 공식 이전 전까지 옛 주소 그대로 둔다(같은 문서가 두 주소에 있어 검색엔진이 중복으로 보지 않게). 바꾸는 작업은 `domain-move` 브랜치.
+- 결제는 시작한 주소로 돌아오고(pay.js payBase), 결제 서버 CORS는 `*` 라서 두 주소 모두 결제돼요. 로그인 안 한 사용자의 기록(localStorage)은 주소별이라 서로 안 보여요.
