@@ -1189,3 +1189,24 @@ body:has(.tabbar) .app>.lp{max-width:460px}
 .pw-email input[type=email]{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;margin-bottom:10px}
 .pw-fine{font-size:12px;color:var(--gray);text-align:center;margin-top:10px;line-height:1.6}
 .pw-fine a{text-decoration:underline;cursor:pointer}
+/* 새 주소 이사 화면 (user/move.js) */
+.mvs{position:fixed;inset:0;z-index:60;background:var(--bg)}
+.mvs-in{max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column;padding:0 22px calc(28px + env(safe-area-inset-bottom))}
+.mvs-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:0;overflow:auto}
+.mvs-logo{width:84px;height:84px;flex:none;border-radius:22px;background:url(../icon-192.png) center/cover;box-shadow:0 8px 24px rgba(14,27,61,.18)}
+.mvs-wm{margin:14px 0 22px}.mvs-wm svg{height:32px;width:auto}
+.mvs h1{font-size:26px;font-weight:800;line-height:1.38}
+.mvs-addr{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:var(--blue-soft);color:var(--blue);font-weight:800;font-size:17px;padding:9px 16px;border-radius:99px}
+.mvs-sub{font-size:15px;color:var(--sub);margin-top:12px}
+.mvs-card{width:100%;background:#fff;border-radius:22px;padding:8px 18px;margin-top:24px;text-align:left}
+.mvs-card .feat .ck{background:var(--green-soft);color:var(--green)}
+.mvs-bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin:14px 4px}
+.mvs-bar b{display:block;height:100%;width:0;background:var(--blue);border-radius:6px;transition:width 2.1s linear}
+.mvs.on .mvs-bar b{width:100%}
+.mvs .btn{width:100%;flex:none}
+.mvs-small{font-size:13px;color:var(--gray);text-align:center;margin-top:12px;line-height:1.6}
+.mvc{display:flex;gap:10px;margin-bottom:16px}
+.mvc>div{flex:1;background:var(--bg);border-radius:16px;padding:14px}
+.mvc>div.on{background:var(--blue-soft);box-shadow:inset 0 0 0 2px var(--blue)}
+.mvc .k{font-size:13px;color:var(--gray);font-weight:700;margin-bottom:6px}
+.mvc .v{font-size:15px;font-weight:700;line-height:1.7}.mvc .v b{font-size:20px}

@@ -16,3 +16,4 @@ try { if (authOn()) authInit(); } catch (e) {}
 try { if (typeof switchSync === 'function') switchSync(); } catch (e) {} /* 해설 제한·새 환불 방식 스위치 */
 try { if (/[?&]pay=/.test(location.search)) payReturn(); } catch (e) {}
 try { if (!/[?&]pay=/.test(location.search) && typeof gOrders === 'function' && gOrders().length) syncPurchases(); } catch (e) {}
+try { if (typeof moveCheck === 'function') moveCheck(); } catch (e) {} /* 새 주소 이사 (스위치 꺼져 있으면 아무것도 안 함) */
