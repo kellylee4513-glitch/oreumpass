@@ -7,6 +7,9 @@ else { useCert(G.cur); go('certs'); }
 /* ===== 정책 바로가기 주소: ?p=terms | privacy | refund ===== */
 try { const pk = new URLSearchParams(location.search).get('p'); if (READY.length && ['terms', 'privacy', 'refund'].includes(pk)) { if (!C) useCert(READY[0].id); legalPage(pk); } } catch (e) {}
 
+/* ===== 화면 바로가기 주소: ?go=play | note | shop | comm | study | my (검색용 소개 페이지의 버튼이 씀) ===== */
+try { const gk = new URLSearchParams(location.search).get('go'); if (READY.length && ['home', 'play', 'note', 'shop', 'comm', 'study', 'my'].includes(gk)) { if (!C) useCert(READY[0].id); if (!G.cur) G.cur = C.id; go(gk); } } catch (e) {}
+
 /* ===== 앱 저장(서비스 워커): 내 주소(https)에 올렸을 때만 동작 ===== */
 try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !/claude|anthropic/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
 

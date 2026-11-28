@@ -21,7 +21,7 @@ const fails = [], ok = m => console.log('✓ ' + m), bad = m => { fails.push(m);
       if (p.endsWith('/')) p += 'index.html';
       const f = path.join(R, p); if (!fs.existsSync(f)) return route.fulfill({ status: 404, body: '' });
       let body = fs.readFileSync(f);
-      if (p === 'js/core/config.js') body = Buffer.from(body.toString().replace('moveOn: false', 'moveOn: ' + moveOn).replace(/sbUrl: '[^']*'/, "sbUrl: ''"));
+      if (p === 'js/core/config.js') body = Buffer.from(body.toString().replace(/moveOn: (true|false)/, 'moveOn: ' + moveOn).replace(/sbUrl: '[^']*'/, "sbUrl: ''"));
       route.fulfill({ status: 200, body, contentType: TYPES[path.extname(f)] || 'application/octet-stream' });
     };
     await c.route(OLD + '**', serve(OLD)); await c.route(NEW + '**', serve(NEW));

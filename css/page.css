@@ -1,0 +1,25 @@
+/* [css/page.css] 검색용 소개 페이지(cbt/, mock/, ox/ …) 공통 디자인 — about.html과 같은 톤 */
+:root{--ink:#191F28;--sub:#4E5968;--line:#E5E8EB;--bg:#F2F4F6;--brand:#1F6E6E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:720px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;flex-direction:column;gap:12px}
+.brand{display:inline-flex;align-items:center;gap:8px;color:var(--ink);font-weight:800;font-size:18px;text-decoration:none}
+.brand img{border-radius:8px}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{background:#fff;color:var(--sub);font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;text-decoration:none}
+nav a[aria-current="page"]{background:var(--brand);color:#fff}
+h1{font-size:28px;line-height:1.35;margin:28px 0 12px}
+h2{font-size:20px;margin:36px 0 10px}
+p,li{color:var(--sub);font-size:16px}
+p a{color:var(--brand);font-weight:600}
+ul{padding-left:20px;margin:0}
+.card{background:#fff;border-radius:16px;padding:20px 22px;margin:16px 0}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:15px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#E4F1F1;color:var(--ink);white-space:nowrap}
+td{overflow-wrap:normal}
+.cta{display:inline-block;background:var(--brand);color:#fff;font-weight:700;padding:14px 22px;border-radius:12px;text-decoration:none;margin:8px 0}
+footer{margin-top:40px;font-size:14px;color:#8B95A1;line-height:2}
+footer a{color:#8B95A1}
+@media (min-width:600px){main{padding:32px 20px 64px}}
